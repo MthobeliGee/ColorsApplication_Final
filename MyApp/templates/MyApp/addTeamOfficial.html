@@ -1,0 +1,244 @@
+
+
+
+{% extends "MyApp/base.html" %}
+
+{% block content %}
+    {% load static %}
+    {% if messages %}
+        {% for message in messages %}
+            <br/>
+            <div>
+                <center>
+                    <div style="padding:1rem;  border:solid 2px #FF69B4; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% endif %}">
+                    <p >
+                        <b> {{ message }}</b>
+                    </p>
+                    </div>
+                </center>
+            </div>
+
+        {% endfor %}
+    {% endif %}
+
+    <div class="container">
+        {% if teamOfficials %}
+            <div style="padding:1rem; display:flex;justify-content:space-between">
+
+                <div>
+                   <h3><b> {{application.EventName}} team officials</b></h3>
+                </div>
+                <div>
+                    <a href="{% url 'AddRepp' applicationId=application.ApplicationId %}" class="btn btn-default btn-success">
+                        Move on to the next step>>
+                    </a>
+                </div>
+            </div>
+        {% else %}
+
+            <center>
+                <div  style="padding:1rem">
+                    <h3><b> {{application.EventName}} team officials</b></h3>
+                 </div>
+            </center>
+        {% endif %}
+
+        <form method="post"  enctype="multipart/form-data" style="width:inherit">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline">
+                    
+                        <input required type="text" name="FirstName" placeholder="Team official first name."  class="form-control form-control-lg">
+                        <label class="form-label" for="FirstName">First Name</label>
+                
+                    </div>
+
+                </div>
+
+            
+            
+                <div class="col-md-6 mb-4">
+
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    
+                    <input required  type="text" name="LastName" placeholder="Official last name"  class="form-control form-control-lg">
+                    <label class="form-label" for="LastName">Last Name</label>
+                
+                </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline">
+
+                    
+                        <select required name="Gender" class="form-control form-control-lg">
+                            <option value="Male">
+                                Male
+                            </option>
+                            <option value="Femal">
+                                Female
+                            </option>
+                            <option value="Other">
+                                Other
+                            </option>
+                        </select>
+
+                        <label class="form-label" for="EndDate">Gender</label>
+                
+                    </div>
+
+                </div>
+
+            
+            
+                <div class="col-md-6 mb-4">
+
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    
+                    <input required  type="text" name="Designation"   class="form-control form-control-lg">
+                    <label class="form-label" for="Designation">Official Designation</label>
+                
+                </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline">
+                    
+                        <select required  name="IDCopySubmited" class="form-control form-control-lg">
+                            <option value="yes">
+                                Yes
+                            </option>
+                            <option value="no">
+                                No
+                            </option>
+                        </select>
+
+                        <label class="form-label" for="IDCopySubmited">Is the official id copy submited?</label>
+
+                
+                    </div>
+
+                </div>
+
+            
+            
+                <div class="col-md-6 mb-4">
+
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    
+                    <select required   name="AcceptanceofTeamAppointment"  class="form-control form-control-lg">
+                        <option value="yes">
+                            Yes
+                        </option>
+                        <option value="no">
+                            No 
+                        </option>
+                    <select>
+                    <label class="form-label" for="AcceptanceofTeamAppointment">Is the acceptance of team appointment submited?</label>
+                
+                </div>
+
+                </div>
+            </div>
+            
+      
+
+
+            <input class="btn btn-default btn-primary" style="width:100%" type="submit" value="Save Official details"/> 
+        </form>
+
+
+
+    </div>
+    {% if teamOfficials %}
+        <hr/>
+        <div class="container">
+            {% if teamOfficials %}
+            <div style="padding:1rem; display:flex;justify-content:space-between">
+
+                <div>
+                    <h2><b>Selected team officials</b></h2>
+                </div>
+                <div>
+                    <a href="{% url 'AddRepp' applicationId=application.ApplicationId %}" class="btn btn-default btn-success">
+                        Move on to the next step>>
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+            <div>
+
+                <div class="row">
+                    {% if teamOfficials %}
+                        {% for official in teamOfficials %}
+                         
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
+                                            {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
+                                            <img style="width:inherit; width:100%;border:solid;max-height:320px" src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/>
+                                            
+                                        </div>
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2" style="display:flex; justify-content: space-between;">
+                                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
+                                                    {{ official.FirstName}} {{official.LastName}}
+                                                </div>
+                                                
+                                            </div>
+                                           
+                                        </div>
+                                        <div class="row no-gutters align-items-center" style="padding:1rem">
+                                            <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;justify-content:center" >
+                                                
+                                                    {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
+                                                     {% endcomment %}
+                                                    
+                                                
+                                            
+                                                    
+                                                    <a style="color: #FF69B4;padding:0.5rem" href="{% url 'remove_team_official' officialId=official.TeamOfficialId %}"><i class="fas  fa-trash-alt bin-icon"></i></a>
+                                                
+                                                    <a style="color: #FF69B4;padding:0.5rem" href="{% url 'update_team_official' officialId=official.TeamOfficialId %}" style="padding:5px"><i class="fas  fa-pencil-alt edit-icon"></i></a>
+                                            
+                                            </div>
+                                        </div>
+                                        
+                                
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor%}
+                    {%endif%}
+    
+        
+    
+    
+    
+    
+                
+    
+    
+                </div>
+    
+            <div>
+
+        </div>
+    {% endif %}
+
+
+
+{% endblock %}
+
+
+
+

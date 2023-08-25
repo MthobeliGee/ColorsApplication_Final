@@ -1,0 +1,254 @@
+
+
+
+{% extends "MyApp/base.html" %}
+
+{% block content %}
+    {% load static %}
+    {% if messages %}
+        {% for message in messages %}
+            <br/>
+            <div>
+                <center>
+                    <div style="padding:1rem;  border:solid 2px #FF69B4; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% endif %}">
+                    <p >
+                        <b> {{ message }}</b>
+                    </p>
+                    </div>
+                </center>
+            </div>
+
+        {% endfor %}
+    {% endif %}
+
+    <div class="container">
+        <div style="padding:1rem; display:flex;justify-content:space-between">
+
+            <div>
+                <h3><b>{{application.EventName}} represantatives</b> 
+            </div>
+            <div>
+                <a style="color:white" href="{% url 'AddRepp' applicationId=application.ApplicationId %}" class="btn btn-default btn-warning">
+                    Abort action
+                </a>
+            </div>
+        </div>
+
+        <form method="post"  enctype="multipart/form-data" style="width:inherit">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline">
+                    
+                        <input  type="text" name="FirstName" value="{{represantative.FirstName}}"  class="form-control form-control-lg">
+                        <label class="form-label" for="FirstName">First Name</label>
+                
+                    </div>
+
+                </div>
+
+            
+            
+                <div class="col-md-6 mb-4">
+
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    
+                    <input   type="text" name="Surname" value="{{represantative.Surname}}"  class="form-control form-control-lg">
+                    <label class="form-label" for="Surname">Last Name</label>
+                
+                </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline" style="display:flex;flex-direction: column">
+                        
+                        <input   type="text" name="PhoneNumber" value="{{represantative.PhoneNumber}}"  class="form-control form-control-lg">
+                        <label class="form-label" for="PhoneNumber">Phone Number</label>
+                    
+                    </div>
+
+                </div>
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline">
+
+                    
+                        <select  name="Gender" class="form-control form-control-lg">
+                            <option value="none">
+                                Select
+                            </option>
+                            <option value="Male">
+                                Male
+                            </option>
+                            <option value="Femal">
+                                Female
+                            </option>
+                            <option value="Other">
+                                Other
+                            </option>
+                        </select>
+
+                        <label class="form-label" for="EndDate">Gender: <b>{{represantative.Gender}}</label>
+                
+                    </div>
+
+                </div>
+
+            
+            
+                
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline" style="display:flex;flex-direction: column">
+                    
+                        <input   type="email" name="Email" value="{{represantative.Email}}"   class="form-control form-control-lg">
+                        <label class="form-label" for="Email">Email Address</label>
+                    
+                    </div>
+                </div>
+
+            
+            
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline" style="display:flex;flex-direction: column">
+                    
+                        <input   type="text" name="City" value="{{represantative.City}}"  class="form-control form-control-lg">
+                        <label class="form-label" for="City">City</label>
+                    
+                    </div>
+
+                </div>
+            </div>
+            <!--*****************************************-->
+            <div class="row">
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline" style="display:flex;flex-direction: column">
+                    
+                        <input   type="text" name="Province" value="{{represantative.Province}}"  class="form-control form-control-lg">
+                        <label class="form-label" for="Province">Province</label>
+                    
+                    </div>
+                </div>
+
+            
+            
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline" style="display:flex;flex-direction: column">
+                    
+                        <select  name="RepresatativeType"   class="form-control form-control-lg">
+                            <option value="none">
+                                Select
+                            </option>
+                            <option value="Junior">
+                                Junior
+                            </option>
+                            <option value="Senior">
+                                Senior
+                            </option>
+                        </select>
+                        <label class="form-label" for="City">Represatative Type: <b>{{represantative.RepresatativeType}}</label>
+                    
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline">
+                    
+                        <select  name="IDCopySubmited" class="form-control form-control-lg">
+                            <option value="none">
+                                Select
+                            </option>
+                            <option value="yes">
+                                Yes
+                            </option>
+                            <option value="no">
+                                No
+                            </option>
+                        </select>
+
+                        <label class="form-label" for="IDCopySubmited">Is the official id copy submited: 
+                            <b>{% if represantative.IDCopySubmited == True %}
+                                    Yes
+                                {% else %}
+                                    No
+                                {% endif %}
+                            </b>
+
+
+                        </label>
+
+                
+                    </div>
+
+                </div>
+
+            
+            
+                <div class="col-md-6 mb-4">
+
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    
+                    <select    name="AcceptanceofTeamAppointment"  class="form-control form-control-lg">
+                        <option value="none">
+                            Select
+                        </option>
+                        <option value="yes">
+                            Yes
+                        </option>
+                        <option value="no">
+                            No 
+                        </option>
+                    <select>
+                    <label class="form-label" for="AcceptanceofTeamAppointment">Is the acceptance of team appointment submited:
+                        <b>
+                            {% if represantative.AcceptanceofTeamAppointment == True%}
+                                Yes
+                            {% else %}
+                                No
+                            {% endif %}
+                        </b>
+
+                    </label>
+                
+                </div>
+
+                </div>
+            </div>
+            
+      
+
+
+            <input class="btn btn-default btn-primary" style="width:100%" type="submit" value="Save details"/> 
+            <div style="display:flex; justify-content:center;padding:1rem">
+
+                <a style="color:white; width:30%" href="{% url 'AddRepp' applicationId=application.ApplicationId %}" class="btn btn-default btn-warning">
+                    Abort action
+                </a>
+
+            </div>
+        </form>
+
+
+
+    </div>
+
+
+
+
+{% endblock %}
+
+
+
+

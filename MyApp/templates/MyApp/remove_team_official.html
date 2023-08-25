@@ -1,0 +1,80 @@
+
+
+
+{% extends "MyApp/base.html" %}
+
+{% block content %}
+    {% load static %}
+    {% if messages %}
+        {% for message in messages %}
+            <br/>
+            <div>
+                <center>
+                    <div style="padding:1rem;  border:solid 2px #FF69B4; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% endif %}">
+                    <p >
+                        <b> {{ message }}</b>
+                    </p>
+                    </div>
+                </center>
+            </div>
+
+        {% endfor %}
+    {% endif %}
+
+    <div class="container">
+
+        <form method="post"  enctype="multipart/form-data" style="width:inherit">
+            {% csrf_token %}
+          
+            <div>
+                <center>
+                    <div>
+
+                        <p>
+                            <label><b>First name: </b>{{teamOfficial.FirstName}}</label><br/>
+                            <label><b>Last Name: </b>{{teamOfficial.LastName}}</label><br/>
+                            <label><b>Gemder: </b>{{teamOfficial.Gender}}</label><br/>
+                            <label><b>Designation: </b>{{teamOfficial.Designation}}</label>
+                            <label><b>Id copy submited: </b>
+                                {% if teamOfficial.IDCopySubmited == True %}
+                                    Yes
+                                {% else %}
+                                    No
+                                {% endif %}
+                            </label><br/>
+                            <label><b>Acceptance of team appointment submited: </b>
+                                {% if AcceptanceofTeamAppointment.True %}
+                                    Yes
+                                {% else %}
+                                    No
+                                {% endif %}
+                            </label><br/>
+
+                            <div>
+                                <input type="submit" value="Confirm record delete" class="btn btn-default btn-success"/>
+                                <a href="{% url 'addTeamOfficial' applicationId=application.ApplicationId %}" 
+                                    class="btn btn-default btn-danger">
+                                    Cancel Action
+                                </a>
+                            </div>
+
+
+
+                    <div>
+
+                </center>
+            
+        </form>
+
+
+
+    </div>
+   
+
+
+
+{% endblock %}
+
+
+
+

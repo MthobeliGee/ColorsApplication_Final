@@ -1,0 +1,159 @@
+
+
+
+{% extends "MyApp/base.html" %}
+
+{% block content %}
+    {% load static %}
+    {% if messages %}
+        {% for message in messages %}
+            <br/>
+            <div>
+                <center>
+                    <div style="padding:1rem;  border:solid 2px #FF69B4; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% endif %}">
+                    <p >
+                        <b> {{ message }}</b>
+                    </p>
+                    </div>
+                </center>
+            </div>
+
+        {% endfor %}
+    {% endif %}
+
+    <div class="container">
+       
+            <div style="padding:1rem; display:flex;justify-content:space-between">
+
+                <div>
+                    <h3><b>{{application.EventName}} committee Member</b>    
+                </div>
+                <div>
+                    <a href="{% url 'Add_Committee_Member' applicationId=application.ApplicationId %}" class="btn btn-default btn-danger">
+                        Abort Action
+                    </a>
+                </div>
+            </div>
+       
+
+
+        <form method="post"  enctype="multipart/form-data" style="width:inherit">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline">
+                    
+                        <input type="text" name="FirstName" value="{{committeeMember.FirstName}}"  class="form-control form-control-lg">
+                        <label class="form-label" for="FirstName">First Name</label>
+                
+                    </div>
+
+                </div>
+
+            
+            
+                <div class="col-md-6 mb-4">
+
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    
+                    <input   type="text" name="Surname" value="{{committeeMember.Surname}}"  class="form-control form-control-lg">
+                    <label class="form-label" for="Surname">Last Name</label>
+                
+                </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline">
+
+                    
+                        <select  name="Gender" class="form-control form-control-lg">
+                            <option value="none">
+                                Select
+                            </option>
+                            <option value="Male">
+                                Male
+                            </option>
+                            <option value="Femal">
+                                Female
+                            </option>
+                            <option value="Other">
+                                Other
+                            </option>
+                        </select>
+
+                        <label class="form-label" for="EndDate">Gender: <b>{{committeeMember.Gender}}</b></label>
+                
+                    </div>
+
+                </div>
+
+            
+            
+                <div class="col-md-6 mb-4">
+
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    
+                    <input   type="text" name="PhoneNumber" value="{{committeeMember.PhoneNumber}}"  class="form-control form-control-lg">
+                    <label class="form-label" for="PhoneNumber">Phone Number</label>
+                
+                </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline" style="display:flex;flex-direction: column">
+                    
+                        <input  type="email" name="Email" value="{{committeeMember.Email}}"   class="form-control form-control-lg">
+                        <label class="form-label" for="Email">Email Address</label>
+                    
+                    </div>
+                </div>
+
+            
+            
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline" style="display:flex;flex-direction: column">
+                    
+                        <input  type="text" name="City"  value="{{committeeMember.City}}" class="form-control form-control-lg">
+                        <label class="form-label" for="City">City</label>
+                    
+                    </div>
+
+                </div>
+            </div>
+            <!--*****************************************-->
+            <div >
+
+                    
+                <input  type="text" name="Province" value="{{committeeMember.Province}}"   class="form-control form-control-lg">
+                <label class="form-label" for="Province">Province</label>
+ 
+            </div>
+            <input class="btn btn-default btn-primary" style="width:100%" type="submit" value="Save changes"/> 
+            <div style="padding:1rem; display:flex; justify-content:center">
+                <a href="{% url 'Add_Committee_Member' applicationId=application.ApplicationId %}" class="btn btn-default btn-danger">
+                    Abort Action
+                </a>
+
+            </div>
+        </form>
+
+
+
+    </div>
+
+
+
+
+{% endblock %}
+
+
+
+

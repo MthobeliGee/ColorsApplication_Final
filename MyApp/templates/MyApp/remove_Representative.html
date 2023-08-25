@@ -1,0 +1,101 @@
+
+
+
+{% extends "MyApp/base.html" %}
+
+{% block content %}
+    {% load static %}
+    {% if messages %}
+        {% for message in messages %}
+            <br/>
+            <div>
+                <center>
+                    <div style="padding:1rem;  border:solid 2px #FF69B4; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% endif %}">
+                    <p >
+                        <b> {{ message }}</b>
+                    </p>
+                    </div>
+                </center>
+            </div>
+
+        {% endfor %}
+    {% endif %}
+
+    <div class="container">
+       
+            <div style="padding:1rem; display:flex;justify-content:space-between">
+
+                <div>
+                    <h3><b>{{application.EventName}} represantative</b>    
+                </div>
+                <div>
+                    <a href="{% url 'AddRepp' applicationId=application.ApplicationId %}" class="btn btn-default btn-danger">
+                        Abort action
+                    </a>
+                </div>
+            </div>
+
+
+        <form method="post"  enctype="multipart/form-data" style="width:inherit">
+            {% csrf_token %}
+           <div>
+
+                <center>
+
+
+                    <div>
+
+                        <p>
+                            <label><b>First name: </b>{{represantative.FirstName}}</label><br/>
+                            <label><b>Last name: </b>{{represantative.Surname}}</label><br/>
+                            <label><b>Gender: </b>{{represantative.Gender}}</label><br/>
+                            <label><b>Email: </b>{{represantative.Email}}</label><br/>
+                            <label><b>Phone number: </b>{{represantative.PhoneNumber}}</label><br/>
+                            <label><b>City: </b>{{represantative.City}}</label><br/>
+                            <label><b>Province: </b>{{represantative.Province}}</label><br/>
+                            <label><b>Level: </b>{{represantative.RepresatativeType}}</label><br/>
+                            <label><b>ID copy submited: </b> 
+                                {% if represantative.IDCopySubmited == True %}
+                                    Yes
+                                {%else%}
+                                    No
+                                {% endif %}
+                            </label>
+
+                            <label><b>Acceptance of team appointment submited: </b>
+                                {% if represantative.AcceptanceofTeamAppointment == True %}
+                                    Yes
+
+                                {% else %}
+                                    No
+
+                                {% endif %}
+                            </label>
+                    </div>
+                </center>
+           </div>
+      
+
+
+            <input class="btn btn-default btn-primary" style="width:100%" type="submit" value="Delete record"/>
+            <div style="display:flex;justify-content:center; padding:1rem">
+
+                <a href="{% url 'AddRepp' applicationId=application.ApplicationId %}" class="btn btn-default btn-danger" style="">
+                    Abort Action
+                </a>
+                
+            </div>
+        </form>
+
+
+
+    </div>
+
+
+
+
+{% endblock %}
+
+
+
+

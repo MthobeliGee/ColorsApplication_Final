@@ -1,0 +1,545 @@
+{% extends "MyApp/base.html" %}
+
+{% block content %}
+    {% load static %}
+    {% if messages %}
+        {% for message in messages %}
+            <br/>
+            <div>
+                <center>
+                    <div style="padding:1rem;  border:solid 2px #FF69B4; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% endif %}">
+                    <p >
+                        <b> {{ message }}</b>
+                    </p>
+                    </div>
+                </center>
+            </div>
+
+        {% endfor %}
+    {% endif %}
+
+<div class="container">
+    <center>
+
+        <div>
+            <h1>
+                {{application.EventName}}
+            </h1>
+
+        </div>
+        <hr/>
+        <div>
+            <div style="display:flex; justify-content:space-between;padding:1rem">
+                <div>
+                    <h4><b>{{application.EventName}} application details</b></h4>
+                </div>
+                <div>
+                    <a href="{% url 'UpdateDetails' ApplicationId=application.ApplicationId %}" >
+                        <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>
+                    </a>
+                </div>
+            </div>
+
+            <label><b>Event name: </b>{{application.EventName}}</label><br/>
+            <label><b>Start date: </b>{{application.StartDate}}</label><br/>
+            <label><b>End date: </b>{{application.EndDate}}</label><br/>
+            <label><b>Host city: </b>{{application.HostCity}}</label><br/>
+            <label><b>Host province: </b>{{application.HostProvince}}</label><br/>
+            <label><b>Number of team members: </b>{{application.NumberOfTeam}}</label><br/>
+            <label><b>Selection approved date: </b>{{application.SelectionApprovedDate}}</label><br/>
+            <label><b>Travel Date Time: </b>{{application.TravelDateTime}}</label><br/>
+            <label><b>Mode Of Travel: </b>{{application.ModeOfTravel}}</label><br/>
+            
+
+        </div>
+        <hr/>
+        <div>
+            <div style="display:flex; justify-content:space-between; padding:1rem">
+                <div>
+                    <h4><b>{{application.EventName}} application team officials</b></h4>
+                </div>
+                <div>
+                    <a href="{% url 'addTeamOfficial' applicationId=application.ApplicationId %}" >
+                        <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>
+                    </a>
+                </div>
+            </div>
+            {% if teamOfficials %}
+      
+                <div class="container">
+                    
+                    <div>
+
+                        <div class="row">
+                            {% if teamOfficials %}
+                                {% for official in teamOfficials %}
+                                
+                                    <div class="col-xl-3 col-md-6 mb-4">
+                                        <div class="card border-left-primary shadow h-100 py-2">
+                                            <div class="card-body">
+                                                <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
+                                                    {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
+                                                    <img style="width:inherit; width:100%;border:solid;max-height:320px" src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/>
+                                                    
+                                                </div>
+                                                <div class="row no-gutters align-items-center">
+                                                    <div class="col mr-2" style="display:flex; justify-content: space-between;">
+                                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
+                                                            {{ official.FirstName}} {{official.LastName}}
+                                                        </div>
+                                                        
+                                                    </div>
+                                                
+                                                </div>
+                                                <div class="row no-gutters align-items-center" style="padding:1rem">
+                                                    <div class="col-auto"  styl="display:flex; justify-content:space-between;" >
+                                                        
+                                                            {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
+                                                            {% endcomment %}
+                                                            
+                                                       
+                                                            
+                                                        
+                                                                <a style="color: #FF69B4;padding:0.5rem" href="{% url 'remove_team_official' officialId=official.TeamOfficialId %}"><i class="fas  fa-trash-alt bin-icon"></i></a>&nbsp; 
+                                                         
+                                                                <a style="color: #FF69B4;padding:0.5rem" href="{% url 'update_team_official' officialId=official.TeamOfficialId %}" style="padding:5px"><i class="fas  fa-pencil-alt edit-icon"></i></a> &nbsp;
+                                                            
+                                                            
+                                                        
+                                                                <a style="color: #FF69B4;padding:0.5rem" href="{% url 'teamOfficialDetails' teamOfficialId=official.TeamOfficialId %}"><i class="fas fa-eye view-icon"></i>   </a> 
+                                                            
+                                                    </div>
+                                                </div>
+                                                
+                                                
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                {% endfor%}
+                            {%endif%}
+            
+                
+            
+            
+            
+            
+                        
+            
+            
+                        </div>
+            
+                    <div>
+
+                </div>
+            {% endif %}
+
+            
+            
+
+        </div> 
+        <hr/>
+        <div>
+            <div style="display:flex; justify-content:space-between; padding:1rem">
+                <div>
+                    <h4><b>{{application.EventName}} application team represantatives</b></h4>
+                </div>
+                <div>
+                    <a href="{% url 'AddRepp' applicationId=application.ApplicationId %}" >
+                        <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>
+                    </a>
+                </div>
+            </div>
+          
+
+            {% if represantatives %}
+                <div class="row">
+
+                    {% for represantative in represantatives %}
+                
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
+                                        {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
+                                        <img style="width:inherit; width:100%;border:solid;max-height:320px" src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/>
+                                        
+                                    </div>
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2" style="display:flex; justify-content: space-between;">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
+                                                {{ represantative.FirstName}} {{represantative.Surname}}
+                                            </div>
+                                            
+                                        </div>
+                                    
+                                    </div>
+                                    <div class="row no-gutters align-items-center" style="padding:1rem">
+                                        <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;justify-content:center" >
+                                            
+                                                {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
+                                                {% endcomment %}
+                                                
+                                            
+                                        
+                                                
+                                                <a style="color: #FF69B4;padding:0.5rem" href="{% url 'remove_Representative' represantativeId=represantative.RepresantativeId %}"><i class="fas  fa-trash-alt bin-icon"></i></a>
+                                            
+                                                <a style="color: #FF69B4;padding:0.5rem" href="{% url 'update_Representative' represantativeId=represantative.RepresantativeId %}" style="padding:5px"><i class="fas  fa-pencil-alt edit-icon"></i></a>
+                                                <a href="{% url 'represantativeDetails' represantativeId=represantative.RepresantativeId %}" style="color: #FF69B4;padding:0.5rem"><i class="fas fa-eye view-icon"></i></a>
+                                        </div>
+                                    </div>
+                                    
+                            
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor%}
+                </div>
+            {%endif%}
+            
+
+        </div> 
+        <hr/>
+        <div>
+            <div style="display:flex; justify-content:space-between; padding:1rem">
+                <div>
+                    <h4><b>{{application.EventName}} application committee members</b></h4>
+                </div>
+                <div>
+                    <a href="{% url 'Add_Committee_Member' applicationId=application.ApplicationId %}" >
+                        <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="row">
+                {% if CommitteeMembers %}
+                    {% for CommitteeMember in CommitteeMembers %}
+                     
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
+                                        {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
+                                        <img style="width:inherit; width:100%;border:solid;max-height:320px" src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/>
+                                        
+                                    </div>
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2" style="display:flex; justify-content: space-between;">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
+                                                {{ CommitteeMember.FirstName}} {{CommitteeMember.Surname}}
+                                            </div>
+                                            
+                                        </div>
+                                       
+                                    </div>
+                                    <div class="row no-gutters align-items-center" style="padding:1rem">
+                                        <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;justify-content:center" >
+                                            
+                                                {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
+                                                 {% endcomment %}
+                                                
+                                            
+                                           
+                                                
+                                                <a title="Remove Committee Member?" style="color: #FF69B4;padding:0.5rem" href="{% url 'Remove_CommitteeMember' memberId=CommitteeMember.CommitteeMemberId %}"><i class="fas  fa-trash-alt bin-icon"></i></a>
+                                             
+                                                <a style="color: #FF69B4;padding:0.5rem" href="{% url 'update_CommiteeMember' CommitteeMemberId=CommitteeMember.CommitteeMemberId %}" style="padding:5px"><i class="fas  fa-pencil-alt edit-icon"></i></a>
+                                                <a href="{% url 'CommitteeMemberDetails' committeeMemberId=CommitteeMember.CommitteeMemberId %}" style="color: #FF69B4;padding:0.5rem"><i class="fas fa-eye view-icon"></i></a>
+                                                
+
+                                       
+                                            </div>
+                                    </div>
+                                    
+                            
+                                </div>
+                            </div>
+                        </div>
+                        
+                    {% endfor%}
+                {%endif%}
+
+    
+
+
+
+
+            
+
+
+            </div>
+
+            
+            
+
+        </div> 
+
+        <hr/>
+        <div>
+            <div style="display:flex; justify-content:space-between; padding:1rem">
+                <div>
+                    <h4><b>{{application.EventName}} Documents</b></h4>
+                </div>
+                <div>
+                    <a href="{% url 'Upload_Documents' applicationId=application.ApplicationId %}" >
+                        <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>
+                    </a>
+                </div>
+            </div>
+          
+
+            <div class="row">
+           
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
+                                        {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
+                                        {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
+                                      
+                                        <iframe id="iframe" src="{{application.RegulationsInterestDeclaration}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
+
+                                        </iframe>
+                                    </div>
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2" style="display:flex; justify-content: space-between;">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
+                                                Regulations Interest Declaration
+                                            </div>
+                                            
+                                        </div>
+                                    
+                                    </div>
+                                    <div class="row no-gutters align-items-center" style="padding:1rem">
+                                        <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;" >
+                                            
+                                                {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
+                                                {% endcomment %}
+
+                                                
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                   
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
+                                        {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
+                                        {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
+                                      
+                                        <iframe id="iframe" src="{{application.SelectionCriteriaProtocols}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
+
+                                        </iframe>
+                                    </div>
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2" style="display:flex; justify-content: space-between;">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
+                                                Selection Criteria Protocols
+                                            </div>
+                                            
+                                        </div>
+                                    
+                                    </div>
+                                    <div class="row no-gutters align-items-center" style="padding:1rem">
+                                        <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;" >
+                                            
+                                                {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
+                                                {% endcomment %}
+
+                                                
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
+                                        {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
+                                        {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
+                                      
+                                        <iframe id="iframe" src="{{application.GeneralRegulationSelectionProcedure}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
+
+                                        </iframe>
+                                    </div>
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2" style="display:flex; justify-content: space-between;">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
+                                                General Regulation Selection Procedure
+                                            </div>
+                                            
+                                        </div>
+                                    
+                                    </div>
+                                    <div class="row no-gutters align-items-center" style="padding:1rem">
+                                        <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;" >
+                                            
+                                                {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
+                                                {% endcomment %}
+
+                                                
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
+                                        {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
+                                        {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
+                                      
+                                        <iframe id="iframe" src="{{application.TeamOfficialDuties}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
+
+                                        </iframe>
+                                    </div>
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2" style="display:flex; justify-content: space-between;">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
+                                                Team Official Duties
+                                            </div>
+                                            
+                                        </div>
+                                    
+                                    </div>
+                                    <div class="row no-gutters align-items-center" style="padding:1rem">
+                                        <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;" >
+                                            
+                                                {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
+                                                {% endcomment %}
+
+                                                
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
+                                        {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
+                                        {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
+                                      
+                                        <iframe id="iframe" src="{{application.HighPerformancePlan}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
+
+                                        </iframe>
+                                    </div>
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2" style="display:flex; justify-content: space-between;">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
+                                                High Performance Plan
+                                            </div>
+                                            
+                                        </div>
+                                    
+                                    </div>
+                                    <div class="row no-gutters align-items-center" style="padding:1rem">
+                                        <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;" >
+                                            
+                                                {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
+                                                {% endcomment %}
+
+                                                
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
+                                        {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
+                                        {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
+                                      
+                                        <iframe id="iframe" src="{{application.EventInvitation}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
+
+                                        </iframe>
+                                    </div>
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2" style="display:flex; justify-content: space-between;">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
+                                                Event Invitation 
+                                            </div>
+                                            
+                                        </div>
+                                    
+                                    </div>
+                                    <div class="row no-gutters align-items-center" style="padding:1rem">
+                                        <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;" >
+                                            
+                                                {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
+                                                {% endcomment %}
+
+                                                
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+
+
+            
+
+
+            </div>
+            
+            <div class="container">
+                <center>
+                    <button class="btn btn-success">
+                        Submit Application
+
+                    </button>
+                </center>
+            </div>
+        </div>
+    </center>
+
+
+</div>
+
+
+
+
+
+
+
+
+<script>
+
+    iframe = document.getElementById("iframe");
+    console.log(iframe);
+</script>
+
+
+
+{% endblock %}

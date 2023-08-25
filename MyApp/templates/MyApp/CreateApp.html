@@ -1,0 +1,202 @@
+
+
+
+{% extends "MyApp/base.html" %}
+
+{% block content %}
+    {% load static %}
+    {% if messages %}
+        {% for message in messages %}
+            <br/>
+            <div>
+                <center>
+                    <div style="padding:1rem;  border:solid 2px #FF69B4; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% endif %}">
+                    <p >
+                        <b> {{ message }}</b>
+                    </p>
+                    </div>
+                </center>
+            </div>
+
+        {% endfor %}
+    {% endif %}
+
+    <div class="container">
+
+        <form method="post"  enctype="multipart/form-data" style="width:inherit">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline">
+                    
+                        <input required type="text" name="EventName" placeholder="Name of event"  class="form-control form-control-lg">
+                        <label class="form-label" for="EventName">Event Name</label>
+                
+                    </div>
+
+                </div>
+
+            
+            
+                <div class="col-md-6 mb-4">
+
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    
+                    <input required  type="date" name="StartDate"  class="form-control form-control-lg">
+                    <label class="form-label" for="Middlename">Start Date</label>
+                
+                </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline">
+                    
+                        <input required type="date" name="EndDate" class="form-control form-control-lg">
+                        <label class="form-label" for="EndDate">End Date</label>
+                
+                    </div>
+
+                </div>
+
+            
+            
+                <div class="col-md-6 mb-4">
+
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    
+                    <input required  type="number" name="NumberOfTeam"  class="form-control form-control-lg">
+                    <label class="form-label" for="NumberOfTeam">Number Of Team Members</label>
+                
+                </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline">
+                    
+                        <input required type="text" name="HostCity" class="form-control form-control-lg">
+                        <label class="form-label" for="HostCity">Host City</label>
+                
+                    </div>
+
+                </div>
+
+            
+            
+                <div class="col-md-6 mb-4">
+
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    
+                    <input required  type="text" name="HostProvince"  class="form-control form-control-lg">
+                    <label class="form-label" for="Middlename">Host Province</label>
+                
+                </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline">
+                    
+                        <input required type="text" name="MethodOfSelection" class="form-control form-control-lg">
+                        <label class="form-label" for="MethodOfSelection">Method Of Selection</label>
+                
+                    </div>
+
+                </div>
+
+            
+            
+                <div class="col-md-6 mb-4">
+
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    
+                   
+                    <input type="date" name="SelectionApprovedDate" class="form-control form-control-lg" />
+                        
+                    <label class="form-label" for="RepresatativeType">Team Selection Approved  Date</label>
+                
+                </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline">
+                    
+                        <input required type="text" name="ModeOfTravel" class="form-control form-control-lg">
+                        <label class="form-label" for="ModeOfTravel">Mode of travel</label>
+                
+                    </div>
+
+                </div>
+
+            
+            
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline" style="display:flex;flex-direction: column">
+                        
+                        <div style="display:flex; ">
+                            <input required  type="date" name="TravelDate" style="border-right:none"  class="form-control form-control-lg">
+                            <input required type="time" name="TravelTime" style="padding:0.5rem; border:solid 1px grey; border-left:none; border-raduis:12px"/>
+                        </div>
+                        <label class="form-label" for="TravelDateTime">Travel Date And Time</label>
+                    
+                    </div>
+
+                </div>
+            </div>
+
+
+            <input class="btn btn-default btn-primary" style="width:100%" type="submit" value="Save and continue"/> 
+        </form>
+
+
+
+    </div>
+
+
+
+{% endblock %}
+
+
+
+<hr/>
+
+
+{% comment %} 
+
+<form method="post" >
+    {% csrf_token %}
+
+
+
+
+
+
+
+
+
+   
+
+
+
+    <label for="ModeOfTravel">Mode Of Travel</label><br/>
+
+    <input required type="Text" name="ModeOfTravel" placeholder="Mode Of Travel"/><br/><br/>
+
+
+
+    <input type="submit" value="Submit" />
+</form>
+
+<hr/> {% endcomment %}

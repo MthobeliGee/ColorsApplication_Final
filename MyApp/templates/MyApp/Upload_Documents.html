@@ -1,0 +1,390 @@
+
+
+
+{% extends "MyApp/base.html" %}
+
+{% block content %}
+    {% load static %}
+    {% if messages %}
+        {% for message in messages %}
+            <br/>
+            <div>
+                <center>
+                    <div style="padding:1rem;  border:solid 2px #FF69B4; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% endif %}">
+                    <p >
+                        <b> {{ message }}</b>
+                    </p>
+                    </div>
+                </center>
+            </div>
+
+        {% endfor %}
+    {% endif %}
+    <!--
+        <input required type="text" name="FirstName" placeholder="First name"  class="form-control form-control-lg">
+                        <label class="form-label" for="FirstName">First Name</label>
+    -->
+    <div class="container">
+     
+            <div style="padding:1rem; display:flex;justify-content:space-between">
+
+                <div>
+                    <h3><b>{{application.EventName}} documents</b>    
+                </div>
+                <div>
+                    
+                </div>
+            </div>
+        
+
+
+        <form method="post"  enctype="multipart/form-data" style="width:inherit">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline">
+                    
+                        <input id="RegulationsInterestDeclarationID" required type="file" class="form-control form-control-lg">
+                        <label class="form-label" for="FirstName" id="lblRegulationsInterestDeclaration">Regulations Interest Declaration <b id="msgRegulationsInterestDeclaration"> </b></label>
+                        <input type="hidden" id="RegulationsInterestDeclaration" name="RegulationsInterestDeclaration"/>
+                
+                    </div>
+
+                </div>
+
+            
+            
+                <div class="col-md-6 mb-4">
+
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    
+                    <input required  type="file" id="SelectionCriteriaProtocolsId" placeholder="Last name"  class="form-control form-control-lg">
+                    <label class="form-label" for="Surname" id="lblSelectionCriteriaProtocols">Selection Criteria Protocols<b id="msgSelectionCriteriaProtocols"></b></label>
+                    <input type="hidden" id="SelectionCriteriaProtocols" name="SelectionCriteriaProtocols"/>
+
+                
+                </div>
+
+                </div>
+            </div>
+
+
+            <!--******************************************************************************-->
+            <div class="row">
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline">
+                    
+                        <input id="GeneralRegulationSelectionProcedureID" required type="file" class="form-control form-control-lg">
+                        <label class="form-label" for="GeneralRegulationSelectionProcedure" id="lblGeneralRegulationSelectionProcedure">General Regulation Selection Procedure<b id="msgGeneralRegulationSelectionProcedure"></b></label>
+                        <input type="hidden" id="GeneralRegulationSelectionProcedure" name="GeneralRegulationSelectionProcedure"/>
+                
+                    </div>
+
+                </div>
+
+            
+            
+                <div class="col-md-6 mb-4">
+
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    
+                    <input required  type="file" id="TeamOfficialDutiesId" placeholder="Last name"  class="form-control form-control-lg">
+                    <label class="form-label" for="Surname" id="lblTeamOfficialDuties">Team Official Duties<b id="msgTeamOfficialDuties"></b></label>
+                    <input type="hidden" id="TeamOfficialDuties" name="TeamOfficialDuties"/>
+
+                
+                </div>
+
+                </div>
+            </div>
+            <!--*************************************************************************-->
+            <div class="row">
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline">
+                    
+                        <input id="HighPerformancePlanId" required type="file" class="form-control form-control-lg">
+                        <label class="form-label" for="HighPerformancePlan" id="lblHighPerformancePlan">High Performance Plan<b id="msgHighPerformancePlan"></b></label>
+                        <input type="hidden" id="HighPerformancePlan" name="HighPerformancePlan"/>
+                
+                    </div>
+
+                </div>
+
+            
+            
+                <div class="col-md-6 mb-4">
+
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    
+                    <input required  type="file" id="EventInvitationId" placeholder="Last name"  class="form-control form-control-lg">
+                    <label class="form-label" for="EventInvitation" id="lblEventInvitation">Event Invitation <b id="msgEventInvitation"></b></label>
+                    <input type="hidden" id="EventInvitation" name="EventInvitation"/>
+
+                
+                </div>
+
+                </div>
+            </div>
+
+            <div class="">
+           
+
+                    <div class="form-outline">
+                    
+                        <input id="DocumentationOfSelectionSubmittedId" required type="file" class="form-control form-control-lg">
+                        <label class="form-label" for="DocumentationOfSelectionSubmitted" id="lblDocumentationOfSelectionSubmitted">Documentation Of Selection<b id="msgDocumentationOfSelectionSubmitted"></b></label>
+                        <input type="hidden" id="DocumentationOfSelectionSubmitted" name="DocumentationOfSelectionSubmitted"/>
+                
+                    </div>
+
+          
+
+            
+            
+               
+            </div>
+            <input class="btn btn-default btn-primary" style="width:100%" type="submit" value="Save details"/> 
+        </form>
+
+        <img id="TheReview"/>
+
+    </div>
+    
+
+    <script>
+        RegulationsInterestDeclaration = document.getElementById('RegulationsInterestDeclarationID');
+        SelectionCriteriaProtocols = document.getElementById("SelectionCriteriaProtocolsId")
+
+        GeneralRegulationSelectionProcedure = document.getElementById("GeneralRegulationSelectionProcedureID")
+        AcceptanceOfTeamAppointment = document.getElementById("AcceptanceOfTeamAppointmentId")
+        DocumentationOfSelectionSubmitted = document.getElementById("DocumentationOfSelectionSubmittedId")
+        TeamOfficialDuties = document.getElementById("TeamOfficialDutiesId")
+
+        HighPerformancePlan = document.getElementById("HighPerformancePlanId")
+        EventInvitation = document.getElementById("EventInvitationId")
+        federation = "Net ball fed"
+       
+
+        DocumentationOfSelectionSubmitted.addEventListener("change",function() {
+            // document.getElementById('OfficialLetterhead_selected').innerHTML= '<h6 class="text-info"><b>uploading file.. please wait.</b></h6>';
+            whichFileType = 'DocumentationOfSelectionSubmitted'
+            file = DocumentationOfSelectionSubmitted.files[0]
+            msgId = document.getElementById('msg'+whichFileType)
+            if (msgId){
+                 msgId.innerHTML=null
+             }
+            if (validatefile(file, whichFileType) ==false){
+ 
+                 return;
+             }
+             else{
+ 
+                 uploadFile(file,federation,whichFileType)
+             }
+             return null;
+        });
+
+ 
+
+        RegulationsInterestDeclaration.addEventListener("change",function() {
+           // document.getElementById('OfficialLetterhead_selected').innerHTML= '<h6 class="text-info"><b>uploading file.. please wait.</b></h6>';
+           whichFileType = 'RegulationsInterestDeclaration'
+           file = RegulationsInterestDeclaration.files[0]
+           msgId = document.getElementById('msg'+whichFileType)
+           if (msgId){
+                msgId.innerHTML=null
+            }
+           if (validatefile(file, whichFileType) ==false){
+
+                return;
+            }
+            else{
+
+                uploadFile(file,federation,whichFileType)
+            }
+            return null;
+        }); 
+
+        SelectionCriteriaProtocols.addEventListener("change",function() {
+            // document.getElementById('OfficialLetterhead_selected').innerHTML= '<h6 class="text-info"><b>uploading file.. please wait.</b></h6>';
+            whichFileType = 'SelectionCriteriaProtocols'
+            file = SelectionCriteriaProtocols.files[0]
+            msgId = document.getElementById('msg'+whichFileType)
+            if (msgId){
+                msgId.innerHTML=null
+            }
+            if (validatefile(file, whichFileType) ==false){
+                return;
+            }
+            else{
+               
+                uploadFile(file,federation,whichFileType)
+            }
+             return null;
+        });
+
+        GeneralRegulationSelectionProcedure.addEventListener("change",function() {
+            // document.getElementById('OfficialLetterhead_selected').innerHTML= '<h6 class="text-info"><b>uploading file.. please wait.</b></h6>';
+            whichFileType = 'GeneralRegulationSelectionProcedure'
+            file = GeneralRegulationSelectionProcedure.files[0]
+            msgId = document.getElementById('msg'+whichFileType)
+            if (msgId){
+                msgId.innerHTML=null
+            }
+            if (validatefile(file, whichFileType) ==false){
+                return;
+            }
+            else{
+                
+                uploadFile(file,federation,whichFileType)
+            }
+            return null;
+        });
+
+        TeamOfficialDuties.addEventListener("change",function() {
+            // document.getElementById('OfficialLetterhead_selected').innerHTML= '<h6 class="text-info"><b>uploading file.. please wait.</b></h6>';
+            whichFileType = 'TeamOfficialDuties'
+            file = TeamOfficialDuties.files[0]
+            msgId = document.getElementById('msg'+whichFileType)
+            if (msgId){
+                msgId.innerHTML=''
+            }
+            
+            if (validatefile(file, whichFileType) ==false){
+                return;
+            }
+            else{
+                
+                uploadFile(file,federation,whichFileType)
+            }
+             return null;
+        });
+
+        HighPerformancePlan.addEventListener("change",function() {
+            // document.getElementById('OfficialLetterhead_selected').innerHTML= '<h6 class="text-info"><b>uploading file.. please wait.</b></h6>';
+            whichFileType = 'HighPerformancePlan'
+            file = HighPerformancePlan.files[0]
+            msgId = document.getElementById('msg'+whichFileType)
+            if (msgId){
+                msgId.innerHTML=null
+            }
+            if (validatefile(file, whichFileType) ==false){
+                return;
+            }
+            else{
+                
+                uploadFile(file,federation,whichFileType)
+            }
+            return null;
+        });
+
+        EventInvitation.addEventListener("change",function() {
+            // document.getElementById('OfficialLetterhead_selected').innerHTML= '<h6 class="text-info"><b>uploading file.. please wait.</b></h6>';
+            whichFileType = 'EventInvitation'
+            file = EventInvitation.files[0]
+            msgId = document.getElementById('msg'+whichFileType)
+            if (msgId){
+                msgId.innerHTML=null
+            }
+            if (validatefile(file, whichFileType) ==false){
+                return;
+            }
+            else{
+                
+                uploadFile(file,federation,whichFileType)
+            }
+            return null;
+        });
+    
+
+
+
+
+
+
+        const uploadFile = (file, federation, whichFileType) =>{
+           
+            var ext = file.name.split('.').reverse()[0]
+            oldFilrName = file.name
+            
+           
+           // document.getElementById('OfficialLetterhead_selected').innerHTML= '<h6 class="text-info"><b>uploading file... please wait.</b></h6>';
+            
+            const form_data = new FormData();
+            form_data.append('fileUpload',file);
+            form_data.append('whichFileType',whichFileType);
+            form_data.append('Federation', federation);
+          
+            //email
+            //upload.php https://governance.kznsc.com/upload.php   http://localhost/code1/upload.php"  
+            fetch("http://localhost/Colors_Documents/upload.php",{
+                method:"POST",
+                
+               // mode:'no-cors',
+                
+                body:form_data
+            }).then(function(response){
+                console.log(response.status)
+                id = "lbl"+whichFileType
+                lblError = document.getElementById(id)
+                if(response.status == "200"){
+                    console.log("Uploaded!")
+                    filelinK = document.getElementById(whichFileType)
+                    
+                    filelinK.value = 'http://localhost/Colors_Documents/uploads/'+federation+whichFileType+'.pdf'
+                    TheReview = document.getElementById("TheReview")
+                    msgId.innerHTML  = null
+                    
+                    msgId.innerHTML += ' (<i class="text-success">Uploaded</i>)'
+                }
+              
+            }).catch(function(error){
+                console.log("error")
+                msgId.innerHTML  = null
+               // document.getElementById('OfficialLetterhead_selected').innerHTML= '<small class="text-danger"><b>Something went wrong, please try again.</b></small>'
+               msgId.innerHTML += ' (<i class="text-danger">Something went wrong please try again</i>)'
+
+            });
+            //OfficialLetterhead.value =null;
+         
+     
+            
+            
+        } 
+
+        function validatefile(file, whichFileType){
+            isValid = true
+            var ext = file.name.split('.').reverse()[0]
+            oldFilrName = file.name
+            id = "lbl"+whichFileType
+            lblError = document.getElementById(id)
+            console.log("Ext: "+ext)
+            thefile= document.getElementById(whichFileType)
+            msgId =document.getElementById('msg'+whichFileType) 
+            if (ext != 'pdf'){
+                
+                msgId.innerHTML += ' (<i style="color:red">Only PDF files accepted</i>)'
+                thefile.value =null;
+                return false;
+            }
+            if(file.size > (5*1024*1024)){
+                thefile.value =null;
+                msgId.innerHTML += ' (<i style="color:red">All files must be less than 5mb</i>)'
+                return false
+            }
+
+            
+            
+        }
+    </script>
+
+
+
+{% endblock %}
+
+
+
+

@@ -1,0 +1,137 @@
+{% extends "MyApp/base.html" %}
+
+{% block content %}
+    {% load static %}
+    {% if messages %}
+        {% for message in messages %}
+            <br/>
+            <div>
+                <center>
+                    <div style="padding:1rem;  border:solid 2px #FF69B4; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% endif %}">
+                    <p >
+                        <b> {{ message }}</b>
+                    </p>
+                    </div>
+                </center>
+            </div>
+
+        {% endfor %}
+    {% endif %}
+
+
+
+<div class="container">
+
+    <div>
+        <center>
+            <div style="border:solid">
+                            
+                
+
+                <h3><b>Terms and Conditions</b></h3>
+
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vitae felis ac nulla accumsan consequat.
+                Quisque nec erat quis nunc tristique ullamcorper. Sed eget lorem nec justo eleifend aliquet nec id lectus.
+                Integer facilisis ligula et ligula suscipit, at malesuada justo euismod. Vivamus et ultrices neque.
+                Nullam auctor elit a enim ullamcorper, in congue tortor fermentum. Fusce posuere purus id enim ultrices, nec dignissim eros ultricies.
+                Phasellus nec ipsum vel metus fermentum bibendum. Morbi venenatis, mi id molestie elementum, libero quam aliquet lectus, a gravida neque odio a risus.
+                Suspendisse ullamcorper mi vel nisi cursus, id tincidunt leo sagittis. Sed non dictum purus.
+                Nam nec arcu sed purus tincidunt facilisis. In hac habitasse platea dictumst.
+                Sed eleifend mauris et libero feugiat, in consequat arcu fringilla. Sed pulvinar justo nec sapien tristique, eu fermentum ligula auctor.
+                Proin vel dolor vel eros varius sollicitudin. Ut nec fermentum lectus.
+                Duis at odio a elit posuere efficitur. Sed euismod arcu a odio hendrerit, eu volutpat arcu vestibulum.
+                Please note that this is a randomly generated placeholder text and not a legally accurate representation of terms and conditions. When creating actual terms and conditions, it's important to consult with legal professionals to ensure accuracy and compliance with relevant laws and regulations.
+
+
+
+              </p>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vitae felis ac nulla accumsan consequat.
+                Quisque nec erat quis nunc tristique ullamcorper. Sed eget lorem nec justo eleifend aliquet nec id lectus.
+                Integer facilisis ligula et ligula suscipit, at malesuada justo euismod. Vivamus et ultrices neque.
+                Nullam auctor elit a enim ullamcorper, in congue tortor fermentum. Fusce posuere purus id enim ultrices, nec dignissim eros ultricies.
+                Phasellus nec ipsum vel metus fermentum bibendum. Morbi venenatis, mi id molestie elementum, libero quam aliquet lectus, a gravida neque odio a risus.
+                Suspendisse ullamcorper mi vel nisi cursus, id tincidunt leo sagittis. Sed non dictum purus.
+                Nam nec arcu sed purus tincidunt facilisis. In hac habitasse platea dictumst.
+                Sed eleifend mauris et libero feugiat, in consequat arcu fringilla. Sed pulvinar justo nec sapien tristique, eu fermentum ligula auctor.
+                Proin vel dolor vel eros varius sollicitudin. Ut nec fermentum lectus.
+                Duis at odio a elit posuere efficitur. Sed euismod arcu a odio hendrerit, eu volutpat arcu vestibulum.
+
+              </p>
+              <hr/>
+              <div>
+                    <div>
+                            
+                               <p>
+                                    <b>Agree to the tearms and contitions?</b><br/>
+                               </p>
+                                
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <div>
+                                            
+                                                <div>
+                                                    <label style="padding:0.3rem"><input name="IsAccepted" id="IsAcceptedYes" value="Yes" type="radio"/><b>Yes</b></label><label style="padding:0.3rem"><input id="IsAcceptedNo" name="IsAccepted" value="No" type="radio"/><b>NO</b></label>
+                                                </div>
+                                                <div>
+                                                    
+                                                </div>
+                                           
+                                        </div>
+                                        <div>
+                                            <button disabled id="btnContinue" class="btn btn-default btn-success">
+                                                Continue application
+                                            </button>
+                                            <input hidden type="submit" id="btnSubmit"/>
+                                        </div>
+                                        <br/>
+                                    </form>
+                                    <div id="NoteMSG" hidden style="padding:1rem">
+                                        <center>
+                                            <div style="padding:1rem;  border:solid 2px red; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center; " class="alert-danger">
+                                            <p >
+                                                <b>Please note the application will be canceled if the terms and conditions are not aligned with your ageement.</b>
+                                            </p>
+                                            </div>
+                                        </center>
+                                    </div>
+                       
+                    </div>
+              </div>
+
+
+
+            </div>
+        </center>
+    </div>
+</div>
+
+
+<script>
+    IsAcceptedYes = document.getElementById("IsAcceptedYes")
+    IsAcceptedNo =document.getElementById("IsAcceptedNo")
+    btnContinue = document.getElementById("btnContinue")
+    btnSubmit = document.getElementById("btnSubmit")
+    NoteMSG = document.getElementById("NoteMSG")
+
+
+    IsAcceptedNo.addEventListener('click', function(){
+        btnContinue.disabled = false;
+        btnContinue.innerHTML = "Cancel application";
+        btnContinue.style = "background-color:red";
+        NoteMSG.hidden = false;
+
+
+    })
+    IsAcceptedYes.addEventListener('click', function(){
+        btnContinue.disabled = false;
+        btnContinue.innerHTML = "Continue application";
+        btnContinue.style = ""
+        NoteMSG.hidden = true;
+    })
+   // IsAcceptedNo.click()
+
+</script>
+
+{% endblock %}

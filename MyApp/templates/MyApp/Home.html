@@ -1,0 +1,63 @@
+{% extends "MyApp/base.html" %}
+
+{% block content %}
+    {% load static %}
+    {% if messages %}
+        {% for message in messages %}
+            <br/>
+            <div>
+                <center>
+                    <div style="padding:1rem; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% endif %}">
+                        <p>
+                            <b> {{ message }}</b>
+                        </p>
+                    </div>
+                </center>
+            </div>
+
+        {% endfor %}
+    {% endif %}
+
+
+
+    <div style="display;flex; justify-content:center; align-content:center">
+
+    
+    
+        <center>
+            {% if application %}
+                {% if application.ApplicationStatus == 'Oncreate' %}
+                    <a class="btn btn-default btn-info" href="{% url 'ContinueApplication' applicationId=application.ApplicationId %}"> Continue Application</a>
+                {% endif %}
+                {% if application.ApplicationStatus == "Complete" %}
+                    <a class="btn btn-default btn-info" href="{%   url 'Application_review' applicationId=application.ApplicationId  %}"> Review Application</a>
+
+
+                {% else %}
+
+                    <a class="btn btn-default btn-info" href="{%  url 'CreateApplication'  %}"> Create Application</a>
+
+
+                {% endif %}
+            {% else %}
+
+
+                <a class="btn btn-default btn-info" href="{%  url 'CreateApplication'  %}"> Create Application</a>
+       
+            {% endif %}
+        </center>
+
+
+    
+    </div>
+
+
+{% endblock %}
+
+
+
+
+{% comment %} 
+<div>
+    <a href="{%  url 'MemberSelection'  %}">  Member Selection</a>
+</div> {% endcomment %}

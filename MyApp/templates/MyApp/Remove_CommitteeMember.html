@@ -1,0 +1,88 @@
+{% extends "MyApp/base.html" %}
+
+{% block content %}
+    {% load static %}
+    {% if messages %}
+        {% for message in messages %}
+            <br/>
+            <div>
+                <center>
+                    <div style="padding:1rem;  border:solid 2px #FF69B4; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% endif %}">
+                    <p >
+                        <b> {{ message }}</b>
+                    </p>
+                    </div>
+                </center>
+            </div>
+
+        {% endfor %}
+    {% endif %}
+
+
+
+    <div style="display:flex; flex-direction:row; justify-content:space-between">
+        <div>
+            <h3>
+                <b>{{application.EventName}}</b>
+
+            </h3>
+        </div>
+        <div>
+            <a href="{% url 'Add_Committee_Member' applicationId=application.ApplicationId %}" class="btn btn-default btn-danger">
+                Abort Action
+
+            </a>
+        </div>
+    </div>
+    <hr/>
+    <div class="container">
+
+        <div>
+            <center>
+                <div>
+
+                    <p>
+                        <label><b>First name: </b>{{CommitteeMember.FirstName}}</label><br/>
+                        <label><b>Last name: </b>{{committeeMember.Surname}}</label><br/>
+                        <label><b>Gender: </b>{{committeeMember.Gender}}</label><br/>
+                        <label><b>Designation: </b>{{committeeMember.Designation}}</label><br/>
+                        <label><b>Id copy submited?: </b>
+                            {% if committeeMember.IDCopySubmited == True %}
+                                Yes
+                            {% else %}
+                                No
+                            {% endif %}
+                        </label><br/>
+                        <label><b>Acceptance of Team Appointment submited?: </b>
+                            {% if committeeMember.AcceptanceofTeamAppointment == True %}
+                                Yes
+                            {% else %}
+                                No
+                            {% endif %}
+                        </label><br/>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div style="padding:0.5rem">
+                                <input type="submit" class="btn btn-default btn-success text-center" style="width:60%" value="Confirn Delete"/>
+
+                            </div>
+                            <div style="padding:0.5rem">
+                                <a href="{% url 'Add_Committee_Member' applicationId=application.ApplicationId %}" class="btn btn-default btn-danger">
+                                    Abort Action
+                    
+                                </a>
+                            </div>
+                        </form>
+
+
+                    </p>
+                </div>
+            </center>
+        </div>
+    </div>
+
+
+
+
+
+{% endblock %}

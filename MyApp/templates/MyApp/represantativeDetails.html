@@ -1,0 +1,88 @@
+{% extends "MyApp/base.html" %}
+
+{% block content %}
+    {% load static %}
+    {% if messages %}
+        {% for message in messages %}
+            <br/>
+            <div>
+                <center>
+                    <div style="padding:1rem;  border:solid 2px #FF69B4; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% endif %}">
+                    <p >
+                        <b> {{ message }}</b>
+                    </p>
+                    </div>
+                </center>
+            </div>
+
+        {% endfor %}
+    {% endif %}
+
+    <div style="display:flex; justify-content:space-between;">
+        <div>
+
+        <h3>{{application.EventName}} represantative
+        </div>
+        <div>
+            <a href="{% url 'Application_review' applicationId=application.ApplicationId %}" class="btn btn-info">
+                Back to application
+            </a>
+        </div>
+    </div>
+    <hr/>
+    <div class="container">
+        <center>
+
+            <div>
+         
+
+                <label>First name: <b>{{represantative.FirstName}}</b></label><br/>
+                <label>Last name: <b>{{represantative.Surname}}</b></label><br/>
+                <label>Gender: <b>{{represantative.Gender}}</b></label><br/>
+                <label>Phone number: <b>{{represantative.PhoneNumber}}</b></label><br/>
+                <label>Email address: <b>{{represantative.Email}}</b></label><br/>
+                <label>City: <b>{{represantative.City}}</b></label><br/>
+                <label>Province: <b>{{represantative.Province}}</b></label><br/>
+                <label>Represatative Type: <b>{{represantative.RepresatativeType}}</b></label><br/>
+                <label>ID copy submited?: <b>
+                    {% if represantative.IDCopySubmited == True%}
+                        Yes
+                    {% else %}
+
+                        No
+                    {% endif %}
+                    </b>
+                </label><br/>
+                <label>Acceptance  of Team Appointment submited?: <b>
+                    {% if represantative.AcceptanceofTeamAppointment == True%}
+                        Yes
+                    {% else %}
+
+                        No
+                    {% endif %}
+                    </b>
+                </label><br/>
+                
+                <div>
+                    <a href="{% url 'Application_review' applicationId=application.ApplicationId %}" class="btn btn-info">
+                        Back to application
+                    </a>
+                </div>  
+            </div>
+        </center>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
