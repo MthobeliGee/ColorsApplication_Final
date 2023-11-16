@@ -2,19 +2,30 @@ from django.db import models
 from datetime import date, datetime
 from django.contrib.auth.models import User 
 
-
+class FederationPersonel(models.Model):
+    #I am last adding this class on the user but wondering about the other part where I get the applications by user, fix that too 
+    PersonelId = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User,blank=True,null=True,on_delete=models.CASCADE)
+    FederationName = models.CharField(max_length=255,blank=True,null=True)
+    dateSelected = models.DateField(default=datetime.now())
+    PersonelPhone = models.CharField(max_length=255)
+    PersonelGender = models.CharField(max_length=6,null=True, blank=True)
+    Status = models.CharField(max_length=20,default="Pending")
 
 # Create your models here.
 class Application(models.Model):
     ApplicationId = models.AutoField(primary_key=True)
     user = models.ForeignKey(User,blank=True,null=True,on_delete=models.CASCADE)
+    
+    FederationPersonel = models.ForeignKey(FederationPersonel,blank=True,null=True,on_delete=models.CASCADE)
+    
     EventName = models.CharField(max_length=255)
     StartDate = models.DateTimeField(max_length=255)
     EndDate = models.DateTimeField(max_length=255)
     HostCity = models.CharField(max_length=255)
     HostProvince =models.CharField(max_length=255)
     ReportSubmitAgreement = models.BooleanField(default=False)
-    NumberOfTeam = models.IntegerField(max_length=255)
+    NumberOfTeam = models.IntegerField()
     MethodOfSelection = models.CharField(max_length=255)
     SelectionApprovedDate = models.DateField(max_length=255)
     TravelDateTime = models.DateTimeField(max_length=255)
@@ -32,8 +43,12 @@ class Application(models.Model):
     ApplicationDate  = models.DateTimeField(default=datetime.now())
     Step = models.CharField(max_length=255, default='start')
     ApplicationStatus = models.CharField(max_length=255, default='Oncreate')
+    isHistory = models.BooleanField(default=False)
+    DateCreated = models.DateTimeField(default=datetime.now())
+    DeclineReason = models.TextField(blank=True, null=True)
+    CancelReason = models.TextField(blank=True, null=True)
     
-    
+    ApparelLetters = models.CharField(max_length=300, blank=True, null=True)
 
 class Represantative(models.Model):
     RepresantativeId = models.AutoField(primary_key=True)

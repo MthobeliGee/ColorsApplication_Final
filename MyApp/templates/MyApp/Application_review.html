@@ -2,6 +2,24 @@
 
 {% block content %}
     {% load static %}
+
+    <style>
+        table{
+            border:solid 1px;
+            width:100%
+        }
+        tr{
+            border:solid 1px
+        }
+        td{
+            border:solid 1px
+        }
+        tr:hover{
+            background-color:green;
+            color:white
+        }
+
+    </style>
     {% if messages %}
         {% for message in messages %}
             <br/>
@@ -17,512 +35,444 @@
 
         {% endfor %}
     {% endif %}
+    <div class="row"  style="display:flex;justify-content:center; padding:1rem">
+        {% if user.is_superuser != True %}
+
+            <div style="padding:0.5rem;">
+
+                
+
+                <div class="text-success" style="padding:0.5rem; border:solid 2px; border-radius:12px">
+                    <a href="{% url 'my_applications'  %}" title="See officials page" class="btn btn-success">
+                        <b>
+                            << All Applications
+                        </b>
+                    </a>
+                   
+                    
+
+                </div>
+            
+            </div>
+       
+
+
+        {% endif %}
+        <div style="padding:0.5rem;">
+
+            
+
+            <div style="padding:0.5rem; border:solid 1px; border-radius:12px">
+                <a href="{% url 'Officials' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
+                    <b>
+                        Officials
+                    </b>
+                </a>
+                {% if user.is_superuser != True %}
+                    {% if application.isHistory == False%}
+                        <b style="font-size:25px" class="text-success"> | </b>
+                        
+                        <a href="{% url 'addTeamOfficial' applicationId=application.ApplicationId %}" >
+                            <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>
+                        </a>
+                    {% endif %}
+
+                {% endif %}
+                
+
+            </div>
+        
+        </div>
+       
+        <div style="padding:0.5rem;">
+
+            <div style="padding:0.5rem; border:solid 1px; border-radius:12px">
+                <a href="{% url 'Applcants' applicationId=application.ApplicationId  %}" title="See Applicants page" class="btn btn-info">
+                    <b>
+                        Applicants
+                    </b>
+                </a> 
+                {% if user.is_superuser != True %}
+                    {% if application.isHistory == False%}
+                        <b style="font-size:25px" class="text-success"> | </b>
+                        <a title="Go to Applicants editing page" href="{% url 'AddRepp' applicationId=application.ApplicationId %}" >
+                            <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>
+                        </a>
+                    {% endif %}
+                {% endif %}
+                
+
+            </div>
+        
+        </div>
+       
+        <div style="padding:0.5rem;">
+
+            <div style="padding:0.5rem; border:solid 1px; border-radius:12px">
+                <a href="{% url 'Committee' applicationId=application.ApplicationId  %}" title="See Committee members page" class="btn btn-info">
+                    <b>
+                        Committee
+                    </b>
+                </a>
+                {% if user.is_superuser != True %}
+                    {% if application.isHistory == False%}
+                        <b style="font-size:25px" class="text-success"> | </b>
+                        <a title="Go to Committee members editing page"  href="{% url 'Add_Committee_Member' applicationId=application.ApplicationId %}" >
+                            <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>
+                        </a>
+                    {% endif %}
+                {% endif  %}
+                
+
+            </div>
+        
+        </div>
+        <div style="padding:0.5rem;">
+
+            <div style="padding:0.5rem; border:solid 1px; border-radius:12px">
+                <a href="{% url 'Documents' applicationId=application.ApplicationId  %}" title="See documents page" class="btn btn-info">
+                    <b>
+                        Documents
+                    </b>
+                </a>
+                
+                {% if user.is_superuser != True %}
+                    {% if application.isHistory == False%}
+                        <b style="font-size:25px" class="text-success"> | </b>
+                        <a title="Go to Documents editing page"  href="{% url 'Upload_Documents' applicationId=application.ApplicationId %}" >
+                            <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>
+                        </a>
+                    {% endif %}
+                {% endif %}
+                
+
+            </div>
+        
+        </div>
+       
+
+    </div>
+
 
 <div class="container">
-    <center>
 
-        <div>
-            <h1>
-                {{application.EventName}}
-            </h1>
-
-        </div>
-        <hr/>
-        <div>
-            <div style="display:flex; justify-content:space-between;padding:1rem">
-                <div>
-                    <h4><b>{{application.EventName}} application details</b></h4>
-                </div>
-                <div>
-                    <a href="{% url 'UpdateDetails' ApplicationId=application.ApplicationId %}" >
-                        <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>
-                    </a>
-                </div>
-            </div>
-
-            <label><b>Event name: </b>{{application.EventName}}</label><br/>
-            <label><b>Start date: </b>{{application.StartDate}}</label><br/>
-            <label><b>End date: </b>{{application.EndDate}}</label><br/>
-            <label><b>Host city: </b>{{application.HostCity}}</label><br/>
-            <label><b>Host province: </b>{{application.HostProvince}}</label><br/>
-            <label><b>Number of team members: </b>{{application.NumberOfTeam}}</label><br/>
-            <label><b>Selection approved date: </b>{{application.SelectionApprovedDate}}</label><br/>
-            <label><b>Travel Date Time: </b>{{application.TravelDateTime}}</label><br/>
-            <label><b>Mode Of Travel: </b>{{application.ModeOfTravel}}</label><br/>
-            
-
-        </div>
-        <hr/>
-        <div>
-            <div style="display:flex; justify-content:space-between; padding:1rem">
-                <div>
-                    <h4><b>{{application.EventName}} application team officials</b></h4>
-                </div>
-                <div>
-                    <a href="{% url 'addTeamOfficial' applicationId=application.ApplicationId %}" >
-                        <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>
-                    </a>
-                </div>
-            </div>
-            {% if teamOfficials %}
-      
-                <div class="container">
-                    
-                    <div>
-
-                        <div class="row">
-                            {% if teamOfficials %}
-                                {% for official in teamOfficials %}
-                                
-                                    <div class="col-xl-3 col-md-6 mb-4">
-                                        <div class="card border-left-primary shadow h-100 py-2">
-                                            <div class="card-body">
-                                                <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
-                                                    {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
-                                                    <img style="width:inherit; width:100%;border:solid;max-height:320px" src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/>
-                                                    
-                                                </div>
-                                                <div class="row no-gutters align-items-center">
-                                                    <div class="col mr-2" style="display:flex; justify-content: space-between;">
-                                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
-                                                            {{ official.FirstName}} {{official.LastName}}
-                                                        </div>
-                                                        
-                                                    </div>
-                                                
-                                                </div>
-                                                <div class="row no-gutters align-items-center" style="padding:1rem">
-                                                    <div class="col-auto"  styl="display:flex; justify-content:space-between;" >
-                                                        
-                                                            {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
-                                                            {% endcomment %}
-                                                            
-                                                       
-                                                            
-                                                        
-                                                                <a style="color: #FF69B4;padding:0.5rem" href="{% url 'remove_team_official' officialId=official.TeamOfficialId %}"><i class="fas  fa-trash-alt bin-icon"></i></a>&nbsp; 
-                                                         
-                                                                <a style="color: #FF69B4;padding:0.5rem" href="{% url 'update_team_official' officialId=official.TeamOfficialId %}" style="padding:5px"><i class="fas  fa-pencil-alt edit-icon"></i></a> &nbsp;
-                                                            
-                                                            
-                                                        
-                                                                <a style="color: #FF69B4;padding:0.5rem" href="{% url 'teamOfficialDetails' teamOfficialId=official.TeamOfficialId %}"><i class="fas fa-eye view-icon"></i>   </a> 
-                                                            
-                                                    </div>
-                                                </div>
-                                                
-                                                
-                                            </div>
-                                            
-                                        </div>
-                                    </div>
-                                {% endfor%}
-                            {%endif%}
-            
-                
-            
-            
-            
-            
-                        
-            
-            
-                        </div>
-            
-                    <div>
-
-                </div>
-            {% endif %}
-
-            
-            
-
-        </div> 
-        <hr/>
-        <div>
-            <div style="display:flex; justify-content:space-between; padding:1rem">
-                <div>
-                    <h4><b>{{application.EventName}} application team represantatives</b></h4>
-                </div>
-                <div>
-                    <a href="{% url 'AddRepp' applicationId=application.ApplicationId %}" >
-                        <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>
-                    </a>
-                </div>
-            </div>
-          
-
-            {% if represantatives %}
-                <div class="row">
-
-                    {% for represantative in represantatives %}
-                
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
-                                        {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
-                                        <img style="width:inherit; width:100%;border:solid;max-height:320px" src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/>
-                                        
-                                    </div>
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2" style="display:flex; justify-content: space-between;">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
-                                                {{ represantative.FirstName}} {{represantative.Surname}}
-                                            </div>
-                                            
-                                        </div>
-                                    
-                                    </div>
-                                    <div class="row no-gutters align-items-center" style="padding:1rem">
-                                        <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;justify-content:center" >
-                                            
-                                                {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
-                                                {% endcomment %}
-                                                
-                                            
-                                        
-                                                
-                                                <a style="color: #FF69B4;padding:0.5rem" href="{% url 'remove_Representative' represantativeId=represantative.RepresantativeId %}"><i class="fas  fa-trash-alt bin-icon"></i></a>
-                                            
-                                                <a style="color: #FF69B4;padding:0.5rem" href="{% url 'update_Representative' represantativeId=represantative.RepresantativeId %}" style="padding:5px"><i class="fas  fa-pencil-alt edit-icon"></i></a>
-                                                <a href="{% url 'represantativeDetails' represantativeId=represantative.RepresantativeId %}" style="color: #FF69B4;padding:0.5rem"><i class="fas fa-eye view-icon"></i></a>
-                                        </div>
-                                    </div>
-                                    
-                            
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor%}
-                </div>
-            {%endif%}
-            
-
-        </div> 
-        <hr/>
-        <div>
-            <div style="display:flex; justify-content:space-between; padding:1rem">
-                <div>
-                    <h4><b>{{application.EventName}} application committee members</b></h4>
-                </div>
-                <div>
-                    <a href="{% url 'Add_Committee_Member' applicationId=application.ApplicationId %}" >
-                        <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="row">
-                {% if CommitteeMembers %}
-                    {% for CommitteeMember in CommitteeMembers %}
-                     
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
-                                        {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
-                                        <img style="width:inherit; width:100%;border:solid;max-height:320px" src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/>
-                                        
-                                    </div>
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2" style="display:flex; justify-content: space-between;">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
-                                                {{ CommitteeMember.FirstName}} {{CommitteeMember.Surname}}
-                                            </div>
-                                            
-                                        </div>
-                                       
-                                    </div>
-                                    <div class="row no-gutters align-items-center" style="padding:1rem">
-                                        <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;justify-content:center" >
-                                            
-                                                {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
-                                                 {% endcomment %}
-                                                
-                                            
-                                           
-                                                
-                                                <a title="Remove Committee Member?" style="color: #FF69B4;padding:0.5rem" href="{% url 'Remove_CommitteeMember' memberId=CommitteeMember.CommitteeMemberId %}"><i class="fas  fa-trash-alt bin-icon"></i></a>
-                                             
-                                                <a style="color: #FF69B4;padding:0.5rem" href="{% url 'update_CommiteeMember' CommitteeMemberId=CommitteeMember.CommitteeMemberId %}" style="padding:5px"><i class="fas  fa-pencil-alt edit-icon"></i></a>
-                                                <a href="{% url 'CommitteeMemberDetails' committeeMemberId=CommitteeMember.CommitteeMemberId %}" style="color: #FF69B4;padding:0.5rem"><i class="fas fa-eye view-icon"></i></a>
-                                                
-
-                                       
-                                            </div>
-                                    </div>
-                                    
-                            
-                                </div>
-                            </div>
-                        </div>
-                        
-                    {% endfor%}
-                {%endif%}
 
     
-
-
-
-
-            
-
-
-            </div>
-
-            
-            
-
-        </div> 
-
-        <hr/>
-        <div>
-            <div style="display:flex; justify-content:space-between; padding:1rem">
-                <div>
-                    <h4><b>{{application.EventName}} Documents</b></h4>
+    <div>
+        {% if user.is_superuser != True %}
+            {% if application.isHistory == False%}
+                <div style="display:flex; justify-content:center;padding:1rem">
+                    
+                    <div>
+                        <a title="Edit application details" href="{% url 'UpdateDetails' ApplicationId=application.ApplicationId %}" >
+                            <i class="fas fa-2x  fa-pencil-alt edit-icon"></i>
+                        </a>
+                    </div>
                 </div>
-                <div>
-                    <a href="{% url 'Upload_Documents' applicationId=application.ApplicationId %}" >
-                        <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>
-                    </a>
+            {% endif %}
+        {% endif %}
+
+        <div class=" " style="width:100%">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-header">
+
+                    <h2>
+                        {{application.EventName}}
+
+                    </h2>
                 </div>
-            </div>
-          
+                <div class="card-body">
+                    <div class="no-gutters align-items-center">
+                        <div class="col mr-2" style="">
+                            <div class=" font-weight-bold" >
+                                <table class="" >
+                                    <tr> 
+                                        <td>
+                                            <b>Host province</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.HostProvince}}
+                                        </td>
+                                    </tr>
+                                    <tr > 
+                                        <td>
+                                            <b>City</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.HostCity}}
+                                        </td>
+                                    </tr>
 
-            <div class="row">
-           
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
-                                        {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
-                                        {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
-                                      
-                                        <iframe id="iframe" src="{{application.RegulationsInterestDeclaration}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
+                                    <tr > 
+                                        <td>
+                                            <b>Start Date</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.StartDate}}
+                                        </td>
+                                    </tr>
 
-                                        </iframe>
-                                    </div>
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2" style="display:flex; justify-content: space-between;">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
-                                                Regulations Interest Declaration
-                                            </div>
-                                            
-                                        </div>
-                                    
-                                    </div>
-                                    <div class="row no-gutters align-items-center" style="padding:1rem">
-                                        <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;" >
-                                            
-                                                {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
-                                                {% endcomment %}
+                                    <tr > 
+                                        <td>
+                                            <b>End date</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.EndDate}}
+                                        </td>
+                                    </tr>
 
-                                                
-                                        </div>
-                                    </div>
-                                    
-                                    
-                                </div>
+                                    <tr > 
+                                        <td>
+                                            <b>Number of team members</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.NumberOfTeam}}
+                                        </td>
+                                    </tr>
+                                    <tr > 
+                                        <td>
+                                            <b>Selection approved date</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.SelectionApprovedDate}}
+                                        </td>
+                                    </tr>
+                                    <tr > 
+                                        <td>
+                                            <b>Travel Date Time</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.TravelDateTime}}
+                                        </td>
+                                    </tr>
+
+
+                                    <tr > 
+                                        <td>
+                                            <b>Mode Of Travel</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.ModeOfTravel}}
+                                        </td>
+                                    </tr>
+
+                                    <tr > 
+                                        <td>
+                                            <b>Number of applicants</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{numApplicants}}
+                                        </td>
+                                    </tr>
+
+                                    <tr > 
+                                        <td>
+                                            <b>Number of Officials</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{numOfficials}}
+                                        </td>
+                                    </tr>
+
+                                    <tr > 
+                                        <td>
+                                            <b>Number of commitee members</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{numCommitee}}
+                                        </td>
+                                    </tr>
+                                    <tr > 
+                                        <td>
+                                            <b>Application Status</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.ApplicationStatus}}
+                                        </td>
+                                    </tr>
+
+
+
+                                </table>
                                 
+
+
+     
+
                             </div>
+                            
                         </div>
-                   
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
-                                        {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
-                                        {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
-                                      
-                                        <iframe id="iframe" src="{{application.SelectionCriteriaProtocols}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
+                        
+                    </div>
 
-                                        </iframe>
-                                    </div>
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2" style="display:flex; justify-content: space-between;">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
-                                                Selection Criteria Protocols
-                                            </div>
-                                            
-                                        </div>
-                                    
-                                    </div>
-                                    <div class="row no-gutters align-items-center" style="padding:1rem">
-                                        <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;" >
-                                            
-                                                {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
-                                                {% endcomment %}
-
-                                                
-                                        </div>
-                                    </div>
-                                    
-                                    
-                                </div>
-                                
-                            </div>
-                        </div>
-
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
-                                        {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
-                                        {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
-                                      
-                                        <iframe id="iframe" src="{{application.GeneralRegulationSelectionProcedure}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
-
-                                        </iframe>
-                                    </div>
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2" style="display:flex; justify-content: space-between;">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
-                                                General Regulation Selection Procedure
-                                            </div>
-                                            
-                                        </div>
-                                    
-                                    </div>
-                                    <div class="row no-gutters align-items-center" style="padding:1rem">
-                                        <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;" >
-                                            
-                                                {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
-                                                {% endcomment %}
-
-                                                
-                                        </div>
-                                    </div>
-                                    
-                                    
-                                </div>
-                                
-                            </div>
-                        </div>
-
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
-                                        {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
-                                        {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
-                                      
-                                        <iframe id="iframe" src="{{application.TeamOfficialDuties}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
-
-                                        </iframe>
-                                    </div>
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2" style="display:flex; justify-content: space-between;">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
-                                                Team Official Duties
-                                            </div>
-                                            
-                                        </div>
-                                    
-                                    </div>
-                                    <div class="row no-gutters align-items-center" style="padding:1rem">
-                                        <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;" >
-                                            
-                                                {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
-                                                {% endcomment %}
-
-                                                
-                                        </div>
-                                    </div>
-                                    
-                                    
-                                </div>
-                                
-                            </div>
-                        </div>
-
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
-                                        {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
-                                        {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
-                                      
-                                        <iframe id="iframe" src="{{application.HighPerformancePlan}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
-
-                                        </iframe>
-                                    </div>
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2" style="display:flex; justify-content: space-between;">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
-                                                High Performance Plan
-                                            </div>
-                                            
-                                        </div>
-                                    
-                                    </div>
-                                    <div class="row no-gutters align-items-center" style="padding:1rem">
-                                        <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;" >
-                                            
-                                                {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
-                                                {% endcomment %}
-
-                                                
-                                        </div>
-                                    </div>
-                                    
-                                    
-                                </div>
-                                
-                            </div>
-                        </div>
-
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
-                                        {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
-                                        {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
-                                      
-                                        <iframe id="iframe" src="{{application.EventInvitation}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
-
-                                        </iframe>
-                                    </div>
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2" style="display:flex; justify-content: space-between;">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
-                                                Event Invitation 
-                                            </div>
-                                            
-                                        </div>
-                                    
-                                    </div>
-                                    <div class="row no-gutters align-items-center" style="padding:1rem">
-                                        <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;" >
-                                            
-                                                {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
-                                                {% endcomment %}
-
-                                                
-                                        </div>
-                                    </div>
-                                    
-                                    
-                                </div>
-                                
-                            </div>
-                        </div>
-
-
+                    
             
+                </div>
+                {% if user.is_superuser == True%}
+                    <div class="card-footer">
+                        <div >
+                            <p style="color:black" class="font-weight-bold ">
+                                This application was created by {{application.user.first_name}} {{application.user.last_name}} on {{application.DateCreated}}, contact details are as follow.<br/>
+                                <label>Phone number: {{FederationPersonel.PersonelPhone}}</label><br/>
+
+                                <label>Email: {{application.user.email}}
+                            </p>
+                        </div>
+                        {% if application.ApplicationStatus == "Pending" %}
+                            
+
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2" style="display:flex; justify-content:center">
+                                    
+                                    
+                                    <div style="padding:1rem; display:flex; justify-content:center"  class="row">
+                                        {% csrf_token %}
+                                        <div style="padding:0.5rem; "    >
+                                        <a href="{% url 'ApproveApplication' applicationId=application.ApplicationId %}" class="btn btn-success text-uppercase font-weight-bold text-xs" style="width:100%">
+                                                Approve Application
+                    
+                                            </a>
+                    
+                                        </div>
+                                        <div style="padding:0.5rem">
+                    
+                                            <a href="{% url 'DeclineApplication' applicationId=application.ApplicationId %}" class="btn btn-danger text-uppercase font-weight-bold text-xs    " style="color:white;width:100%">
+                                                Decline Application
+                    
+                                            </a> 
+                                        </div>
+                                    </div>
+                                
+                                    
+                                </div>
+                                
+                            </div>
+                        
+
+                        {% else %}
+                            {% if application.ApplicationStatus == "Canceled" %}
+                            <br/>
+                            <hr/>
+                            <div class="text-danger">
+
+                                <h4><b>The application has been Canceled due to reason stated bellow</b></h4>
+                                <br/>
+                                <p>{{application.CancelReason}}</p>
+
+                            </div>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                {% else %}
+                    {% if application.ApplicationStatus == "Declined" %}
+
+                        <div class="card-footer">
+                            <div class="text-danger">
+
+                                <h4><b>The application has been declined due to reason stated bellow</b></h4>
+                                <br/>
+                                <p>{{application.DeclineReason}}</p>
+
+                            </div>
+                        </div>
+
+                    {% endif %}
+
+                    {% if application.ApplicationStatus == "Canceled" %}
+
+                        <div class="card-footer">
+                            <div class="text-danger">
+
+                                <h4><b>The application has been Canceled due to reason stated bellow</b></h4>
+                                <br/>
+                                <p>{{application.CancelReason}}</p>
+
+                            </div>
+                        </div>
+
+                    {% endif %}
 
 
-            </div>
-            
-            <div class="container">
-                <center>
-                    <button class="btn btn-success">
-                        Submit Application
 
-                    </button>
-                </center>
+                {% endif %}
+
             </div>
         </div>
-    </center>
+
+        
+        
+    </div>
+    
+        
+
+       
+
+        <hr/>
+
+        {% if user.is_superuser != True %}
+
+            {% if application.ApplicationStatus != "Approved"%}
+                {% if application.ApplicationStatus != "Pending"%}
+                    {% if application.ApplicationStatus == 'Complete'%}
+
+                        <div>
+                        
+                        
+
+                        
+                            
+                            <div class="container">
+                                <center>
+                                    <form method="post" >
+                                        {% csrf_token %}
+                                        <button class="btn btn-success">
+                                            Submit Application
+
+                                        </button>
+                                    </form>
+                                </center>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="container">
+                        <a href="{% url 'CancelApplication' applicationId=application.ApplicationId %}" class="btn btn-danger">
+                           <b>
+                                Cancel Application
+                           </b>
+
+                        </a>
+                        
+                    </div>
+                    
+
+                {% endif %}
+            {% endif %}
+        {% else %}
+
+            {% if application.ApplicationStatus == 'Pending'%}
+  
+                
+
+                
+                    
+               
+            {% endif %}
+
+        {% endif %}
+
 
 
 </div>

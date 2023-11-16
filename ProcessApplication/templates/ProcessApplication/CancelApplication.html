@@ -1,0 +1,215 @@
+{% extends "MyApp/base.html" %}
+
+{% block content %}
+    {% load static %}
+    
+    <style>
+        table{
+            border:solid 1px;
+            width:100%
+        }
+        tr{
+            border:solid 1px
+        }
+        td{
+            border:solid 1px
+        }
+        tr:hover{
+            background-color:green;
+            color:white
+        }
+
+    </style>    
+    {% if messages %}
+        {% for message in messages %}
+            <br/>
+            <div>
+                <center>
+                    <div style="padding:1rem; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% endif %}">
+                        <p>
+                            <b> {{ message }}</b>
+                        </p>
+                    </div>
+                </center>
+            </div>
+
+        {% endfor %}
+    {% endif %}
+
+
+
+
+
+    <div class="container">
+
+        <div class="text-center" style="padding:1rem; font-size:25px">
+            <h1>
+                <b>
+                    {{application.EventName}} colors application
+                </b>
+            </h1>
+            <hr/>
+            <p class='text-danger'>
+                Are you sure you want to cancel this application?
+            </p>
+        </div>
+        <div class=" " style="width:100%">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-header">
+
+                    <h2>
+                        {{application.EventName}}
+
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div class="no-gutters align-items-center">
+                        <div class="col mr-2" style="">
+                            <div class=" font-weight-bold" >
+                                <table class="" >
+                                    <tr> 
+                                        <td>
+                                            <b>Host province</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.HostProvince}}
+                                        </td>
+                                    </tr>
+                                    <tr > 
+                                        <td>
+                                            <b>City</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.HostCity}}
+                                        </td>
+                                    </tr>
+
+                                    <tr > 
+                                        <td>
+                                            <b>Start Date</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.StartDate}}
+                                        </td>
+                                    </tr>
+
+                                    <tr > 
+                                        <td>
+                                            <b>End date</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.EndDate}}
+                                        </td>
+                                    </tr>
+
+                                    <tr > 
+                                        <td>
+                                            <b>Number of team members</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.NumberOfTeam}}
+                                        </td>
+                                    </tr>
+                                    <tr > 
+                                        <td>
+                                            <b>Selection approved date</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.SelectionApprovedDate}}
+                                        </td>
+                                    </tr>
+                                    <tr > 
+                                        <td>
+                                            <b>Travel Date Time</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.TravelDateTime}}
+                                        </td>
+                                    </tr>
+
+
+                                    <tr > 
+                                        <td>
+                                            <b>Mode Of Travel</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.ModeOfTravel}}
+                                        </td>
+                                    </tr>
+
+                                   
+                                    <tr > 
+                                        <td>
+                                            <b>Application Status</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.ApplicationStatus}}
+                                        </td>
+                                    </tr>
+
+
+
+                                </table>
+                                
+
+
+     
+
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
+
+                    
+            
+                </div>
+               
+                    
+
+                        <div class="card-footer">
+
+                            <form  method="post" >
+                                {% csrf_token %}
+
+                                <input type="hidden" name="applicationId" value="{{application.ApplicationId}}"/>
+                                <div>
+                                    <textarea class="form-control" placeholder="please enter reason for cancelling and click 'Confirm Cancilation' to complete the process" required style="" name="CancelReason"></textarea>
+                                </div>
+                                <div class="row" style="padding:1rem; display:flex; justify-content:space-between">
+
+                                    <div>
+                                        <button type="Submit" class="btn btn-danger">
+                                            <b>Confirm Cancilation</b>
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <a type="Submit" class="btn btn-success" style="color:white">
+                                            <b>Abort action</b>
+                                        </a>
+                                    </div>  
+                                </div>
+
+                            </form>
+                        </div>
+
+                   
+
+
+               
+
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

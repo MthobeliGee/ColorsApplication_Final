@@ -1,0 +1,22 @@
+{% autoescape off %}
+
+    Hello {{admin_user.first_name}}, I hope this email finds you well.
+    Please be informed that the application for {{application.EventName}} has been canceled .
+    Event Name: {{application.EventName}}
+    Start Date: {{application.StartDate}}
+    End Date: {{application.EndDate}}
+    Statu: {{application.ApplicationStatus}}
+    Reason to cancel:
+    {{application.CancelReason}}
+    ____________________________________________________
+
+    For the rest of the details, please use the link below to log in and process the colors application.
+    {{protocol}}://{{ domain }}{% url 'login' %}
+
+
+    Best regard
+
+    KZNSC Colors
+
+
+{% endautoescape %}

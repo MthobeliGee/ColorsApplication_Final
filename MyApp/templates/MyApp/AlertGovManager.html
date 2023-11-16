@@ -1,0 +1,21 @@
+{% autoescape off %}
+
+    Hello {{coloresUser.first_name}} {{coloresUser.last_name}}, I hope this email finds you well. This email is to inform you as the user handing {{federationPersonel.FederationName}} federation on the Governance web application 
+    that your federation will be prepresnted by the user of which details are listed below.
+    First name: {{user.first_name}}
+    Last name: {{user.last_name}}
+    Email: {{user.email}}
+    This action was taken on: {{federationPersonel.dateSelected}}
+    ______________________________________________________________
+
+    If you do not know this person on your federation please inform the KZNSC
+    for this matter to be dealt with.
+
+
+    Best Regards 
+    The colors application
+
+
+
+
+{% endautoescape %}

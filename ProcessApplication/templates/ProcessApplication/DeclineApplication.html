@@ -1,0 +1,356 @@
+{% extends "MyApp/base.html" %}
+
+{% block content %}
+    {% load static %}
+
+    <style>
+        table{
+            border:solid 1px;
+            width:100%
+        }
+        tr{
+            border:solid 1px
+        }
+        td{
+            border:solid 1px
+        }
+        tr:hover{
+            background-color:green;
+            color:white
+        }
+
+    </style>
+    {% if messages %}
+        {% for message in messages %}
+            <br/>
+            <div>
+                <center>
+                    <div style="padding:1rem;  border:solid 2px #FF69B4; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% endif %}">
+                    <p >
+                        <b> {{ message }}</b>
+                    </p>
+                    </div>
+                </center>
+            </div>
+
+        {% endfor %}
+    {% endif %}
+    <div class="row"  style="display:flex;justify-content:center">
+        <div style="padding:0.5rem;">
+
+            <div style="padding:0.5rem; border:solid 1px; border-radius:12px">
+                <a href="{% url 'Application_review' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
+                    <b>
+                        Back to application
+                    </b>
+                </a>
+                <a href="{% url 'Officials' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
+                    <b>
+                        Officials
+                    </b>
+                </a>
+                {% if user.is_superuser != True %}
+                    <b style="font-size:25px" class="text-success"> | </b>
+                    
+                    <a href="{% url 'addTeamOfficial' applicationId=application.ApplicationId %}" >
+                        <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>
+                    </a>
+
+                {% endif %}
+                
+
+            </div>
+        
+        </div>
+       
+        <div style="padding:0.5rem;">
+
+            <div style="padding:0.5rem; border:solid 1px; border-radius:12px">
+                <a href="{% url 'Application_review' applicationId=application.ApplicationId %}" title="See Applicants page" class="btn btn-info">
+                    <b>
+                        Applicants
+                    </b>
+                </a> 
+                {% if user.is_superuser != True %}
+                    <b style="font-size:25px" class="text-success"> | </b>
+                    <a title="Go to Applicants editing page" href="{% url 'AddRepp' applicationId=application.ApplicationId %}" >
+                        <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>
+                    </a>
+                {% endif %}
+                
+
+            </div>
+        
+        </div>
+       
+        <div style="padding:0.5rem;">
+
+            <div style="padding:0.5rem; border:solid 1px; border-radius:12px">
+                <a href="{% url 'Committee' applicationId=application.ApplicationId  %}" title="See Committee members page" class="btn btn-info">
+                    <b>
+                        Committee
+                    </b>
+                </a>
+                {% if user.is_superuser != True %}
+
+                    <b style="font-size:25px" class="text-success"> | </b>
+                    <a title="Go to Committee members editing page"  href="{% url 'Add_Committee_Member' applicationId=application.ApplicationId %}" >
+                        <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>
+                    </a>
+                {% endif  %}
+                
+
+            </div>
+        
+        </div>
+        <div style="padding:0.5rem;">
+
+            <div style="padding:0.5rem; border:solid 1px; border-radius:12px">
+                <a href="{% url 'Documents' applicationId=application.ApplicationId  %}" title="See documents page" class="btn btn-info">
+                    <b>
+                        Documents
+                    </b>
+                </a>
+                
+                {% if user.is_superuser != True %}
+
+                    <b style="font-size:25px" class="text-success"> | </b>
+                    <a title="Go to Documents editing page"  href="{% url 'Upload_Documents' applicationId=application.ApplicationId %}" >
+                        <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>
+                    </a>
+
+                {% endif %}
+                
+
+            </div>
+        
+        </div>
+       
+
+    </div>
+
+
+<div class="container">
+
+
+    
+    <div>
+        
+
+        <div class=" " style="width:100%">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-header">
+
+                    <h2>
+                        {{application.EventName}}
+
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div class="no-gutters align-items-center">
+                        <div class="col mr-2" style="">
+                            <div class=" font-weight-bold" >
+                                <table class="" >
+                                    <tr> 
+                                        <td>
+                                            <b>Host province</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.HostProvince}}
+                                        </td>
+                                    </tr>
+                                    <tr > 
+                                        <td>
+                                            <b>City</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.HostCity}}
+                                        </td>
+                                    </tr>
+
+                                    <tr > 
+                                        <td>
+                                            <b>Start Date</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.StartDate}}
+                                        </td>
+                                    </tr>
+
+                                    <tr > 
+                                        <td>
+                                            <b>End date</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.EndDate}}
+                                        </td>
+                                    </tr>
+
+                                   
+                                    <tr > 
+                                        <td>
+                                            <b>Selection approved date</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.SelectionApprovedDate}}
+                                        </td>
+                                    </tr>
+                                    <tr > 
+                                        <td>
+                                            <b>Travel Date Time</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.TravelDateTime}}
+                                        </td>
+                                    </tr>
+
+
+                                            
+
+                                  
+                                    <tr > 
+                                        <td>
+                                            <b>Application Status</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.ApplicationStatus}}
+                                        </td>
+                                    </tr>
+
+
+
+                                </table>
+                                
+
+
+     
+
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
+
+                    
+            
+                </div>
+                <div class="card-footer">
+
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2" style="display:flex; justify-content:center">
+                            
+                            
+                            <form method="post" style="padding:1rem; display:flex; justify-content:center; flex-direction:column" >
+                                {% csrf_token %}
+
+                                <div>
+
+                                    <textarea name="DeclineReason" required style="width:100%" placeholder="Reason for application declining"></textarea>
+                                </div>
+                                <br/>
+
+                               <div class="row">
+
+                                    <div style="padding:0.5rem; "    >
+                                        <button type="submit" class="btn btn-success text-uppercase font-weight-bold text-xs" style="width:100%">
+                                            Confirm Application Decline
+                
+                                        </button>
+                
+                                    </div>
+                                    <div style="padding:0.5rem">
+                
+                                        <a href="{% url 'Application_review' applicationId=application.ApplicationId %}" class="btn btn-danger text-uppercase font-weight-bold text-xs    " style="color:white;width:100%">
+                                            Abort action
+                
+                                        </a> 
+                                    </div>
+                               </div>
+                            </form>
+                        
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+        
+    </div>
+    
+        
+
+       
+
+        <hr/>
+
+        {% if user.is_superuser != True %}
+            {% if application.Step == 'Application_review'%}
+
+                <div>
+                
+                
+
+                
+                    
+                    <div class="container">
+                        <center>
+                            <form method="post" >
+                                {% csrf_token %}
+                                <button class="btn btn-success">
+                                    Submit Application
+
+                                </button>
+                            </form>
+                        </center>
+                    </div>
+                </div>
+            {% endif %}
+        {% else %}
+
+        {% if application.ApplicationStatus == 'Pending'%}
+
+        <div>
+        
+        
+
+        
+            
+            <div class="container">
+                
+               
+            </div>
+        </div>
+    {% endif %}
+
+        {% endif %}
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<script>
+
+    iframe = document.getElementById("iframe");
+    console.log(iframe);
+</script>
+
+
+
+{% endblock %}

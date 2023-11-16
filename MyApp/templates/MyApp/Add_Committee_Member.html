@@ -29,9 +29,37 @@
                     <h3><b>{{application.EventName}} committee Members</b>    
                 </div>
                 <div>
-                    <a href="{% url 'Upload_Documents' applicationId=application.ApplicationId %}" class="btn btn-default btn-success">
-                        Move on to the next step>>
-                    </a>
+                        
+
+                        {% if application.Step != 'Application_review' %} 
+
+                            {% if application.Step != 'Pending' %}
+                                <a href="{% url 'Upload_Documents' applicationId=application.ApplicationId %}" class="btn btn-default btn-success">
+                                    Move on to the next step>>
+                                </a>
+
+
+                            {% else %}
+
+                                <div style="padding:0.5rem;">
+                                    <a href="{% url 'Application_review' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
+                                        <b>
+                                            Back to Application
+                                        </b>
+                                    </a>
+                                
+                
+                                </div>
+                            {% endif %}
+
+                        {% else %}
+                            <a href="{% url 'Application_review' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
+                                <b>
+                                    Back to Application review
+                                </b>
+                            </a>
+
+                        {% endif %}
                 </div>
             </div>
         {% else %}
@@ -155,9 +183,35 @@
                         <h2><b>Committee members</b></h2>
                     </div>
                     <div>
-                        <a href="{% url 'Upload_Documents' applicationId=application.ApplicationId %}" class="btn btn-default btn-success">
-                            Move on to the next step>>
-                        </a>
+                        {% if application.Step != 'Application_review' %} 
+
+                            {% if application.Step != 'Pending' %}
+                                <a href="{% url 'Upload_Documents' applicationId=application.ApplicationId %}" class="btn btn-default btn-success">
+                                    Move on to the next step>>
+                                </a>
+
+
+                            {% else %}
+
+                                <div style="padding:0.5rem;">
+                                    <a href="{% url 'Application_review' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
+                                        <b>
+                                            Back to Application
+                                        </b>
+                                    </a>
+                                
+                
+                                </div>
+                            {% endif %}
+
+                        {% else %}
+                            <a href="{% url 'Application_review' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
+                                <b>
+                                    Back to Application review
+                                </b>
+                            </a>
+
+                        {% endif %}
                     </div>
                 </div>
             {% endif %}

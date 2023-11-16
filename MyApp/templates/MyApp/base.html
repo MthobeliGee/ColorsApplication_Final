@@ -64,7 +64,7 @@
                 <div class="container-fluid" style="color: black;">
                
                    
-                    <a class="nav-link" href="{% url 'home' %}" style="color: #FF69B4;"> <img style="width:inherit;width:30px;border-radius:12px;height:30px " src="{% static 'manageProfile/images/kzn-sports-confederation-logo.png' %}" class="thumbnail"/></a>
+                    <a class="nav-link" href="{% url 'home' %}" style="color: green;"> <img style="width:inherit;width:30px;border-radius:12px;height:30px " src="{% static 'manageProfile/images/kzn-sports-confederation-logo.png' %}" class="thumbnail"/></a>
                     
             
                     
@@ -104,8 +104,8 @@
                             </li>
                             {% if user.is_authenticated %}
                                
-                                <li class="nav-item">
-                                    <a style="color: #FF69B4;" class="nav-link"  href="{% url 'home' %}">Home</a>
+                                <li class="nav-item text-uppercase font-weight-bold">
+                                    <a style="color: green;" class="nav-link"  href="{% url 'home' %}">Home</a>
                                 </li> 
                                 {% if user.is_superuser %}
                                     {% comment %} <li class="nav-item">
@@ -116,34 +116,42 @@
                   
                 
                                     
-                                    {% comment %} <li class="nav-item">
-                                        <a href="{% url 'addItem' %}" style="color: #FF69B4;" class="nav-link" href="">Add new Items</a>
-                                    </li> {% endcomment %}
+                                    <li class="nav-item text-uppercase font-weight-bold">
+                                        <a href="{% url 'Applications' %}" style="color: green;" class="nav-link" href="">Applications</a>
+                                    </li>
                                     
                                 
                                 
+                                {% else %}
+
+
+                                
+
+                                    <li class="nav-item text-uppercase font-weight-bold">
+                                        <a class="nav-link" href="{%   url 'my_applications' %}" >Applications</a>
+                                    </li>
                                 {% endif %}
                                 {% comment %} <li class="nav-item">
                                     <a class="nav-link" href="{% url 'EstoreAbout' %}" style="color: #FF69B4;">About Us</a>
                                 </li>
                                 {% endcomment %}
-                                <li class="nav-item">
+                                <li class="nav-item text-uppercase font-weight-bold">
                                     <a class="nav-link" href="{% url 'account' %}">{{user.first_name}} {{user.last_name}}</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a style="color: #FF69B4;" class="nav-link" href="{% url 'logoutuser' %}">logout</a>
+                                <li class="nav-item text-uppercase font-weight-bold">
+                                    <a style="color: green;" class="nav-link" href="{% url 'logoutuser' %}">logout</a>
                                     
                                 </li> 
                             {% else %}
 
-                                <li class="nav-item">
-                                    <a style="color: #FF69B4;" class="nav-link"  href="{% url 'home' %}">Home</a>
+                                <li class="nav-item text-uppercase font-weight-bold">
+                                    <a style="color: green;" class="nav-link"  href="{% url 'home' %}">Home</a>
                                 </li> 
-                               <li class="nav-item">
-                                    <a style="color: #FF69B4;" class="nav-link"  href="{% url 'login' %}">Login</a>
+                               <li class="nav-item text-uppercase font-weight-bold">
+                                    <a style="color: green;" class="nav-link"  href="{% url 'login' %}">Login</a>
                                </li>
-                               <li class="nav-item">
-                                    <a style="color: #FF69B4;" class="nav-link"  href="{% url 'Signup' %}">Register</a>
+                               <li class="nav-item text-uppercase font-weight-bold">
+                                    <a style="color: green;" class="nav-link"  href="{% url 'Signup' %}">Register</a>
                                 </li>
 
                             

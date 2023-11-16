@@ -15,9 +15,6 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from LoginManager.models import Account
-from .forms import registrationform
-#from .models import Todo
-from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django import forms
@@ -25,8 +22,9 @@ from .tokens import account_activation_token, Password_Reset_token
 from django.core.mail import send_mail, BadHeaderError
 from django.db.models.query_utils import Q
 from django.contrib.auth.tokens import default_token_generator
+from MyApp.models import *
 
-
+import requests
 
 #User = get_user_model()
 def ActivationEmail(request, user, to_email):
@@ -39,11 +37,11 @@ def ActivationEmail(request, user, to_email):
         "protocol": 'https' if request.is_secure() else 'http'
     })
     print(to_email)
-    if send_mail(mail_subject,f"{message}"  ,'hairforyoubymandy@gmail.com',[f'{to_email}'], fail_silently=False,
-    ):
+    try:
+        send_mail(mail_subject,f"{message}"  ,'',[f'{to_email}'], fail_silently=False)
         return messages.success(request,f"Verification email sent to {to_email}, please verify to access your account.")
-    else:
-        return messages.error(request, f"There was an erroe sening verification email, please ensure you enter the correct email")        
+    except:
+        return messages.error(request, f"Something went wrong while sending the email, do not create a new account instead contact the admin for your account verification.")        
 
 def ResertEmail(request, user, to_email):
     print(f"To user: {user.username}")
@@ -56,10 +54,10 @@ def ResertEmail(request, user, to_email):
         "protocol": 'https' if request.is_secure() else 'http'
     })
     print(to_email)
-    if send_mail(mail_subject,f"{message}"  ,'hairforyoubymandy@gmail.com',[f'{to_email}'], fail_silently=False,
-    ):
+    try:
+        send_mail(mail_subject,f"{message}"  ,'hairforyoubymandy@gmail.com',[f'{to_email}'], fail_silently=False)
         return messages.success(request,f"Click on the link that has been sent to {to_email}, to reset your password.")
-    else:
+    except:
         return messages.error(request, f"There was an erroe sening verification email, please ensure you enter the correct email")        
 
     
@@ -108,7 +106,7 @@ def register_view(request, *args, **kwargs):
                 user.is_active = False
               #  user.save(commit=False)
                 user.save()
-                
+    
                 print(ActivationEmail(request, user, request.POST['email'].lower()))
                # login(request,user)
                
@@ -132,20 +130,26 @@ def home(request):
 
 def signupuser(request):
     if request.method == 'GET':
-        return render(request,'LoginManager/signup.html',{'form':UserCreationForm()})
+    
+        return render(request,'LoginManager/signup.html')
     else:
         if request.POST['password1'] == request.POST['password2']:
-            try:
-                user = User.objects.create_user(first_name = request.POST["first_name"],last_name = request.POST["last_name"],username = request.POST['email'].lower(),email =request.POST['email'].lower(), password = request.POST['password1'],)# email = request.POST['email'],
-                user.is_active = False
-                user.save()
-                ActivationEmail(request, user, request.POST['email'].lower())
-                #login(request,user)
-                messages.success(request,"Account created successfully, an email has been sent for activation please visit email ("+request.POST['email'].lower()+") to activate your account.")
-                return redirect('home')
-            except IntegrityError:
-                messages.error(request, "something went wrong please try again.")
-                return render(request,'LoginManager/signup.html',{'form':UserCreationForm(), 'error':'Username Already Taken'})
+            # try:
+            user = User.objects.create_user(first_name = request.POST["first_name"],last_name = request.POST["last_name"],username = request.POST['email'].lower(),email =request.POST['email'].lower(), password = request.POST['password1'],)# email = request.POST['email'],
+            user.is_active = False
+            user.save()
+            fedPersonel = FederationPersonel.objects.create(
+                user = user,
+                # FederationName = request.POST["FederationName"],
+                PersonelPhone = request.POST["PersonelPhone"]
+            )
+            ActivationEmail(request, user, request.POST['email'].lower())
+            #login(request,user)
+            messages.success(request,"Account created successfully, an email has been sent for activation please visit email ("+request.POST['email'].lower()+") to activate your account.")
+            return redirect('home')
+            # except IntegrityError:
+            #     messages.error(request, "something went wrong please try again.")
+            #     return render(request,'LoginManager/signup.html',{'form':UserCreationForm(), 'error':'Username Already Taken'})
             
         else:
             return render(request,'LoginManager/signup.html',{'form':UserCreationForm(), 'error':'Passwords did not match'})

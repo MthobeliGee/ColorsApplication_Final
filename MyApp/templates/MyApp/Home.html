@@ -32,6 +32,10 @@
                 {% if application.ApplicationStatus == "Complete" %}
                     <a class="btn btn-default btn-info" href="{%   url 'Application_review' applicationId=application.ApplicationId  %}"> Review Application</a>
 
+                {% elif application.ApplicationStatus == "Pending" %}
+
+                    <a class="btn btn-default btn-info" href="{%   url 'Application_review' applicationId=application.ApplicationId  %}">My Application</a>
+                    
 
                 {% else %}
 

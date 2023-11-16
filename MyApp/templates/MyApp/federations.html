@@ -1,0 +1,160 @@
+{% extends "MyApp/base.html" %}
+
+{% block content %}
+    {% load static %}
+    {% if messages %}
+        {% for message in messages %}
+            <br/>
+            <div>
+                <center>
+                    <div style="padding:1rem;  border:solid 2px #FF69B4; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% endif %}">
+                    <p >
+                        <b> {{ message }}</b>
+                    </p>
+                    </div>
+                </center>
+            </div>
+
+        {% endfor %}
+    {% endif %}
+    <div class="container">
+        <div >
+           <center>
+                <h1>
+                    <b>
+                        Federation Selection
+                    </b>
+                </h1>
+                <div id="error">
+                
+                    <label style="font-size:20px;" class="text-danger">
+                        <b>
+                            Please Selection a you federation from the list below and confirm Selection
+                        </b>
+                    </label>
+                </div>
+           </center>
+           
+        </div>
+        <hr/>
+
+
+
+        <form method="post" style="padding:3rem; display:flex; justify-content:center"  >
+            {% csrf_token %}
+            <input id="FederationName" name="FederationName" type="hidden">
+            <input id="userName" name="userName" value="" type="hidden"/>
+            <input id="userSurname" name="userSurname" value="" type="hidden"/>
+            <input id="userEmail" name="userEmail" value="" type="hidden"/>
+            <br/> 
+
+            <div  id="FedDisplay" hidden style="border:solid;padding:1.5rem">
+                <h2 id="theFed">
+                   
+
+                </h3>  
+                <hr/>
+                <label>
+                    <b>
+                        Click 'Confirm Selection' if you choose  "<b id="theFed2" class="text-success"> </b>" as your federation
+                    </b>
+                </label>
+                <br/>
+                <button type="submit" style="width:100%; padding:0.5rem; border-radius:12px0; font-size:20px" class="btn-success">
+                    <b>
+                        Confirm Selection
+                    </b>
+
+                </button>
+                <hr/>
+            </div>
+            <div>
+
+                
+            </div>
+                
+        </form>
+    </div>
+ 
+
+    <div class="container">
+       <div class="row" >
+        {% for federation in federations%}
+
+            
+            <div class="col" style="padding:0.5rem" >
+                <div class="card">
+                    <div class="card-header">
+                        <h2>
+                            <b>
+                                {{federation.federationName}}
+                            </b>
+                        </h2>
+                    </div>
+                    <div class="card-body" style="font-size:20px;">
+                        <label>
+                            On Governance managed by: {{federation.userName}} {{federation.userSurname}}
+                        </label><br/>
+                        <label>Email: {{federation.userEmail}}</label>
+                    </div>
+    
+                    <div class="card-footer">
+                        <button id="btn{{federation.federationName}}" class="btn btn-info" style="width:100%"> 
+                            Select
+                        </button>   
+                    </div>
+    
+                    
+    
+    
+                   
+                </div>
+            </div>
+           
+            
+
+            <script>
+                FederationName = document.getElementById("FederationName")
+                sFed = document.getElementById("btn{{federation.federationName}}")
+                userName = document.getElementById("userName")
+                userSurname = document.getElementById("userSurname")
+                theFed = document.getElementById("theFed")
+                theFed2 = document.getElementById("theFed2")
+                FedDisplay=  document.getElementById("FedDisplay")
+                error = document.getElementById("error")
+
+                userEmail = document.getElementById("userEmail")
+
+                console.log("FederationName: ",FederationName)
+                console.log(sFed)
+
+                sFed.addEventListener('click', function(){
+                    FederationName.value= '{{federation.federationName}}'
+                    userName.value="{{federation.userName}}"
+                    userSurname.value="{{federation.userSurname}}"
+                    userEmail.value="{{federation.userEmail}}"
+                    theFed.innerHTML = "{{federation.federationName}}"
+                    theFed2.innerHTML = "{{federation.federationName}}"
+                    alert("If you are sure you want to select '" +FederationName.value+"' click the confirm button, and be informed that the relevent federation managers will be notified.")
+                    FedDisplay.hidden = false
+                    error.hidden = true
+                })
+            </script>
+
+        {% endfor%}
+       </div>
+    </div>
+
+    
+
+   
+{% endblock %}
+
+
+
+
+
+
+
+
+

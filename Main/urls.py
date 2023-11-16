@@ -23,4 +23,5 @@ urlpatterns = [
     path('',include('MyApp.urls')),
     path('Account', include('LoginManager.urls')),
     path('accounts/login/', loginuser, name='login'),
+    path('ProcessApplication', include('ProcessApplication.urls'))
 ]

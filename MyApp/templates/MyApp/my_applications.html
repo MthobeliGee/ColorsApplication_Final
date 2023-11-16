@@ -1,0 +1,377 @@
+{% extends "MyApp/base.html" %}
+
+{% block content %}
+    {% load static %}
+    
+    <style>
+        table{
+            border:solid 1px;
+            width:100%
+        }
+        tr{
+            border:solid 1px
+        }
+        td{
+            border:solid 1px
+        }
+        tr:hover{
+            background-color:green;
+            color:white
+        }
+
+    </style>    
+    {% if messages %}
+        {% for message in messages %}
+            <br/>
+            <div>
+                <center>
+                    <div style="padding:1rem; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% endif %}">
+                        <p>
+                            <b> {{ message }}</b>
+                        </p>
+                    </div>
+                </center>
+            </div>
+
+        {% endfor %}
+    {% endif %}
+    {% if ActiveApplication %}
+
+        <div style="padding:1rem; display:flex;justify-content:center; font-size:25px">
+            <h2><b>Active {{ActiveApplication.ApplicationStatus}} colors application</b></h2>
+        </div>
+        <hr/>
+
+        {% comment %} <div class="row"  style="display:flex;justify-content:center">
+            <div style="padding:0.5rem;">
+
+                <div style="padding:0.5rem; border:solid 1px; border-radius:12px">
+                    <a href="{% url 'Officials' applicationId=ActiveApplication.ApplicationId  %}" title="See officials page" class="btn btn-info">
+                        <b>
+                            Officials
+                        </b>
+                    </a>
+                    
+                    
+
+                </div>
+            
+            </div>
+        
+            <div style="padding:0.5rem;">
+
+                <div style="padding:0.5rem; border:solid 1px; border-radius:12px">
+                    <a href="{% url 'Applcants' applicationId=ActiveApplication.ApplicationId  %}" title="See Applicants page" class="btn btn-info">
+                        <b>
+                            Applicants
+                        </b>
+                    </a> 
+                    
+                    
+
+                </div>
+            
+            </div>
+        
+            <div style="padding:0.5rem;">
+
+                <div style="padding:0.5rem; border:solid 1px; border-radius:12px">
+                    <a href="{% url 'Committee' applicationId=ActiveApplication.ApplicationId  %}" title="See Committee members page" class="btn btn-info">
+                        <b>
+                            Committee
+                        </b>
+                    </a>
+                  
+                    
+
+                </div>
+            
+            </div>
+            <div style="padding:0.5rem;">
+
+                <div style="padding:0.5rem; border:solid 1px; border-radius:12px">
+                    <a href="{% url 'Documents' applicationId=ActiveApplication.ApplicationId  %}" title="See documents page" class="btn btn-info">
+                        <b>
+                            Documents
+                        </b>
+                    </a>
+                    
+                    
+                    
+
+                </div>
+            
+            </div>
+        
+
+        </div> {% endcomment %}
+    
+        <div class="container">
+
+
+    
+            <div>
+                
+                <div class=" " style="width:100%">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-header" style="display:flex; justify-content:space-between">
+        
+                            <div>
+                                <h2>
+                                    {{ActiveApplication.EventName}}
+            
+                                </h2>
+                            </div>
+                            <div>
+                                <a href="{% url 'Application_review' applicationId=ActiveApplication.ApplicationId %}" class="btn btn-info">
+                                   <b>
+                                        Full review
+                                   </b>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="no-gutters align-items-center">
+                                <div class="col mr-2" style="">
+                                    <div class=" font-weight-bold" >
+                                        <table class="" >
+                                            <tr> 
+                                                <td>
+                                                    <b>Host province</b>
+                                                </td>
+                                                
+                                                <td>
+                                                    {{ActiveApplication.HostProvince}}
+                                                </td>
+                                            </tr>
+                                            <tr > 
+                                                <td>
+                                                    <b>City</b>
+                                                </td>
+                                                
+                                                <td>
+                                                    {{ActiveApplication.HostCity}}
+                                                </td>
+                                            </tr>
+        
+                                            <tr > 
+                                                <td>
+                                                    <b>Start Date</b>
+                                                </td>
+                                                
+                                                <td>
+                                                    {{ActiveApplication.StartDate}}
+                                                </td>
+                                            </tr>
+        
+                                            <tr > 
+                                                <td>
+                                                    <b>End date</b>
+                                                </td>
+                                                
+                                                <td>
+                                                    {{ActiveApplication.EndDate}}
+                                                </td>
+                                            </tr>
+        
+                                           
+                                           
+                                           
+                                          
+                                            <tr > 
+                                                <td>
+                                                    <b>Application Status</b>
+                                                </td>
+                                                
+                                                <td>
+                                                    {{ActiveApplication.ApplicationStatus}}
+                                                </td>
+                                            </tr>
+        
+        
+        
+                                        </table>
+                                        
+        
+        
+             
+        
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+        
+                            
+                    
+                        </div>
+                  
+                       
+        
+        
+        
+                       
+        
+                    </div>
+                </div>
+        
+                
+                
+            </div>
+            
+                
+        
+               
+        
+                <hr/>
+        
+                {% if user.is_superuser != True %}
+                    {% if application.Step == 'Application_review'%}
+        
+                        <div>
+                        
+                        
+        
+                        
+                            
+                            <div class="container">
+                                <center>
+                                    <form method="post" >
+                                        {% csrf_token %}
+                                        <button class="btn btn-success">
+                                            Submit Application
+        
+                                        </button>
+                                    </form>
+                                </center>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% else %}
+        
+                {% if application.ApplicationStatus == 'Pending'%}
+        
+                <div>
+                
+                
+        
+                
+                    
+                    <div class="container">
+                        
+                       
+                    </div>
+                </div>
+            {% endif %}
+        
+                {% endif %}
+        
+        
+        
+        </div>
+        
+      
+
+    {% else %}
+        <div class="text-center text-warning">
+
+            <h3><b>You do not have any active application</b></h3><br/>
+            <p style="font-size:20px"><b>You may add a new application <a href="{%  url 'CreateApplication'  %}"> here</a></p>
+        </div>
+
+
+    {% endif %}
+
+
+    {% if historyApplications %}
+        <hr/>
+        <div class="container">
+
+            <div class="text-center" style="padding:1rem; border:solid 1px red; border-radius:12px">
+                <h2>
+                    <b>
+                        <i>
+                            <u>
+                                History applications
+                            </u>
+                        </i>
+                    </b>
+                </h2>
+
+
+            </div>
+            <br/>
+
+        </div>
+
+    
+        <div class="row">
+            {% for application in historyApplications %}
+        
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-header">
+
+                            <h2>
+                                {{application.EventName}}
+
+                            </h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="no-gutters align-items-center">
+                                <div class="col mr-2" style="display:flex; justify-content: space-between;">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
+                                        <label>
+                                            <b>City: {{application.HostCity}}</b>
+                                        </label><br/>
+
+                                        <label>
+                                            <b>Start Date: {{application.StartDate}}</b>
+                                        </label><br/>
+
+                                        <label>
+                                            <b>End date: {{application.EndDate}}</b>
+                                        </label><br/>
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+
+                        
+                    
+                        </div>
+                        <div class="card-footer">
+
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2" style="display:flex;">
+                                
+                                        <a class="text-center btn btn-info  text-uppercase font-weight-bold text-xs" href="{% url 'Application_review' applicationId=application.ApplicationId %}" style="width:100%">
+                                            review
+                                        </a>
+                                
+                                </div>
+                            
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            
+            {% endfor%}
+        
+
+
+
+
+
+
+
+
+
+        </div>
+
+
+    {% endif %}
+{% endblock %}

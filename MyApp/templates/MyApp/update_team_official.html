@@ -25,13 +25,32 @@
         <div style="padding:1rem; display:flex;justify-content:space-between">
 
             <div>
-               <h3><b> {{application.EventName}} team official</b></h3>
+               <h2><b> {{application.EventName}} team official</b></h2>
             </div>
-            <div>
-                <a style="color:white" href="{% url 'addTeamOfficial' applicationId=application.ApplicationId %}" class="btn btn-default btn-warning">
-                    Abort action
-                </a>
-            </div>
+            {% if application.Step != 'Application_review' %}
+                {% if application.Step != 'Pending' %}
+                    <div>
+                        <a style="color:white" href="{% url 'addTeamOfficial' applicationId=application.ApplicationId %}" class="btn btn-default btn-warning">
+                            Abort action
+                        </a>
+                    </div>
+                {% endif %}
+                
+           
+
+                
+
+           
+            {% else  %}
+
+                <div>
+                    <a style="color:white" href="{% url 'Officials' applicationId=application.ApplicationId %}" class="btn btn-default btn-warning">
+                        Abort action
+                    </a>
+                </div>
+
+
+            {% endif %}
         </div>
 
         <form method="post"  enctype="multipart/form-data" style="width:inherit">
@@ -166,15 +185,38 @@
       
 
 
-            <div style="padding:0.5; display:flex; justify-content:center">
-                <input class="btn btn-default btn-primary" style="width:70%" type="submit" value="Save and continue"/> 
-            </div>
-            <div style="padding:0.5rem; display:flex; justify-content:center ">
-                <a class="btn btn-default btn-warning" style="width:30%;color:white" href="{% url 'addTeamOfficial' applicationId=application.ApplicationId %}"> 
-                    Abort action
-                </a>
-            </div>
+            <div style="padding:0.5; display:flex; justify-content:center; flex-direction:column">
+                <input class="btn btn-success"  type="submit" value="Save and continue"/> 
             
+            
+                <div style="padding:1rem">
+
+                    {% if application.Step != 'Application_review' %}
+                        {% if application.Step != 'Pending' %}
+                            <div>
+                                <a style="color:white" href="{% url 'addTeamOfficial' applicationId=application.ApplicationId %}" class="btn btn-default btn-warning">
+                                    Abort action
+                                </a>
+                            </div>
+                        {% endif %}
+                        
+                
+
+                        
+
+                
+                    {% else  %}
+
+                        <div>
+                            <a style="color:white" href="{% url 'Officials' applicationId=application.ApplicationId %}" class="btn btn-default btn-warning">
+                                Abort action
+                            </a>
+                        </div>
+
+
+                    {% endif %}
+                </div>
+            </div>
         </form>
 
 

@@ -1,22 +1,33 @@
 from django.shortcuts import render,redirect, get_object_or_404
-from .models import Application,Represantative, CommitteeMember, TeamOfficial,Thefunctions
+from .models import *
 from django.contrib import messages
 from django.contrib.auth.models import User 
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
+from django.template.loader import render_to_string
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+import requests
 
 
 
 def Home(request):
     application  = None
     if request.user.is_authenticated:
-        
+       
         try:
             application = get_object_or_404(Application, user = request.user, ApplicationStatus='Oncreate')
         except:
                 try:
                     application = get_object_or_404(Application, user = request.user, ApplicationStatus='Complete')
                 except:
+                    try:
+                        application = get_object_or_404(Application, user = request.user, ApplicationStatus='Pending')
+                    except:
+                        pass
                     pass
             
             
@@ -27,7 +38,13 @@ def Home(request):
 def CreateApplication(request):
     user = request.user
     if request.method == 'GET':
-        
+        try:
+            federationPersonel = get_object_or_404(FederationPersonel, user = user)
+            if federationPersonel.FederationName == None:
+                messages.error(request, "Please select your federation, in order to add a new application.")
+                return redirect("chooseFederation")
+        except:
+            messages.error(request, "Please select your federation")
         
         
         return render(request, 'MyApp/CreateApp.html')
@@ -116,7 +133,7 @@ def addTeamOfficial(request, applicationId):
     
     
     
-    
+@login_required  
 def update_team_official(request, officialId):
     
     teamOfficial = get_object_or_404(TeamOfficial, pk = officialId)
@@ -183,7 +200,7 @@ def update_team_official(request, officialId):
             
         return redirect("addTeamOfficial",applicationId = teamOfficial.application.ApplicationId)
         
-
+@login_required
 def remove_team_official(request, officialId):
     
     teamOfficial = get_object_or_404(TeamOfficial, pk = officialId)
@@ -203,16 +220,14 @@ def remove_team_official(request, officialId):
     
     
     
-    
-    
-    
+@login_required   
 def ViewDetails(request, ApplicationId):
     
     application = get_object_or_404(Application,pk=ApplicationId)
     print(application)
     
     return render(request, 'MyApp/ViewDetails.html',{"application":application})
-
+@login_required
 def UpdateDetails(request, ApplicationId):
     application = get_object_or_404(Application, pk= ApplicationId)
     if request.method =='GET':
@@ -278,7 +293,7 @@ def UpdateDetails(request, ApplicationId):
             
         return redirect("UpdateDetails", ApplicationId = application.ApplicationId)
             
-            
+@login_required           
 def AddRepp(request, applicationId):
     application = get_object_or_404(Application, pk = applicationId)
     represantatives = Represantative.objects.filter(application = application)
@@ -324,8 +339,7 @@ def AddRepp(request, applicationId):
         return redirect("AddRepp",applicationId=application.ApplicationId)
 
 
-
-
+@login_required
 def update_Representative(request, represantativeId):
     
     represantative = get_object_or_404(Represantative, pk = represantativeId)
@@ -403,11 +417,8 @@ def update_Representative(request, represantativeId):
             messages.info(request, "There were no changes made on the record.")
         return redirect("AddRepp", applicationId = application.ApplicationId)
             
-             
-            
 
-
-
+@login_required
 def remove_Representative(request, represantativeId):
     
     represantative = get_object_or_404(Represantative, pk = represantativeId)
@@ -423,17 +434,14 @@ def remove_Representative(request, represantativeId):
         
         return redirect("AddRepp", applicationId = application.ApplicationId)
         
-        
-        
-        
-
+@login_required
 def RepDetails(request, RepresantativeId):
     
     Rep =get_object_or_404(Represantative, pk= RepresantativeId)
     print(Rep)
     
     return render (request, 'MyApp/RepDetails.html',{"Rep":Rep}) 
-
+@login_required
 def Add_Committee_Member(request, applicationId):
     application = get_object_or_404(Application, pk=applicationId)
     CommitteeMembers = CommitteeMember.objects.filter(application = application)
@@ -462,7 +470,7 @@ def Add_Committee_Member(request, applicationId):
         messages.success(request, "Committee member added successfully")
         return redirect("Add_Committee_Member",applicationId=application.ApplicationId)
 
-
+@login_required
 def update_CommiteeMember(request, CommitteeMemberId):
     
     committeeMember = get_object_or_404(CommitteeMember, pk=CommitteeMemberId)
@@ -520,6 +528,7 @@ def update_CommiteeMember(request, CommitteeMemberId):
         
         return redirect("Add_Committee_Member", applicationId=application.ApplicationId)            
 
+@login_required
 
 def CommitteeMemberDetails(request, MemberId):
     
@@ -528,36 +537,104 @@ def CommitteeMemberDetails(request, MemberId):
     
     return render(request, 'MyApp/CommitteeMemberDetails.html', {"obj":obj})
          
+   
     
-    
+@login_required
     
 def Upload_Documents(request, applicationId):
     
     application = get_object_or_404(Application, pk = applicationId)
-    application.Step = 'Upload_Documents'
-    application.save()
+    if application.Step != 'Application_review' and application.Step != 'Pending':
+        
+        application.Step = 'Upload_Documents'
+        application.save()
     if request.method == 'GET':
         
         return render(request, 'MyApp/Upload_Documents.html',{"application":application}) 
     
     if request.method == 'POST':
-        
-        application.RegulationsInterestDeclaration = request.POST["RegulationsInterestDeclaration"]
-        application.SelectionCriteriaProtocols = request.POST["SelectionCriteriaProtocols"]
-        application.GeneralRegulationSelectionProcedure = request.POST["GeneralRegulationSelectionProcedure"]
-        application.TeamOfficialDuties = request.POST["TeamOfficialDuties"]
-        application.HighPerformancePlan = request.POST["HighPerformancePlan"]
-        application.EventInvitation = request.POST["EventInvitation"]
-        application.DocumentationOfSelectionSubmitted = request.POST["DocumentationOfSelectionSubmitted"]
-        
-        application.save()
+        if application.Step !='Application_review' and  application.Step =='Pending':
+            application.RegulationsInterestDeclaration = request.POST["RegulationsInterestDeclaration"]
+            application.SelectionCriteriaProtocols = request.POST["SelectionCriteriaProtocols"]
+            
+            application.GeneralRegulationSelectionProcedure = request.POST["GeneralRegulationSelectionProcedure"]
+            application.TeamOfficialDuties = request.POST["TeamOfficialDuties"]
+            application.HighPerformancePlan = request.POST["HighPerformancePlan"]
+            application.EventInvitation = request.POST["EventInvitation"]
+            application.DocumentationOfSelectionSubmitted = request.POST["DocumentationOfSelectionSubmitted"]
+            
+            application.save()
+            
+        else:
+            numUpdates = 0
+            try:
+                if request.POST["RegulationsInterestDeclaration"] != '':
+                    application.RegulationsInterestDeclaration = request.POST["RegulationsInterestDeclaration"]
+                
+                    numUpdates += 1
+            except:
+                pass
+            
+            try:
+                if request.POST["SelectionCriteriaProtocols"] !='':
+                    application.SelectionCriteriaProtocols = request.POST["SelectionCriteriaProtocols"]
+                    numUpdates += 1
+            except:
+                pass
+            
+            try:
+                if request.POST["GeneralRegulationSelectionProcedure"] != '':
+                    application.GeneralRegulationSelectionProcedure = request.POST["GeneralRegulationSelectionProcedure"]
+                    numUpdates += 1
+            except:
+                pass
+            
+            try:
+                if request.POST["TeamOfficialDuties"] != '':
+                    application.TeamOfficialDuties = request.POST["TeamOfficialDuties"]
+                    numUpdates += 1
+            except:
+                pass
+            
+            try:
+                if request.POST["HighPerformancePlan"] != '':
+                    application.HighPerformancePlan = request.POST["HighPerformancePlan"]
+                    numUpdates += 1
+            except:
+                pass
+                
+            try:
+                if request.POST["EventInvitation"] != '':
+                    application.EventInvitation = request.POST["EventInvitation"]
+                    numUpdates += 1
+            except:
+                pass
+            
+            try:
+                if request.POST["DocumentationOfSelectionSubmitted"] != '':
+                    application.DocumentationOfSelectionSubmitted = request.POST["DocumentationOfSelectionSubmitted"]
+                    numUpdates += 1
+            except:
+                pass
+            
+            if numUpdates > 0:
+                messages.success(request, "Changes saved successfully "+str(numUpdates))
+                application.save()
+            else:
+                messages.error(request, 'No changes made')   
+                
+            #return redirect("Upload_Documents", applicationId = application.ApplicationId)
+             
+            
+                
+                    
         
         messages.success(request, "Documents uploaded successfully, please proceed to accept code of conduct terms.")
         
         return redirect("termsAndConditions", applicationId = application.ApplicationId)
     
 
-    
+@login_required   
 def Remove_CommitteeMember(request, memberId):
     
     committeeMember = get_object_or_404(CommitteeMember, pk = memberId)
@@ -576,7 +653,7 @@ def Remove_CommitteeMember(request, memberId):
         
         return redirect("Add_Committee_Member", applicationId=application.ApplicationId) 
             
-            
+@login_required          
 def termsAndConditions(request, applicationId):
     
     application = get_object_or_404(Application,pk =applicationId)
@@ -606,17 +683,79 @@ def termsAndConditions(request, applicationId):
         
         
     
-    
+@login_required  
 def Application_review(request, applicationId):
     
     application = get_object_or_404(Application, pk=applicationId)
     represantatives = Represantative.objects.filter(application = application)
     CommitteeMembers = CommitteeMember.objects.filter(application = application)
     teamOfficials = TeamOfficial.objects.filter(application= application)
-    if application.Step != 'Application_review':
+    numApplicants = ObjectsLength(represantatives)
+    numOfficials = ObjectsLength(teamOfficials)
+    numCommitee = ObjectsLength(CommitteeMembers)
+    user = application.user
+    
+    fedPerson = get_object_or_404(FederationPersonel, user = user)
+    if application.Step == 'Complete':
         application.Step = 'Application_review'
         application.save()
-    return render(request, 'MyApp/Application_review.html', {"application":application,"represantatives":represantatives,"CommitteeMembers":CommitteeMembers,"teamOfficials":teamOfficials})
+    if request.method == 'GET':
+        return render(request, 'MyApp/Application_review.html', {"numCommitee":numCommitee,"numOfficials":numOfficials,"application":application,"represantatives":represantatives,"CommitteeMembers":CommitteeMembers,"teamOfficials":teamOfficials, "numApplicants":numApplicants, "FederationPersonel":fedPerson})
+    
+    if request.method == 'POST':
+        
+        application.ApplicationStatus = 'Pending'
+        application.Step = 'Pending'
+        application.save()
+        
+        #alert admin
+        adminUsers = User.objects.filter(is_superuser = True)
+        
+        for admin in adminUsers:
+            
+            alert_admin_Application(request,admin.email,application,admin )
+            
+        messages.success(request, "The application has been submitted for consideration successfully")
+        
+        return redirect("Application_review", applicationId = applicationId)
+        
+
+@login_required
+def Officials(request, applicationId):
+    
+    application = get_object_or_404(Application,pk = applicationId)
+    Officials = TeamOfficial.objects.filter(application = application)
+    
+    if request.method == 'GET':
+        
+        
+        return render(request, 'MyApp/Officials.html', {"application":application, "teamOfficials":Officials})
+    
+    
+def Applcants(request,applicationId):
+    application = get_object_or_404(Application,pk = applicationId)
+    Applicants = Represantative.objects.filter(application = application)
+    
+    if request.method == 'GET':
+        
+        return render(request,'MyApp/Applcants.html', {"application":application,"Applicants": Applicants})
+    
+def Committee(request, applicationId):
+    
+    application = get_object_or_404(Application,pk = applicationId)
+    commitee = CommitteeMember.objects.filter(application = application)
+    
+    if request.method =='GET':
+        
+        return render(request, 'MyApp/Committee.html', {"application":application, "commitee":commitee})
+    
+def Documents(request, applicationId):
+    
+    
+    application = get_object_or_404(Application,pk = applicationId)
+    if request.method == 'GET':
+        
+        return render(request, 'MyApp/Documents.html', {"application":application})
     
     
 # detalis pages 
@@ -676,7 +815,274 @@ def ContinueApplication(request, applicationId):
         messages.info(request, "Please proceed to review the application and submit for consideration")
         return redirect("Application_review",applicationId = application.ApplicationId)
         
-   
+def ObjectsLength(list):
+    
+    numObjects = 0
+    
+    for item in list:
+        numObjects += 1
         
-   
+    return numObjects
+
+
+@login_required
+def SubmitApplication(request, applicationId):
+    
+    application = get_object_or_404(Application, pk = applicationId)
+    if request.method == 'POST':
+        application.Stap = "Pending"
+        application.ApplicationStatus = "Pending"
+        application.save()
         
+        
+        
+def alert_admin_Application(request, to_email, application, admin_user):
+    is_sent = False
+    mail_subject = "Pending colors application."
+    message = render_to_string("MyApp/alert_admin_Application.html",{
+        'admin_user':admin_user,
+        'application':application,
+        'domain': get_current_site(request).domain,
+        "protocol": 'https' if request.is_secure() else 'http'
+    })
+    print(to_email)
+    if to_email:
+        try:
+            send_mail(mail_subject,f"{message}"  ,'',[to_email], fail_silently=False)
+            is_sent = True
+        except:
+            pass
+    
+    return is_sent
+
+
+
+
+@login_required
+def my_applications(request):
+    user = request.user
+    
+    try:
+        
+        ActiveApplication = get_object_or_404(Application, user = user, ApplicationStatus = "Pending")
+    except:
+        try:
+            ActiveApplication = get_object_or_404(Application, user = user, ApplicationStatus =    "Approved")
+        except:
+           
+            try:
+                ActiveApplication = get_object_or_404(Application, user = user, ApplicationStatus = "Active")
+            except:
+                ActiveApplication = None 
+                pass  
+    
+    historyApplications  = []
+    
+    myApplications =  Application.objects.filter(user = user)
+    
+    for application in myApplications:
+        
+        if application.ApplicationStatus != "Pending"  or application.ApplicationStatus != "Approved":
+            
+            if application.isHistory:
+                historyApplications.append(application)
+            
+         
+    numApplicants = Represantative.objects.filter(application = ActiveApplication).count()
+    numOfficials = TeamOfficial.objects.filter(application = ActiveApplication).count()
+    numCommitee = CommitteeMember.objects.filter(application = ActiveApplication).count()
+    infrmationOBJ = {
+        "ActiveApplication":ActiveApplication,
+        "numOfficials":numOfficials,
+        "numApplicants":numApplicants,
+        "numCommitee": numCommitee,
+        "historyApplications":historyApplications,
+        
+    }   
+    return render(request, "MyApp/my_applications.html", infrmationOBJ)
+        
+
+
+@login_required
+def Applications(request):
+    
+    
+    pending = Application.objects.filter(ApplicationStatus = "Pending")
+    numApproved =  countObj(Application.objects.filter(ApplicationStatus = "Approved"))
+    numActive = countObj(Application.objects.filter(ApplicationStatus = "Active"))
+    
+    #approved = Application.objects.filter(ApplicationStatus = "Approved")
+    print()
+    print("pending: ", pending)
+    
+    
+    informationOBJ = {
+        "applications":pending,
+        "status":"pending",
+        "numApproved":numApproved,
+        "numActive":numActive
+       
+    }
+    
+    return render(request, 'MyApp/allApplication.html', informationOBJ)
+
+
+@login_required
+def Approved(request):
+    
+    numApproved =  countObj(Application.objects.filter(ApplicationStatus = "Approved"))
+    numActive = countObj(Application.objects.filter(ApplicationStatus = "Active"))
+    
+   
+    approved = Application.objects.filter(ApplicationStatus = "Approved")
+    print()
+    print("approved: ", approved)
+    
+    
+    informationOBJ = {
+        "applications":approved,
+        "status":"approved",
+        "numApproved":numApproved,
+        "numActive":numActive
+        
+       
+    }
+    
+    return render(request, 'MyApp/allApplication.html', informationOBJ)
+
+
+@login_required
+def History(request):
+    
+    
+    
+    history = Application.objects.filter(isHistory = True)
+    numApproved =  countObj(Application.objects.filter(ApplicationStatus = "Approved"))
+    numActive = countObj(Application.objects.filter(ApplicationStatus = "Active"))
+
+    
+    
+    
+    informationOBJ = {
+        "applications":history,
+        "status":"history",
+        "numApproved":numApproved,
+        "numActive":numActive
+        
+        
+    }
+    
+    return render(request, 'MyApp/allApplication.html', informationOBJ)
+
+
+
+@login_required
+def Active(request):
+    
+    
+    
+    Active = Application.objects.filter(ApplicationStatus = "Active")
+    numApproved =  countObj(Application.objects.filter(ApplicationStatus = "Approved"))
+    numActive = countObj(Application.objects.filter(ApplicationStatus = "Active"))
+
+    
+    
+    
+    informationOBJ = {
+        "applications":Active,
+        "status":"Active",
+        "numApproved":numApproved,
+        "numActive": numActive
+        
+        
+    }
+    
+    return render(request, 'MyApp/allApplication.html', informationOBJ)
+
+
+
+
+def countObj(list):
+    
+    numItem = 0
+    for item in list:
+        numItem += 1
+        
+    return numItem  
+
+@login_required 
+def chooseFederation(request):
+    federations =[]
+    try:
+   
+        url = 'https://yonelahopewell1.pythonanywhere.com/GovApisComplayingFederations'
+        r = requests.get(url)
+    
+     
+        data = r.json()
+        
+        print()
+        federations = data["federations"]
+        #print("The request data fed list: ", data["federations"][0]["federationName"])
+    except :
+        federations =[
+                {
+                    "federationName":"KZN AQUATICS",
+                    "userName":"Yonela",
+                    "userSurname":"Sitshaka",
+                    "userEmail":"livesoundsmusic@gmail.com"
+                    
+                },
+                {
+                    "federationName":"SAFA",
+                    "userName":"Hopewell",
+                    "userSurname":"Sitshaka",
+                    "userEmail":"yonela@kznsc.com"
+                    
+                }
+            ]
+        
+        pass
+    
+    if request.method =='GET':
+        
+        return render(request, 'MyApp/federations.html', {"federations": federations})
+    
+    
+    if request.method == 'POST':
+        
+        user=  request.user
+        
+        FedPersonel = get_object_or_404(FederationPersonel, user = user)
+        FedPersonel.FederationName = request.POST["FederationName"]
+        FedPersonel.dateSelected = datetime.now()
+        FedPersonel.save()
+        AlertGovManager(request, user,request.POST["userEmail"],{"first_name": request.POST["userName"], "last_name":request.POST["userSurname"]},FedPersonel)
+        messages.success(request, "Great you have selected your feration, you may continue with your application")
+        #alert Governance manager by email
+        
+        return redirect("CreateApplication")
+    
+    
+    
+
+def AlertGovManager(request, user, to_email, coloresUser, federationPersonel):
+    print(f"To user: {user.username}")
+    mail_subject = "Colours application  representative."
+    message = render_to_string("MyApp/AlertGovManager.html",{
+        'federationPersonel':federationPersonel,
+        'user':user,
+        'coloresUser':coloresUser,
+        'domain': get_current_site(request).domain,
+        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+        'token': default_token_generator.make_token(user),
+        "protocol": 'https' if request.is_secure() else 'http'
+    })
+    print(to_email)
+    try:
+        send_mail(mail_subject,f"{message}"  ,'',[f'{to_email}'], fail_silently=False)
+        
+    except:
+        pass        
+
+    

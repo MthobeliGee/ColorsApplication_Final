@@ -1,0 +1,19 @@
+{% autoescape off %}
+
+    Hello {{admin_user.first_name}}, I hope this email finds you well.
+    Please be informed that there is a new 'Pending' application for colors, basic details are as follow.
+    Event Name: {{application.EventName}}
+    Start Date: {{application.StartDate}}
+    End Date: {{application.EndDate}}
+    ____________________________________________________
+
+    For the rest of the details, please use the link below to log in and process the colors application.
+    {{protocol}}://{{ domain }}{% url 'login' %}
+
+
+    Best regard
+
+    KZNSC Colors
+
+
+{% endautoescape %}

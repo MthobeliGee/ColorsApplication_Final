@@ -21,13 +21,18 @@
     <div style="display:flex; justify-content:space-between;">
         <div>
 
-        <h3>{{application.EventName}} represantative
+        <h2>
+
+            <b>
+                {{application.EventName}} Applicant
+            </b>
+        </h2>
         </div>
-        <div>
-            <a href="{% url 'Application_review' applicationId=application.ApplicationId %}" class="btn btn-info">
-                Back to application
-            </a>
-        </div>
+        <a style="display:flex; justify-content:center;align-content:center" href="{% url 'Applcants' applicationId=application.ApplicationId %}" class="btn btn-info">
+            <b>
+                Back to applcants list
+            </b>
+        </a>
     </div>
     <hr/>
     <div class="container">
@@ -63,11 +68,9 @@
                     </b>
                 </label><br/>
                 
-                <div>
-                    <a href="{% url 'Application_review' applicationId=application.ApplicationId %}" class="btn btn-info">
-                        Back to application
-                    </a>
-                </div>  
+                <a href="{% url 'Applcants' applicationId=application.ApplicationId %}" class="btn btn-info">
+                    Back to applcants list
+                </a> 
             </div>
         </center>
 

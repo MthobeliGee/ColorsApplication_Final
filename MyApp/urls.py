@@ -23,8 +23,17 @@ urlpatterns = [
     path('teamOfficialDetails/<int:teamOfficialId>', views.teamOfficialDetails, name="teamOfficialDetails"),
     path('represantativeDetails/<int:represantativeId>', views.represantativeDetails, name="represantativeDetails"),
     path('ContinueApplication/<int:applicationId>',views.ContinueApplication, name="ContinueApplication"),
-    path('CommitteeMemberDetails/<int:committeeMemberId>', views.CommitteeMemberDetails, name="CommitteeMemberDetails")
-    
+    path('CommitteeMemberDetails/<int:committeeMemberId>', views.CommitteeMemberDetails, name="CommitteeMemberDetails"),
+    path('Officials/<int:applicationId>', views.Officials, name="Officials"),
+    path('Applcants/<int:applicationId>', views.Applcants, name="Applcants"),
+    path('Committee/<int:applicationId>', views.Committee, name="Committee"),
+    path('Documents/<int:applicationId>', views.Documents, name="Documents"),
+    path('my_applications', views.my_applications, name="my_applications"),
+    path('Applications', views.Applications, name="Applications"),
+    path('Approved', views.Approved, name="Approved"),
+    path('History', views.History, name="History"),
+    path('Active', views.Active, name="Active"),
+    path('chooseFederation', views.chooseFederation, name="chooseFederation")
     
     
 ]

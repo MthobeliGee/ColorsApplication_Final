@@ -1,0 +1,19 @@
+{% autoescape off %}
+
+    Hello {{Applicant_user.first_name}} {{Applicant_user.last_name}}, I hope this email finds you well.
+    We regret to inform you that your  application for colors has been declined.
+    Event Name: {{application.EventName}}
+    Start Date: {{application.StartDate}}
+    End Date: {{application.EndDate}}
+    ____________________________________________________
+
+    For the rest of the details, please use the link below to login.
+    {{protocol}}://{{ domain }}{% url 'login' %}
+
+
+    Best regard
+
+    KZNSC Colors
+
+
+{% endautoescape %}

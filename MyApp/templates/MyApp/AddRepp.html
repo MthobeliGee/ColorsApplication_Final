@@ -26,19 +26,48 @@
             <div style="padding:1rem; display:flex;justify-content:space-between">
 
                 <div>
-                    <h3><b>{{application.EventName}} represantatives</b>    
+                    <h3><b>{{application.EventName}} team Applcants</b>    
                 </div>
+                
                 <div>
-                    <a href="{% url 'Add_Committee_Member' applicationId=application.ApplicationId %}" class="btn btn-default btn-success">
-                        Move on to the next step>>
-                    </a>
+                    
+                    {% if application.Step != 'Application_review' %} 
+
+                        {% if application.Step != 'Pending' %}
+                            <a href="{% url 'Add_Committee_Member' applicationId=application.ApplicationId %}" class="btn btn-default btn-success">
+                                Move on to the next step>>
+                            </a>
+
+
+                        {% else %}
+
+                            <div style="padding:0.5rem;">
+                                <a href="{% url 'Application_review' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
+                                    <b>
+                                        Back to Application
+                                    </b>
+                                </a>
+                            
+            
+                            </div>
+                        {% endif %}
+
+                    {% else %}
+                        <a href="{% url 'Application_review' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
+                            <b>
+                                Back to Application review
+                            </b>
+                        </a>
+
+                    {% endif %}
+                
                 </div>
             </div>
         {% else %}
 
             <center>
                 <div style="padding:1rem">
-                    <h3><b>{{application.EventName}} represantatives</b> 
+                    <h3><b>{{application.EventName}}  team Applicants</b> 
                 </div>
             </center>
         {% endif %}
@@ -218,18 +247,44 @@
         <hr/>
         <div class="container">
             {% if represantatives %}
-            <div style="padding:1rem; display:flex;justify-content:space-between">
+                <div style="padding:1rem; display:flex;justify-content:space-between">
 
-                <div>
-                    <h2><b>Selected team represantatives</b></h2>
+                    <div>
+                        <h2><b>Selected team represantatives</b></h2>
+                    </div>
+                    <div>
+                        {% if application.Step != 'Application_review' %} 
+
+                            {% if application.Step != 'Pending' %}
+                                <a href="{% url 'Add_Committee_Member' applicationId=application.ApplicationId %}" class="btn btn-default btn-success">
+                                    Move on to the next step>>
+                                </a>
+
+
+                            {% else %}
+
+                                <div style="padding:0.5rem;">
+                                    <a href="{% url 'Application_review' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
+                                        <b>
+                                            Back to Application
+                                        </b>
+                                    </a>
+                                
+                
+                                </div>
+                            {% endif %}
+
+                        {% else %}
+                            <a href="{% url 'Application_review' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
+                                <b>
+                                    Back to Application review
+                                </b>
+                            </a>
+
+                        {% endif %}
+                    </div>
                 </div>
-                <div>
-                    <a href="{% url 'Add_Committee_Member' applicationId=application.ApplicationId %}" class="btn btn-default btn-success">
-                        Move on to the next step>>
-                    </a>
-                </div>
-            </div>
-        {% endif %}
+            {% endif %}
             <div>
 
                 <div class="row">
@@ -263,9 +318,11 @@
                                               
                                                     
                                                     <a style="color: #FF69B4;padding:0.5rem" href="{% url 'remove_Representative' represantativeId=represantative.RepresantativeId %}"><i class="fas  fa-trash-alt bin-icon"></i></a>
-                                                 
+                                                
                                                     <a style="color: #FF69B4;padding:0.5rem" href="{% url 'update_Representative' represantativeId=represantative.RepresantativeId %}" style="padding:5px"><i class="fas  fa-pencil-alt edit-icon"></i></a>
-                                               
+                                      
+
+                                                
                                             </div>
                                         </div>
                                         

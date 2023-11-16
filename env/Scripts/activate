@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\yonel\OneDrive\theMthoProject\Colors-Repo\env"
+VIRTUAL_ENV="C:\Users\yonel\OneDrive\ColorsApplication\env"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

@@ -20,28 +20,63 @@
 
         {% endfor %}
     {% endif %}
+    <div class="row"  style="display:flex;justify-content:center">
+        {% if application.Step != 'Application_review' %} 
 
-    <div class="container">
-        {% if teamOfficials %}
-            <div style="padding:1rem; display:flex;justify-content:space-between">
 
-                <div>
-                   <h3><b> {{application.EventName}} team officials</b></h3>
-                </div>
-                <div>
-                    <a href="{% url 'AddRepp' applicationId=application.ApplicationId %}" class="btn btn-default btn-success">
-                        Move on to the next step>>
+            {% if application.Step != 'Pending'%}
+
+
+                <div style="padding:0.5rem;">
+                    <a href="{% url 'AddRepp' applicationId=application.ApplicationId %}" title="See officials page" class="btn btn-info">
+                        <b>
+                            Move on to the next step>>
+                        </b>
                     </a>
+                
+
                 </div>
-            </div>
+
+            {% else %}
+
+                <div style="padding:0.5rem;">
+                    <a href="{% url 'Application_review' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
+                        <b>
+                            Back to Application
+                        </b>
+                    </a>
+                
+
+                </div>
+            {% endif %}
+
         {% else %}
+            <div style="padding:0.5rem;">
+                <a href="{% url 'Application_review' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
+                    <b>
+                        Back to Application review
+                    </b>
+                </a>
+            
+
+            </div>
+
+        {% endif %}
+        
+        
+       
+
+    </div>
+    <hr/>
+    <div class="container">
+       
 
             <center>
                 <div  style="padding:1rem">
-                    <h3><b> {{application.EventName}} team officials</b></h3>
+                    <h1><b> {{application.EventName}} team officials</b></h1>
                  </div>
             </center>
-        {% endif %}
+  
 
         <form method="post"  enctype="multipart/form-data" style="width:inherit">
             {% csrf_token %}
@@ -80,7 +115,7 @@
                             <option value="Male">
                                 Male
                             </option>
-                            <option value="Femal">
+                            <option value="Female">
                                 Female
                             </option>
                             <option value="Other">
@@ -165,12 +200,39 @@
             <div style="padding:1rem; display:flex;justify-content:space-between">
 
                 <div>
-                    <h2><b>Selected team officials</b></h2>
+                    <h1><b>Selected team officials</b></h1>
                 </div>
                 <div>
-                    <a href="{% url 'AddRepp' applicationId=application.ApplicationId %}" class="btn btn-default btn-success">
-                        Move on to the next step>>
-                    </a>
+                    {% if application.Step != 'Application_review' %} 
+
+                        {% if application.Step != 'Pending' %}
+                            <a href="{% url 'AddRepp' applicationId=application.ApplicationId %}" class="btn btn-default btn-success">
+                                Move on to the next step>>
+                            </a>
+
+
+                        {% else %}
+
+                            <div style="padding:0.5rem;">
+                                <a href="{% url 'Application_review' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
+                                    <b>
+                                        Back to Application
+                                    </b>
+                                </a>
+                            
+            
+                            </div>
+                        {% endif %}
+
+                    {% else %}
+                        <a href="{% url 'Application_review' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
+                            <b>
+                                Back to Application review
+                            </b>
+                        </a>
+
+                    {% endif %}
+                    
                 </div>
             </div>
         {% endif %}
@@ -207,9 +269,20 @@
                                             
                                                     
                                                     <a style="color: #FF69B4;padding:0.5rem" href="{% url 'remove_team_official' officialId=official.TeamOfficialId %}"><i class="fas  fa-trash-alt bin-icon"></i></a>
-                                                
-                                                    <a style="color: #FF69B4;padding:0.5rem" href="{% url 'update_team_official' officialId=official.TeamOfficialId %}" style="padding:5px"><i class="fas  fa-pencil-alt edit-icon"></i></a>
-                                            
+                                                    {% if application.Step != 'Application_review' %} 
+
+                                                        {% if application.Step != 'Pending' %}
+                                                            <a style="color: #FF69B4;padding:0.5rem" href="{% url 'update_team_official' officialId=official.TeamOfficialId %}" style="padding:5px"><i class="fas  fa-pencil-alt edit-icon"></i></a>
+                                                        {% endif %}
+                                                        
+
+
+
+                                                    {% else %}
+
+
+
+                                                    {% endif %}
                                             </div>
                                         </div>
                                         

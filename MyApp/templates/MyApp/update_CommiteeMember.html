@@ -20,21 +20,40 @@
 
         {% endfor %}
     {% endif %}
-
+    
     <div class="container">
-       
-            <div style="padding:1rem; display:flex;justify-content:space-between">
+        {% if application.Step != 'Application_review' %}
 
+            {% if application.Step != 'Pending' %}
                 <div>
-                    <h3><b>{{application.EventName}} committee Member</b>    
-                </div>
-                <div>
-                    <a href="{% url 'Add_Committee_Member' applicationId=application.ApplicationId %}" class="btn btn-default btn-danger">
-                        Abort Action
+                    <a style="color:white" href="{% url 'Add_Committee_Member' applicationId=application.ApplicationId %}" class="btn btn-default btn-danger">
+                        Abort action
                     </a>
                 </div>
+
+            {% endif %} 
+    
+
+        {% else %}
+
+        
+
+            <div>
+                <a href="{% url 'Committee' applicationId=application.ApplicationId %}" class="btn btn-default btn-danger">
+                    Abort Action
+                </a>
             </div>
+
+
+        {% endif %}
+        <hr/>
+        <div class="container" style="display:flex; justify-content:center; padding:1rem">
+                <h1 class="text">
+                    <b> {{application.EventName}}</b>
+                </h1>
+        </div>
        
+    
 
 
         <form method="post"  enctype="multipart/form-data" style="width:inherit">
@@ -136,13 +155,36 @@
                 <label class="form-label" for="Province">Province</label>
  
             </div>
+           
             <input class="btn btn-default btn-primary" style="width:100%" type="submit" value="Save changes"/> 
-            <div style="padding:1rem; display:flex; justify-content:center">
-                <a href="{% url 'Add_Committee_Member' applicationId=application.ApplicationId %}" class="btn btn-default btn-danger">
-                    Abort Action
-                </a>
+            <div>
+                <br/>
+                {% if application.Step != 'Application_review' %}
 
+                    {% if application.Step != 'Pending' %}
+                        <div>
+                            <a style="color:white" href="{% url 'Add_Committee_Member' applicationId=application.ApplicationId %}" class="btn btn-default btn-danger">
+                                Abort action
+                            </a>
+                        </div>
+
+                    {% endif %} 
+               
+            
+                {% else %}
+        
+                
+
+                    <div>
+                        <a href="{% url 'Committee' applicationId=application.ApplicationId %}" class="btn btn-default btn-danger">
+                            Abort Action
+                        </a>
+                    </div>
+
+
+                {% endif %}
             </div>
+            
         </form>
 
 

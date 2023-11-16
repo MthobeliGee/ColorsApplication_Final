@@ -1,0 +1,186 @@
+{% extends "MyApp/base.html" %}
+
+{% block content %}
+    {% load static %}
+    {% if messages %}
+        {% for message in messages %}
+            <br/>
+            <div>
+                <center>
+                    <div style="padding:1rem; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% endif %}">
+                        <p>
+                            <b> {{ message }}</b>
+                        </p>
+                    </div>
+                </center>
+            </div>
+
+        {% endfor %}
+    {% endif %}
+
+
+    <div class="container">
+        <div style="padding:1rem" class="text-center text-info">
+            <h2>
+                <b class="text-uppercase font-weight-bold">All Applications</b>
+            </h2>
+        </div>
+        <div class="row"  style="display:flex;justify-content:center">
+            <div style="padding:0.5rem;">
+    
+                <div style="padding:0.5rem; border:solid 1px; border-radius:12px;">
+                    <a href="{% url 'Applications' %}" class="btn btn-warning" style="color:green">
+                        <b>
+                            Pending
+                        </b>
+                    </a>
+                    
+                   
+                    
+    
+                </div>
+            
+            </div>
+           
+           
+            <div style="padding:0.5rem;">
+    
+                <div style="padding:0.5rem; border:solid 1px; border-radius:12px">
+                    <a href="{% url 'Approved' %}" class="btn btn-success">
+                        <b>
+                            Approved ({{numApproved}})
+                        </b>
+                    </a>
+                    
+                   
+                    
+    
+                </div>
+            
+            </div>
+            <div style="padding:0.5rem;">
+    
+                <div style="padding:0.5rem; border:solid 1px; border-radius:12px">
+                    <a href="{% url 'Active' %}" class="btn btn-success">
+                        <b>
+                            Active ({{numActive}})
+                        </b>
+                    </a>
+                    
+                   
+                    
+    
+                </div>
+            
+            </div>
+            
+            <div style="padding:0.5rem;">
+    
+                <div style="padding:0.5rem; border:solid 1px; border-radius:12px">
+                    <a href="{% url 'History' %}" class="btn btn-danger">
+                        <b>
+                            History
+                        </b>
+                    </a>
+                    
+                   
+                    
+    
+                </div>
+            
+            </div>
+           
+           
+           
+          
+    
+        </div>
+        <hr class="text-success" style="border:solid 2px"/>
+
+        <div>
+
+           
+            {% if applications %}
+                <div class="row">
+                    {% for application in applications %}
+                
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-header">
+
+                                    <h2>
+                                        {{application.EventName}}
+    
+                                    </h2>
+                                </div>
+                                <div class="card-body">
+                                    <div class="no-gutters align-items-center">
+                                        <div class="col mr-2" style="display:flex; justify-content: space-between;">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
+                                                <label>
+                                                    <b>City: {{application.HostCity}}</b>
+                                                </label><br/>
+    
+                                                <label>
+                                                    <b>Start Date: {{application.StartDate}}</b>
+                                                </label><br/>
+    
+                                                <label>
+                                                    <b>End date: {{application.EndDate}}</b>
+                                                </label><br/>
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                    </div>
+
+                                   
+                            
+                                </div>
+                                <div class="card-footer">
+
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2" style="display:flex;">
+                                           
+                                                <a class="text-center btn btn-info  text-uppercase font-weight-bold text-xs" href="{% url 'Application_review' applicationId=application.ApplicationId %}" style="width:100%">
+                                                    review
+                                                </a>
+                                           
+                                        </div>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                       
+                    {% endfor%}
+                
+
+    
+
+
+
+
+            
+
+
+                </div>
+            {% else %}
+
+                <div style="padding:1rem; display:flex; justify-content:center; font-size:25px; border:solid 1px; border-radius:12px " class="text-danger">
+                    <b>
+                        There are no applications belonging to the status '{{status}}''
+                    </b>
+                </div>
+
+            {% endif %}
+        <div>
+
+
+    </div>
+
+  
+
+{% endblock %}
