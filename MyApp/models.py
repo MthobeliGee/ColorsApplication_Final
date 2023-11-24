@@ -12,6 +12,8 @@ class FederationPersonel(models.Model):
     PersonelGender = models.CharField(max_length=6,null=True, blank=True)
     Status = models.CharField(max_length=20,default="Pending")
 
+
+
 # Create your models here.
 class Application(models.Model):
     ApplicationId = models.AutoField(primary_key=True)
@@ -50,6 +52,20 @@ class Application(models.Model):
     
     ApparelLetters = models.CharField(max_length=300, blank=True, null=True)
 
+
+class Apparel(models.Model):
+    
+    ApparelId = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User,blank=True,null=True,on_delete=models.CASCADE)
+    application = models.ForeignKey(Application,blank=True,null=True,on_delete=models.CASCADE)
+    letter  = models.CharField(max_length=300, default='NotProvided')
+    DateAdded = models.DateTimeField(default=datetime.now())
+    Status = models.CharField(max_length=20,default="Approved")
+    DateCreated = models.DateTimeField(default=datetime.now())
+    
+    
+    
+    
 class Represantative(models.Model):
     RepresantativeId = models.AutoField(primary_key=True)
     application = models.ForeignKey(Application,blank=True,null=True,on_delete=models.CASCADE)

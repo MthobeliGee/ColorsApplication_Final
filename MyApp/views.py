@@ -11,6 +11,7 @@ from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 import requests
+from .functions import *
 
 
 
@@ -37,23 +38,30 @@ def Home(request):
 @login_required
 def CreateApplication(request):
     user = request.user
+    
+    federationPersonel = None
+
+    try:
+        federationPersonel = get_object_or_404(FederationPersonel, user = user)
+        if federationPersonel.FederationName == None:
+            messages.error(request, "Please select your federation, in order to add a new application.")
+            return redirect("chooseFederation")
+    except:
+        messages.error(request, "Please select your federation")
+        return redirect("chooseFederation")
+    
     if request.method == 'GET':
-        try:
-            federationPersonel = get_object_or_404(FederationPersonel, user = user)
-            if federationPersonel.FederationName == None:
-                messages.error(request, "Please select your federation, in order to add a new application.")
-                return redirect("chooseFederation")
-        except:
-            messages.error(request, "Please select your federation")
         
+        
+   
         
         return render(request, 'MyApp/CreateApp.html')
     
     if request.method == 'POST':
-        traveldateTime = request.POST["TravelDate"]+" "+ request.POST["TravelTime"]
+       
         application = Application.objects.create(
                 user = user,
-        
+                FederationPersonel = federationPersonel,
                 EventName = request.POST['EventName'],
                 StartDate = request.POST['StartDate'],
                 EndDate = request.POST['EndDate'],
@@ -62,15 +70,23 @@ def CreateApplication(request):
                 NumberOfTeam = request.POST['NumberOfTeam'],
                 MethodOfSelection = request.POST['MethodOfSelection'],
                 SelectionApprovedDate = request.POST['SelectionApprovedDate'],
-                TravelDateTime = traveldateTime,
+                TravelDateTime = request.POST["TravelDateTime"],
                 ModeOfTravel = request.POST['ModeOfTravel'],
         
        )
-    messages.success(request, 'The information has been saved successfully, proceeed to add the team officials.')
-         
-        
-        
-    return redirect("addTeamOfficial", applicationId= application.ApplicationId)
+        application = get_object_or_404(Application, user = user, ApplicationStatus = "Oncreate")
+        print("application.StartDate: ", type(application.StartDate))
+        valid = checkDate(application.StartDate.day,application.StartDate.month,application.StartDate.year)
+        if valid:
+            messages.success(request, 'The information has been saved successfully, proceed to add the team officials.')
+                
+                
+                
+            return redirect("addTeamOfficial", applicationId= application.ApplicationId)
+        else:
+            application.delete()
+            messages.error(request, "you can only make applications for events 30 prior for submission")
+            return redirect("CreateApplication")
 @login_required
 def addTeamOfficial(request, applicationId):
     application = get_object_or_404(Application, pk = applicationId)
@@ -335,6 +351,8 @@ def AddRepp(request, applicationId):
             
         )
         messages.success(request, "Team represantative add successfully")
+        
+        
             
         return redirect("AddRepp",applicationId=application.ApplicationId)
 
@@ -685,8 +703,12 @@ def termsAndConditions(request, applicationId):
     
 @login_required  
 def Application_review(request, applicationId):
-    
-    application = get_object_or_404(Application, pk=applicationId)
+    application = None
+    try:
+        application = get_object_or_404(Application, pk=applicationId)
+    except:
+        messages.error(request, "The colors application you tried to access is not found")
+        return redirect("home")
     represantatives = Represantative.objects.filter(application = application)
     CommitteeMembers = CommitteeMember.objects.filter(application = application)
     teamOfficials = TeamOfficial.objects.filter(application= application)
@@ -694,19 +716,49 @@ def Application_review(request, applicationId):
     numOfficials = ObjectsLength(teamOfficials)
     numCommitee = ObjectsLength(CommitteeMembers)
     user = application.user
-    
+
     fedPerson = get_object_or_404(FederationPersonel, user = user)
+
+    
+    print(fedPerson)
     if application.Step == 'Complete':
         application.Step = 'Application_review'
         application.save()
     if request.method == 'GET':
-        return render(request, 'MyApp/Application_review.html', {"numCommitee":numCommitee,"numOfficials":numOfficials,"application":application,"represantatives":represantatives,"CommitteeMembers":CommitteeMembers,"teamOfficials":teamOfficials, "numApplicants":numApplicants, "FederationPersonel":fedPerson})
+        
+        apparel = None
+        if application.ApplicationStatus == "Active":
+            try:
+                apparel = get_object_or_404(Apparel, application= application)
+            except:
+                pass
+            
+        informationOBJ = {
+            "numCommitee":numCommitee,
+            "numOfficials":numOfficials,
+            "application":application,
+            "represantatives":represantatives,
+            "CommitteeMembers":CommitteeMembers,
+            "teamOfficials":teamOfficials,
+            "numApplicants":numApplicants,
+            "FederationPersonel":fedPerson, 
+            "apparel":apparel
+            }
+        return render(request, 'MyApp/Application_review.html', informationOBJ)
     
     if request.method == 'POST':
         
-        application.ApplicationStatus = 'Pending'
-        application.Step = 'Pending'
-        application.save()
+        valid = checkDate(application.StartDate.day,application.StartDate.month,application.StartDate.year)
+        if valid:
+            application.ApplicationStatus = 'Pending'
+            application.Step = 'Pending'
+        
+            application.save()
+        else:
+            application.delete()
+            messages.error(request, "you can only make applications for events 30 prior for submission, the application has been removed")
+            return redirect("CreateApplication")
+        
         
         #alert admin
         adminUsers = User.objects.filter(is_superuser = True)
@@ -861,7 +913,7 @@ def alert_admin_Application(request, to_email, application, admin_user):
 @login_required
 def my_applications(request):
     user = request.user
-    
+    messages.success(request, "This is a test message!")
     try:
         
         ActiveApplication = get_object_or_404(Application, user = user, ApplicationStatus = "Pending")
@@ -877,7 +929,14 @@ def my_applications(request):
                 pass  
     
     historyApplications  = []
-    
+    if ActiveApplication:
+   
+        t = sattleApplication(ActiveApplication.ApplicationId)
+       
+        if t:
+            
+           
+            messages.info(request, "Your application for colors has been sattled due to the end date being reached.")
     myApplications =  Application.objects.filter(user = user)
     
     for application in myApplications:
@@ -902,6 +961,46 @@ def my_applications(request):
     return render(request, "MyApp/my_applications.html", infrmationOBJ)
         
 
+
+def sattleApplication(applicationId):
+    isSattled = False
+    application = get_object_or_404(Application, pk = applicationId)
+    
+    year = application.EndDate.year
+    month = application.EndDate.month
+    day = application.EndDate.day
+    
+    currentYear = datetime.now().year
+    currentMonth = datetime.now().month
+    currentDay = datetime.now().day
+    
+    if year < currentYear:
+        print("year less")
+        isSattled = settle(application.ApplicationId)
+    elif year == currentYear:
+        print("year = ")
+        if month < currentMonth:
+            print("month <")
+            isSattled = settle(application.ApplicationId)
+        elif month == currentMonth:
+            if day < currentDay:
+                isSattled = settle(application.ApplicationId)
+    
+    return isSattled
+        
+        
+    
+def settle(applicationId):
+    
+    application = get_object_or_404(Application, pk = applicationId)
+    application.ApplicationStatus = "Sattled"
+    application.Step = "Sattled"
+    application.isHistory = True
+    application.save()
+    
+    return True
+    
+    
 
 @login_required
 def Applications(request):

@@ -7,8 +7,8 @@
             <br/>
             <div>
                 <center>
-                    <div style="padding:1rem; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% endif %}">
-                        <p>
+                    <div style="padding:1rem; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% elif message.tags == 'info' %}info{% endif %}">
+                        <p style="font-size:20px">
                             <b> {{ message }}</b>
                         </p>
                     </div>
@@ -18,36 +18,144 @@
         {% endfor %}
     {% endif %}
 
+    <div id="header-bottom">
+        <!-- Search Section Start -->
+        <div id="search" class="search-slider">
+            <div class="container">
+                <h1 style="font-size:60px">C<img style="border:solid 10px; border-radius:56%; height:50px;width:50px" src="{% static 'manageProfile/images/kzn-sports-confederation-logo.png' %}"/>lors applications at the KZNSC
+                </h1>
 
+            </div>
+        </div>
+        <!-- Search Section End -->
+        
+        <!-- Slider Section Start -->
+        <div id="headerSlider" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <li data-target="#headerSlider" data-slide-to="0" class="active"></li>
+                <li data-target="#headerSlider" data-slide-to="1"></li>
+                <li data-target="#headerSlider" data-slide-to="2"></li>
+            </ol>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="{% static 'management/img/imgae4.jpg' %}" alt="Royal Hotel">
+                </div>
+    
+                <div class="carousel-item">
+                    <img src="{% static 'management/img/Image7.jpg' %}" alt="Royal Hotel">
+                </div>
+                
+                <div class="carousel-item">
+                    <img src="{% static 'management/img/image3.jpg' %}" alt="Royal Hotel">
+                </div>
+               
+
+               
+            </div>
+    
+            <a class="carousel-control-prev" href="#headerSlider" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#headerSlider" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+        <!-- Slider Section End -->
+    </div>
+    <div id="welcome">
+        <div class="container">
+            <h3>Welcome To the colors application at KZNSC</h3>
+            <h4>Make your application to represent with pride to belong</h4> 
+            
+            {% if user.is_superuser == False %}    
+                {% if user.is_authenticated %}
+                    <p style="font-size:20px" >
+                        <b>
+                            On this application you will be able to make applocation for colore in so you an represent KZN on sporting events. In order to do so below.
+                        
+                        </b>
+                    </p>
+                    {% if application %}
+                    {% if application.ApplicationStatus == 'Oncreate' %}
+                        <a class="btn btn-default btn-info" href="{% url 'ContinueApplication' applicationId=application.ApplicationId %}"><b>Continue Application</b></a>
+                    {% endif %}
+                    {% if application.ApplicationStatus == "Complete" %}
+                        <a class="btn btn-default btn-info" href="{%   url 'Application_review' applicationId=application.ApplicationId  %}"><b> Review Application</b></a>
+
+                    {% elif application.ApplicationStatus == "Pending" %}
+
+                        <a class="btn btn-default btn-info" href="{%   url 'Application_review' applicationId=application.ApplicationId  %}"><b>My Application</b></a>
+                        
+                    
+                    {% else %}
+                        {% if application.ApplicationStatus != 'Oncreate' %}
+
+                            <a class="btn btn-default btn-info" href="{%  url 'CreateApplication'  %}"> <b>Create Application</b></a>
+
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+
+
+                    <a  href="{%  url 'CreateApplication'  %}"> <b>Create Application</b> </a>
+        
+                {% endif %}
+                {% else %}
+                    <p style="font-size:20px" >
+                        <b>
+                            On this application you will be able to make applocation for colore in so you an represent KZN on sporting events. In order to do so you must be logged in, if you do not have an account please register by clicking "Register" below.
+                        
+                        </b>
+                    </p>
+
+                    <p style="color: red; border:solid 4px; padding:1rem">
+                        <b>
+                            Please note that only federations that Completed the Governance Update for the current year will be allowed to make applications for colors, and all application must be made 30 days prior the event being applied for.
+
+                        </b>
+                    </p>
+
+                    <div class="row" style="display:flex;justify-content:center"> 
+                        <div style="padding:0.3rem">
+                            <a href="{% url 'Signup' %}"><b>Register</b></a>
+                        </div>
+                        <div style="padding:0.3rem">
+                            <a href="{% url 'login' %}"><b>Login</b></a>
+                        </div>
+                    </div>
+
+                {% endif %}
+            
+            {% else %}
+
+            <p style="font-size:20px; " >
+                <b>
+                    On this application as the admin you will be able to to view all application from "Pending" to 'History' by clicking below on "All Applications" .
+                
+                </b>
+            </p>
+                <div class="row" style="display:flex;justify-content:center"> 
+                    
+                    <div style="padding:0.3rem">
+                        <a href="{% url 'Applications' %}"><b>All Applications</b></a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
 
     <div style="display;flex; justify-content:center; align-content:center">
 
     
     
         <center>
-            {% if application %}
-                {% if application.ApplicationStatus == 'Oncreate' %}
-                    <a class="btn btn-default btn-info" href="{% url 'ContinueApplication' applicationId=application.ApplicationId %}"> Continue Application</a>
-                {% endif %}
-                {% if application.ApplicationStatus == "Complete" %}
-                    <a class="btn btn-default btn-info" href="{%   url 'Application_review' applicationId=application.ApplicationId  %}"> Review Application</a>
-
-                {% elif application.ApplicationStatus == "Pending" %}
-
-                    <a class="btn btn-default btn-info" href="{%   url 'Application_review' applicationId=application.ApplicationId  %}">My Application</a>
-                    
-
-                {% else %}
-
-                    <a class="btn btn-default btn-info" href="{%  url 'CreateApplication'  %}"> Create Application</a>
-
-
-                {% endif %}
+            {% if user.is_superuser == False %}
+                
             {% else %}
-
-
-                <a class="btn btn-default btn-info" href="{%  url 'CreateApplication'  %}"> Create Application</a>
-       
+           
+            
             {% endif %}
         </center>
 

@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect, get_object_or_404
-from MyApp.models import Application,Represantative, CommitteeMember, TeamOfficial,Thefunctions
+from MyApp.models import *
 from django.contrib import messages
 from django.contrib.auth.models import User 
 from django.contrib.auth.decorators import login_required
@@ -206,6 +206,60 @@ def alert_admin_cancel(request, to_email, application, admin_user):
         except:
             pass
     
-    return is_sent    
+    return is_sent  
 
 
+@login_required
+def addApparel(request, applicationId):
+    
+    application = None
+    
+    try:
+        application = get_object_or_404(Application, pk = applicationId)
+    except:
+        messages.error(request, "The application you tried to access is not found")
+        return redirect("home")
+    
+    
+    if request.method =='GET':
+        
+        return render(request, 'ProcessApplication/addApparel.html', {"application":application})
+    #now I am currently adding the view for this function
+    
+    
+    if request.method =='POST':
+        user  = request.user
+        # currenty doinng the part where the super user will ad the letter to approve clothing staff
+        #next we will go to the Gov.com application to make approval for the fedration acces for this
+        apparel = Apparel.objects.create(
+            user = user,
+            application = application,
+            letter = request.POST["letter"]
+        )
+        application.ApplicationStatus = "Active"
+        application.Step = "Active"
+        application.save()
+        messages.success(request, 'The letter for apparel has been uploaded suceessfully')
+        return redirect("Application_review", applicationId= application.ApplicationId)
+        
+
+@login_required
+def noLetterActivate(request, applicationId):
+    
+    application = None
+    
+    try:
+        application = get_object_or_404(Application, pk = applicationId)
+        
+    except:
+        messages.error(request, "The application you tried to access was not found")
+        return redirect("home")
+    
+    
+    if request.method == 'POST':
+        user = request.user
+        application.ApplicationStatus = "Active"
+        application.save()
+        
+        messages.success(request, "The application has been marked as \"Active\".")
+        return redirect("Application_review", applicationId=application.ApplicationId)

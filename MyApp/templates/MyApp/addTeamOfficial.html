@@ -10,10 +10,10 @@
             <br/>
             <div>
                 <center>
-                    <div style="padding:1rem;  border:solid 2px #FF69B4; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% endif %}">
-                    <p >
-                        <b> {{ message }}</b>
-                    </p>
+                    <div style="padding:1rem; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% elif message.tags == 'info' %}info{% endif %}">
+                        <p style="font-size:20px">
+                            <b> {{ message }}</b>
+                        </p>
                     </div>
                 </center>
             </div>
@@ -26,16 +26,17 @@
 
             {% if application.Step != 'Pending'%}
 
+                {% if teamOfficials %}
+                    <div style="padding:0.5rem;">
+                        <a href="{% url 'AddRepp' applicationId=application.ApplicationId %}" title="See officials page" class="btn btn-info">
+                            <b>
+                                Move on to the next step>>
+                            </b>
+                        </a>
+                    
 
-                <div style="padding:0.5rem;">
-                    <a href="{% url 'AddRepp' applicationId=application.ApplicationId %}" title="See officials page" class="btn btn-info">
-                        <b>
-                            Move on to the next step>>
-                        </b>
-                    </a>
-                
-
-                </div>
+                    </div>
+                {% endif %}
 
             {% else %}
 
@@ -71,125 +72,125 @@
     <div class="container">
        
 
-            <center>
-                <div  style="padding:1rem">
-                    <h1><b> {{application.EventName}} team officials</b></h1>
-                 </div>
-            </center>
-  
+        <center>
+            <div  style="padding:1rem">
+                <h1><b> {{application.EventName}} team officials</b></h1>
+                </div>
+        </center>
+        <div class="booking-form" style="border:solid 1px grey; padding:1rem; border-radius:12px">
 
-        <form method="post"  enctype="multipart/form-data" style="width:inherit">
-            {% csrf_token %}
-            <div class="row">
-                <div class="col-md-6 mb-4">
+            <form method="post"  enctype="multipart/form-data" style="width:inherit">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6 mb-4">
 
-                    <div class="form-outline">
+                        <div class="form-outline">
+                        
+                            <input required type="text" name="FirstName" placeholder="Team official first name."  class="form-control form-control-lg">
+                            <label class="form-label" for="FirstName">First Name</label>
                     
-                        <input required type="text" name="FirstName" placeholder="Team official first name."  class="form-control form-control-lg">
-                        <label class="form-label" for="FirstName">First Name</label>
-                
+                        </div>
+
                     </div>
 
-                </div>
-
-            
-            
-                <div class="col-md-6 mb-4">
-
-                <div class="form-outline" style="display:flex;flex-direction: column">
-                    
-                    <input required  type="text" name="LastName" placeholder="Official last name"  class="form-control form-control-lg">
-                    <label class="form-label" for="LastName">Last Name</label>
                 
-                </div>
-
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline">
-
-                    
-                        <select required name="Gender" class="form-control form-control-lg">
-                            <option value="Male">
-                                Male
-                            </option>
-                            <option value="Female">
-                                Female
-                            </option>
-                            <option value="Other">
-                                Other
-                            </option>
-                        </select>
-
-                        <label class="form-label" for="EndDate">Gender</label>
                 
+                    <div class="col-md-6 mb-4">
+
+                    <div class="form-outline" style="display:flex;flex-direction: column">
+                        
+                        <input required  type="text" name="LastName" placeholder="Official last name"  class="form-control form-control-lg">
+                        <label class="form-label" for="LastName">Last Name</label>
+                    
                     </div>
 
+                    </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
 
-            
-            
-                <div class="col-md-6 mb-4">
+                        <div class="form-outline">
 
-                <div class="form-outline" style="display:flex;flex-direction: column">
+                        
+                            <select required name="Gender" class="form-control form-control-lg">
+                                <option value="Male">
+                                    Male
+                                </option>
+                                <option value="Female">
+                                    Female
+                                </option>
+                                <option value="Other">
+                                    Other
+                                </option>
+                            </select>
+
+                            <label class="form-label" for="EndDate">Gender</label>
                     
-                    <input required  type="text" name="Designation"   class="form-control form-control-lg">
-                    <label class="form-label" for="Designation">Official Designation</label>
+                        </div>
+
+                    </div>
+
                 
-                </div>
+                
+                    <div class="col-md-6 mb-4">
 
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline">
+                    <div class="form-outline" style="display:flex;flex-direction: column">
+                        
+                        <input required  type="text" name="Designation"   class="form-control form-control-lg">
+                        <label class="form-label" for="Designation">Official Designation</label>
                     
-                        <select required  name="IDCopySubmited" class="form-control form-control-lg">
+                    </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+
+                        <div class="form-outline">
+                        
+                            <select required  name="IDCopySubmited" class="form-control form-control-lg">
+                                <option value="yes">
+                                    Yes
+                                </option>
+                                <option value="no">
+                                    No
+                                </option>
+                            </select>
+
+                            <label class="form-label" for="IDCopySubmited">Is the official id copy submited?</label>
+
+                    
+                        </div>
+
+                    </div>
+
+                
+                
+                    <div class="col-md-6 mb-4">
+
+                    <div class="form-outline" style="display:flex;flex-direction: column">
+                        
+                        <select required   name="AcceptanceofTeamAppointment"  class="form-control form-control-lg">
                             <option value="yes">
                                 Yes
                             </option>
                             <option value="no">
-                                No
+                                No 
                             </option>
-                        </select>
-
-                        <label class="form-label" for="IDCopySubmited">Is the official id copy submited?</label>
-
-                
+                        <select>
+                        <label class="form-label" for="AcceptanceofTeamAppointment">Is the acceptance of team appointment submited?</label>
+                    
                     </div>
 
+                    </div>
                 </div>
-
-            
-            
-                <div class="col-md-6 mb-4">
-
-                <div class="form-outline" style="display:flex;flex-direction: column">
-                    
-                    <select required   name="AcceptanceofTeamAppointment"  class="form-control form-control-lg">
-                        <option value="yes">
-                            Yes
-                        </option>
-                        <option value="no">
-                            No 
-                        </option>
-                    <select>
-                    <label class="form-label" for="AcceptanceofTeamAppointment">Is the acceptance of team appointment submited?</label>
                 
-                </div>
-
-                </div>
-            </div>
-            
-      
+        
 
 
-            <input class="btn btn-default btn-primary" style="width:100%" type="submit" value="Save Official details"/> 
-        </form>
-
+                <input class="btn btn-default btn-primary" style="width:100%" type="submit" value="Save Official details"/> 
+            </form>
+        </div>
 
 
     </div>
@@ -206,10 +207,11 @@
                     {% if application.Step != 'Application_review' %} 
 
                         {% if application.Step != 'Pending' %}
-                            <a href="{% url 'AddRepp' applicationId=application.ApplicationId %}" class="btn btn-default btn-success">
-                                Move on to the next step>>
-                            </a>
-
+                            {% if teamOfficials %}
+                                <a href="{% url 'AddRepp' applicationId=application.ApplicationId %}" class="btn btn-default btn-success">
+                                    Move on to the next step>>
+                                </a>
+                            {% endif %}
 
                         {% else %}
 

@@ -25,10 +25,10 @@
             <br/>
             <div>
                 <center>
-                    <div style="padding:1rem;  border:solid 2px #FF69B4; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% endif %}">
-                    <p >
-                        <b> {{ message }}</b>
-                    </p>
+                    <div style="padding:1rem; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% elif message.tags == 'info' %}info{% endif %}">
+                        <p style="font-size:20px">
+                            <b> {{ message }}</b>
+                        </p>
                     </div>
                 </center>
             </div>
@@ -179,7 +179,7 @@
                     <h2>
                         {{application.EventName}}
 
-                    </h2>
+                    </h2> <b>application review</b>
                 </div>
                 <div class="card-body">
                     <div class="no-gutters align-items-center">
@@ -330,6 +330,67 @@
                                 <label>Email: {{application.user.email}}
                             </p>
                         </div>
+                        {% if application.ApplicationStatus == "Approved" %}
+                            <hr style="background-color:green; height:5px"/>
+
+                            <p class="text-success" style="padding:1rem; font-size:15px"> 
+                                It will activate the application to upload the Apparel 
+                                <a href="{% url 'addApparel' applicationId=application.ApplicationId %}" style="font-size:20px"><b>here</b></a>
+                                 or specify if it is not needed, please thank you.<br/>
+                            
+                            </p>
+
+                        {% endif %}
+                        {% if application.ApplicationStatus == "Active" %}
+                            {% if apparel %}
+                                <hr style="background-color:green; height:5px; border-radius:12px"/>
+                                <div style="border:solid; border-radius: 12px;padding:1rem; color:green; display:flex" class="row">
+                                   <div style="padding:0.5rem" class="col">
+                                        
+
+                                        <div style="border:solid 5px; border-radius:12px; border-right:none; border-top:none; padding:1rem">
+                                            <h3>{{application.EventName}} apparel Letter</h3>
+                                            <hr/>
+                                            
+                                            <div>
+                                                <u style="font-size:20px"> Please note that an apparel has been approved for this application  see actions below.</u>   
+                                                <br/>
+                                                <div style="padding:1rem">
+                                                    <a style="border:solid; border-radius:100px; padding:0.5rem;display:flex; justify-content:center" href="{{apparel.letter}}"><b> View/download</b></a>
+                                                        
+                                                </div>
+                                            </div>
+                                        
+                                        </div>
+                                   </div>
+                                    
+                                   
+                                    <div style="padding:0.5rem" class="col">
+                                        <div style="border:solid 5px; border-radius:12px; border-right:none; border-top:none; padding:1rem">
+                                            <h3>
+                                                The letter was uploaded by:
+                                            </h3>
+                                            <hr/>
+                                            <p>
+        
+                                                
+                                                First name: {{apparel.user.first_name}}<br/>
+                                                Last name: {{apparel.user.last_name}}<br/>
+                                                Email: {{apparel.user.email}}<br/>  
+                                                Date uploaded: {{apparel.DateCreated}}
+        
+                                            <p/>
+                                        </div>
+                                    </div>
+                                   
+                                </div>
+                               
+
+
+                            {% endif %}
+
+
+                        {% endif %}
                         {% if application.ApplicationStatus == "Pending" %}
                             
 
@@ -404,7 +465,31 @@
 
                     {% endif %}
 
+                    {% if application.ApplicationStatus == "Active" %}
+                       <div style="padding:1rem">
+                            {% if apparel %}
+                                <hr style="background-color:green; height:5px; border-radius:12px"/>
+                                <center style="border:solid 5px; border-radius: 12px;border-right:none;border-top:none;padding:1rem; color:green">
+                                    <h3>{{application.EventName}} apparel Letter</h3>
+                                            <hr/>
+                                    <div>
+                                        <u style="font-size:20px"> Please note that an apparel has been approved for this application  see actions below.</u>   
+                                        <br/>
+                                        <div style="padding:1rem">
+                                            <a class="" style="border:solid; border-radius:100px; display:flex; justify-content:center" href="{{apparel.letter}}"> <b style="padding:0.5rem; "> View/download</b></a>
+                                                
+                                        </div>
+                                    
+                                    </div>
+                                
+                                </center>
 
+
+                            {% endif %}
+                       </div>
+
+
+                    {% endif %}
 
                 {% endif %}
 

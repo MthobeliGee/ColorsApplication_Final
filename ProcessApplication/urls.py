@@ -23,6 +23,9 @@ urlpatterns = [
     path('application_List', views.application_List, name="application_List"),
     path('ApproveApplication/<int:applicationId>', views.ApproveApplication, name="ApproveApplication"),
     path('DeclineApplication/<int:applicationId>', views.DeclineApplication, name="DeclineApplication"),
-    path('CancelApplication/<int:applicationId>', views.CancelApplication, name="CancelApplication")
+    path('CancelApplication/<int:applicationId>', views.CancelApplication, name="CancelApplication"),
+    path('addApparel/<int:applicationId>', views.addApparel, name="addApparel"),
+    path('noLetterActivate/<int:applicationId>', views.noLetterActivate, name="noLetterActivate")
+    
     
 ]

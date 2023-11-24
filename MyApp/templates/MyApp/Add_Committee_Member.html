@@ -10,10 +10,10 @@
             <br/>
             <div>
                 <center>
-                    <div style="padding:1rem;  border:solid 2px #FF69B4; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% endif %}">
-                    <p >
-                        <b> {{ message }}</b>
-                    </p>
+                    <div style="padding:1rem; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% elif message.tags == 'info' %}info{% endif %}">
+                        <p style="font-size:20px">
+                            <b> {{ message }}</b>
+                        </p>
                     </div>
                 </center>
             </div>
@@ -70,106 +70,106 @@
             </div>
         {% endif %}
 
+        <div style="border:solid 1px grey; padding:1rem; border-radius:12px">
+            <form method="post"  enctype="multipart/form-data" style="width:inherit">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6 mb-4">
 
-        <form method="post"  enctype="multipart/form-data" style="width:inherit">
-            {% csrf_token %}
-            <div class="row">
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline">
+                        <div class="form-outline">
+                        
+                            <input required type="text" name="FirstName" placeholder="First name"  class="form-control form-control-lg">
+                            <label class="form-label" for="FirstName">First Name</label>
                     
-                        <input required type="text" name="FirstName" placeholder="First name"  class="form-control form-control-lg">
-                        <label class="form-label" for="FirstName">First Name</label>
-                
+                        </div>
+
                     </div>
 
-                </div>
-
-            
-            
-                <div class="col-md-6 mb-4">
-
-                <div class="form-outline" style="display:flex;flex-direction: column">
-                    
-                    <input required  type="text" name="Surname" placeholder="Last name"  class="form-control form-control-lg">
-                    <label class="form-label" for="Surname">Last Name</label>
                 
-                </div>
-
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline">
-
-                    
-                        <select required name="Gender" class="form-control form-control-lg">
-                            <option value="Male">
-                                Male
-                            </option>
-                            <option value="Femal">
-                                Female
-                            </option>
-                            <option value="Other">
-                                Other
-                            </option>
-                        </select>
-
-                        <label class="form-label" for="EndDate">Gender</label>
                 
-                    </div>
-
-                </div>
-
-            
-            
-                <div class="col-md-6 mb-4">
-
-                <div class="form-outline" style="display:flex;flex-direction: column">
-                    
-                    <input required  type="text" name="PhoneNumber"   class="form-control form-control-lg">
-                    <label class="form-label" for="PhoneNumber">Phone Number</label>
-                
-                </div>
-
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 mb-4">
+                    <div class="col-md-6 mb-4">
 
                     <div class="form-outline" style="display:flex;flex-direction: column">
-                    
-                        <input required  type="email" name="Email"   class="form-control form-control-lg">
-                        <label class="form-label" for="Email">Email Address</label>
+                        
+                        <input required  type="text" name="Surname" placeholder="Last name"  class="form-control form-control-lg">
+                        <label class="form-label" for="Surname">Last Name</label>
                     
                     </div>
-                </div>
 
-            
-            
-                <div class="col-md-6 mb-4">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+
+                        <div class="form-outline">
+
+                        
+                            <select required name="Gender" class="form-control form-control-lg">
+                                <option value="Male">
+                                    Male
+                                </option>
+                                <option value="Femal">
+                                    Female
+                                </option>
+                                <option value="Other">
+                                    Other
+                                </option>
+                            </select>
+
+                            <label class="form-label" for="EndDate">Gender</label>
+                    
+                        </div>
+
+                    </div>
+
+                
+                
+                    <div class="col-md-6 mb-4">
 
                     <div class="form-outline" style="display:flex;flex-direction: column">
-                    
-                        <input required  type="text" name="City"   class="form-control form-control-lg">
-                        <label class="form-label" for="City">City</label>
+                        
+                        <input required  type="text" name="PhoneNumber"   class="form-control form-control-lg">
+                        <label class="form-label" for="PhoneNumber">Phone Number</label>
                     
                     </div>
 
+                    </div>
                 </div>
-            </div>
-            <!--*****************************************-->
-            <div >
+                <div class="row">
+                    <div class="col-md-6 mb-4">
 
-                    
-                <input required  type="text" name="Province"   class="form-control form-control-lg">
-                <label class="form-label" for="Province">Province</label>
- 
-            </div>
-            <input class="btn btn-default btn-primary" style="width:100%" type="submit" value="Save details"/> 
-        </form>
+                        <div class="form-outline" style="display:flex;flex-direction: column">
+                        
+                            <input required  type="email" name="Email"   class="form-control form-control-lg">
+                            <label class="form-label" for="Email">Email Address</label>
+                        
+                        </div>
+                    </div>
 
+                
+                
+                    <div class="col-md-6 mb-4">
+
+                        <div class="form-outline" style="display:flex;flex-direction: column">
+                        
+                            <input required  type="text" name="City"   class="form-control form-control-lg">
+                            <label class="form-label" for="City">City</label>
+                        
+                        </div>
+
+                    </div>
+                </div>
+                <!--*****************************************-->
+                <div >
+
+                        
+                    <input required  type="text" name="Province"   class="form-control form-control-lg">
+                    <label class="form-label" for="Province">Province</label>
+    
+                </div>
+                <input class="btn btn-default btn-primary" style="width:100%" type="submit" value="Save details"/> 
+            </form>
+        </div>
 
 
     </div>

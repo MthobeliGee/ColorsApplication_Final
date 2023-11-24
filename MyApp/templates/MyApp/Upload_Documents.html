@@ -10,10 +10,10 @@
             <br/>
             <div>
                 <center>
-                    <div style="padding:1rem;  border:solid 2px #FF69B4; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% endif %}">
-                    <p >
-                        <b> {{ message }}</b>
-                    </p>
+                    <div style="padding:1rem; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% elif message.tags == 'info' %}info{% endif %}">
+                        <p style="font-size:20px">
+                            <b> {{ message }}</b>
+                        </p>
                     </div>
                 </center>
             </div>
@@ -760,9 +760,9 @@
 
         HighPerformancePlan = document.getElementById("HighPerformancePlanId")
         EventInvitation = document.getElementById("EventInvitationId")
-        federation = "Net ball fed"
+        //federation = "Net ball fed"
        
-
+        federation = "{{application.FederationPersonel.FederationName}}"
         DocumentationOfSelectionSubmitted.addEventListener("change",function() {
             // document.getElementById('OfficialLetterhead_selected').innerHTML= '<h6 class="text-info"><b>uploading file.. please wait.</b></h6>';
             whichFileType = 'DocumentationOfSelectionSubmitted'

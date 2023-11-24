@@ -10,10 +10,10 @@
             <br/>
             <div>
                 <center>
-                    <div style="padding:1rem;  border:solid 2px #FF69B4; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% endif %}">
-                    <p >
-                        <b> {{ message }}</b>
-                    </p>
+                    <div style="padding:1rem; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% elif message.tags == 'info' %}info{% endif %}">
+                        <p style="font-size:20px">
+                            <b> {{ message }}</b>
+                        </p>
                     </div>
                 </center>
             </div>
@@ -22,154 +22,167 @@
     {% endif %}
 
     <div class="container">
-        <div style="display:flex;flex-direction:space-between;padding:1rem">
+        <center style="padding:1rem">
             <div>
-                <h3><b>Colors Application basic information</b></h3>
+                <div style="padding:1rem">
+                    <h3><b>Colors Application basic information</b></h3>
+                </div>
+                
+                
             </div>
-            <div>
+      
+        </center>
 
+        <div class="booking-form" style="border:solid 1px grey; padding:1rem; border-radius:12px">
+            <div style="border:solid 2px; padding: 1rem; border-radius:12px" class="text-danger">
+
+                <p class="text-danger" style="font-size:17px">
+                    <b>
+                        Please note the event you are applying for must be in 30 days or above, else you will not be allowed to continue with the application
+
+                    </b>
+                </p>
             </div>
-        </div>
+            <br/>
+            <form method="post"  enctype="multipart/form-data" style="width:inherit">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6 mb-4">
 
-
-        <form method="post"  enctype="multipart/form-data" style="width:inherit">
-            {% csrf_token %}
-            <div class="row">
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline">
-                    
-                        <input required type="text" name="EventName" placeholder="Name of event"  class="form-control form-control-lg">
-                        <label class="form-label" for="EventName">Event Name</label>
-                
-                    </div>
-
-                </div>
-
-            
-            
-                <div class="col-md-6 mb-4">
-
-                <div class="form-outline" style="display:flex;flex-direction: column">
-                    
-                    <input required  type="date" name="StartDate"  class="form-control form-control-lg">
-                    <label class="form-label" for="Middlename">Start Date</label>
-                
-                </div>
-
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline">
-                    
-                        <input required type="date" name="EndDate" class="form-control form-control-lg">
-                        <label class="form-label" for="EndDate">End Date</label>
-                
-                    </div>
-
-                </div>
-
-            
-            
-                <div class="col-md-6 mb-4">
-
-                <div class="form-outline" style="display:flex;flex-direction: column">
-                    
-                    <input required  type="number" name="NumberOfTeam"  class="form-control form-control-lg">
-                    <label class="form-label" for="NumberOfTeam">Number Of Team Members</label>
-                
-                </div>
-
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline">
-                    
-                        <input required type="text" name="HostCity" class="form-control form-control-lg">
-                        <label class="form-label" for="HostCity">Host City</label>
-                
-                    </div>
-
-                </div>
-
-            
-            
-                <div class="col-md-6 mb-4">
-
-                <div class="form-outline" style="display:flex;flex-direction: column">
-                    
-                    <input required  type="text" name="HostProvince"  class="form-control form-control-lg">
-                    <label class="form-label" for="Middlename">Host Province</label>
-                
-                </div>
-
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline">
-                    
-                        <input required type="text" name="MethodOfSelection" class="form-control form-control-lg">
-                        <label class="form-label" for="MethodOfSelection">Method Of Selection</label>
-                
-                    </div>
-
-                </div>
-
-            
-            
-                <div class="col-md-6 mb-4">
-
-                <div class="form-outline" style="display:flex;flex-direction: column">
-                    
-                   
-                    <input type="date" name="SelectionApprovedDate" class="form-control form-control-lg" />
+                        <div class="form-outline">
                         
-                    <label class="form-label" for="RepresatativeType">Team Selection Approved  Date</label>
-                
-                </div>
-
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline">
+                            <input required type="text" name="EventName" placeholder="Name of event"  class="form-control form-control-lg">
+                            <label class="form-label" for="EventName">Event Name</label>
                     
-                        <input required type="text" name="ModeOfTravel" class="form-control form-control-lg">
-                        <label class="form-label" for="ModeOfTravel">Mode of travel</label>
-                
+                        </div>
+
                     </div>
 
-                </div>
-
-            
-            
-                <div class="col-md-6 mb-4">
+                
+                
+                    <div class="col-md-6 mb-4">
 
                     <div class="form-outline" style="display:flex;flex-direction: column">
                         
-                        <div style="display:flex; ">
-                            <input required  type="date" name="TravelDate" style="border-right:none"  class="form-control form-control-lg">
-                            <input required type="time" name="TravelTime" style="padding:0.5rem; border:solid 1px grey; border-left:none; border-raduis:12px"/>
-                        </div>
-                        <label class="form-label" for="TravelDateTime">Travel Date And Time</label>
+                        <input required  type="date" name="StartDate"  class="form-control form-control-lg">
+                        <label class="form-label" for="Middlename">Start Date</label>
                     
                     </div>
 
+                    </div>
                 </div>
-            </div>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+
+                        <div class="form-outline">
+                        
+                            <input required type="date" name="EndDate" class="form-control form-control-lg">
+                            <label class="form-label" for="EndDate">End Date</label>
+                    
+                        </div>
+
+                    </div>
+
+                
+                
+                    <div class="col-md-6 mb-4">
+
+                    <div class="form-outline" style="display:flex;flex-direction: column">
+                        
+                        <input required  type="number" name="NumberOfTeam"  class="form-control form-control-lg">
+                        <label class="form-label" for="NumberOfTeam">Number Of Team Members</label>
+                    
+                    </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+
+                        <div class="form-outline">
+                        
+                            <input required type="text" name="HostCity" class="form-control form-control-lg">
+                            <label class="form-label" for="HostCity">Host City</label>
+                    
+                        </div>
+
+                    </div>
+
+                
+                
+                    <div class="col-md-6 mb-4">
+
+                    <div class="form-outline" style="display:flex;flex-direction: column">
+                        
+                        <input required  type="text" name="HostProvince"  class="form-control form-control-lg">
+                        <label class="form-label" for="Middlename">Host Province</label>
+                    
+                    </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+
+                        <div class="form-outline">
+                        
+                            <input required type="text" name="MethodOfSelection" class="form-control form-control-lg">
+                            <label class="form-label" for="MethodOfSelection">Method Of Selection</label>
+                    
+                        </div>
+
+                    </div>
+
+                
+                
+                    <div class="col-md-6 mb-4">
+
+                    <div class="form-outline" style="display:flex;flex-direction: column">
+                        
+                    
+                        <input type="date" name="SelectionApprovedDate" class="form-control form-control-lg" />
+                            
+                        <label class="form-label" for="RepresatativeType">Team Selection Approved  Date</label>
+                    
+                    </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+
+                        <div class="form-outline">
+                        
+                            <input required type="text" name="ModeOfTravel" class="form-control form-control-lg">
+                            <label class="form-label" for="ModeOfTravel">Mode of travel</label>
+                    
+                        </div>
+
+                    </div>
+
+                
+                
+                    <div class="col-md-6 mb-4">
+
+                        <div class="form-outline" style="display:flex;flex-direction: column">
+                            
+                            <div style="display:flex; ">
+                                <input required  type="datetime-local" name="TravelDateTime" style=""  class="form-control form-control-lg">
+                                
+                            </div>
+                            <label class="form-label" for="TravelDateTime">Travel Date And Time</label>
+                        
+                        </div>
+
+                    </div>
+                </div>
 
 
-            <input class="btn btn-default btn-primary" style="width:100%" type="submit" value="Save and continue"/> 
-        </form>
-
-
+                <input class="btn btn-default btn-primary" style="width:100%" type="submit" value="Save and continue"/> 
+            </form>
+            
+            
+        </div>
 
     </div>
 

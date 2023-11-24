@@ -1,0 +1,393 @@
+
+
+
+{% extends "MyApp/base.html" %}
+
+{% block content %}
+    {% load static %}
+    <style>
+
+        #TheReview:hover{
+            color:blue
+        }
+    </style>
+    {% if messages %}
+        {% for message in messages %}
+            <br/>
+            <div>
+                <center>
+                    <div style="padding:1rem;  border:solid 2px #FF69B4; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% endif %}">
+                    <p >
+                        <b> {{ message }}</b>
+                    </p>
+                    </div>
+                </center>
+            </div>
+
+        {% endfor %}
+    {% endif %}
+  
+    <div class="container">
+     
+            <div style="padding:1rem; display:flex;justify-content:space-between" class="row">
+
+                <div>
+                    <h3><b>{{application.EventName}} Apparel letter</b>    
+                </div>
+                <div>
+                   
+                  
+
+                            
+                          
+
+                        <div style="padding:0.5rem;">
+                            <a href="{% url 'Application_review' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
+                                <b>
+                                    Back to Application
+                                </b>
+                            </a>
+                                
+                
+                        </div>
+                          
+                   
+
+                </div>
+            </div>
+        
+
+
+        {% comment %} <form method="post"  enctype="multipart/form-data" style="width:inherit">
+            {% csrf_token %}
+       
+
+
+            <!--******************************************************************************-->
+          
+
+            <div class="">
+           
+
+                <div class="form-outline">
+                
+                    <input                    
+                    type="file" class="form-control form-control-lg">
+                    <label class="form-label" for="DocumentationOfSelectionSubmitted" id="lblDocumentationOfSelectionSubmitted">Documentation Of Selection<b id="msgDocumentationOfSelectionSubmitted"></b></label>
+            
+                </div>
+
+          
+
+            
+            
+               
+            </div>
+            <input class="btn btn-default btn-primary" style="width:100%" type="submit" value="Upload Letter"/> 
+        </form> {% endcomment %}
+
+
+
+
+
+
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="amenities">
+        <div class="container">
+            <div class="section-header">
+                <h2>Upload letter</h2>
+                <p>
+                    By upload the letter file automatically the application will be marked as "Active".
+                </p>
+                <br/>
+                <p>
+                    Application Status: <b class="text-success">{{application.ApplicationStatus}}</b>
+                </p>
+            </div>
+            
+                
+                    
+            <div id="msgApparelLetter" class="text-danger" style="font-size:17px">
+                
+                
+            </div>
+
+            <form method="post"  enctype="multipart/form-data" style="width:inherit">
+                {% csrf_token %}
+                <div class="item" style="display:flex; justify-content:center; flex-direction:column">
+                
+            
+                    <input type="file"  id="aplLetter" required   style="border:solid; border-left:none;border-top:none;border-radius:12px; padding:0.5rem;min-width:100px" />
+                    <input type="hidden" id="uploadDoc" name="letter"/>
+                    <label hidden id="TheReview"></label>
+                    <button type="submit" style="border:solid; border-radius:12px; padding:0.5rem" class="btn btn-success"><b>Submit upload</b></button>
+                    
+                    <div hidden  id="Ireview" src="" style="border:solid; border-right:none; border-left:none; border-radius:12px">
+                        <div>
+                            <h2>
+                                Letter Review
+                            </h2>
+                        </div>
+                        <hr/>
+             
+                        <iframe style="width:100%; height:600px; border-radius:12px" id="letterFrame">
+
+                        </iframe>
+
+                       
+
+                     
+                    </div >      
+                </div>
+
+              
+            </form>
+                        
+                        
+     
+                
+           
+
+        </div>
+    </div>
+    {% if application.ApplicationStatus == "Approved" %}
+        <div style="padding:1rem; display:flex;justify-content:center">
+            <h3><b>Or</b></h3>
+
+        </div>
+
+        <div id="amenities">
+            <div class="container">
+                <div class="section-header">
+                    
+                    <p>
+                        Activate the application without the need of the letter.
+                    </p>
+                    
+                </div>
+                
+                <div class="item row" style="display:flex; justify-content:center">
+                    <div class="col-md-4" style="border:solid; border-left:none;border-top:none;border-radius:12px" id="Activation">
+                        <div style="width:inherit; height:inherit">
+                            <h4>No letter Activation</h4>
+                                <hr/>
+                            <div style="padding:0.3rem">
+                                <p class="text-success" style="font-size:17px">
+
+                                    <b>
+                                        Please click button below to activate the application without uploading letter
+                                    </b>
+                                </p>
+
+                            </div>
+                            <hr/>
+                            <div style="padding:0.5rem">
+
+                                <button style="border:solid; border-radius:12px; color:green" class="btn btn-block"><b>Activate application</b></button>
+                           
+                            </div>
+                                
+                        </div>
+                        
+                    </div>
+
+                    <div class="col-md-4" style="border:solid; border-left:none;border-top:none;border-radius:12px" id="Confirmation">
+                        <div style="width:inherit; height:inherit">
+                            <form action="{% url 'noLetterActivate' applicationId=application.ApplicationId %}"  method="post" >
+                                {% csrf_token %}
+                                <h4>Confirmation</h4>
+                                <hr/>
+
+                                <div style="padding:0.3rem">
+                                    <p class="" style="font-size:17px; color:orange">
+
+                                        <b>
+                                            Please click button below to Confirm the activation of the application without uploading letter.
+                                        </b>
+                                    </p>
+
+                                </div>
+                                <hr/>
+                                <div style="padding:0.5rem">
+                                    <button type="submit" style="border:solid orange; border-radius:12px; padding:0.5rem; width:100%" class="btn btn-success"><b>Confirm Activation</b></button>
+                                </div>
+                            <form>
+                                
+                        </div>
+                        
+                    </div>
+                    
+
+                        
+                    
+                </div>
+                            
+                            
+                        
+                    
+            
+            </div>
+        </div>
+    {% endif %}
+
+
+
+
+
+
+    <script>
+        //no letter logic****************start********************
+
+
+        Activation = document.getElementById("Activation")
+        Confirmation = document.getElementById("Confirmation")
+        Confirmation.hidden = true
+
+        
+        Activation.addEventListener('click', function(){
+
+            alert("Please click on \"Confirm Activation\" if you are sure about activating the colors application of the {{application.EventName}} without the letter.")
+
+
+        Confirmation.hidden = false
+        Activation.hidden = true
+
+        })
+        //no letter logic*******************end*********************
+
+
+        //letter uploading
+      
+        aplLetter = document.getElementById("aplLetter")
+        
+        federation = "{{application.FederationPersonel.FederationName}}"
+       
+
+        aplLetter.addEventListener("change",function() {
+            // document.getElementById('OfficialLetterhead_selected').innerHTML= '<h6 class="text-info"><b>uploading file.. please wait.</b></h6>';
+            whichFileType = 'ApparelLetter'
+            file = aplLetter.files[0]
+            msgId = document.getElementById('msg'+whichFileType)
+            if (msgId){
+                 msgId.innerHTML=null
+             }
+            if (validatefile(file, whichFileType) ==false){
+                aplLetter.value = null
+                 return;
+             }
+             else{
+ 
+                 uploadFile(file,federation,whichFileType)
+             }
+             return null;
+        });
+
+
+
+
+
+
+        const uploadFile = (file, federation, whichFileType) =>{
+           
+            var ext = file.name.split('.').reverse()[0]
+            oldFilrName = file.name
+            
+           
+           // document.getElementById('OfficialLetterhead_selected').innerHTML= '<h6 class="text-info"><b>uploading file... please wait.</b></h6>';
+            
+            const form_data = new FormData();
+            form_data.append('fileUpload',file);
+            form_data.append('whichFileType',whichFileType);
+            form_data.append('Federation', federation);
+          
+            //email
+            //upload.php https://governance.kznsc.com/upload.php   http://localhost/code1/upload.php"  
+            fetch("http://localhost/Colors_Documents/upload.php",{
+                method:"POST",
+                
+               // mode:'no-cors',
+                
+                body:form_data
+            }).then(function(response){
+                console.log(response.status)
+                id = "lbl"+whichFileType
+                lblError = document.getElementById(id)
+                if(response.status == "200"){
+                    console.log("Uploaded!")
+                    filelinK = document.getElementById("uploadDoc")
+                    
+                    filelinK.value = 'http://localhost/Colors_Documents/uploads/'+federation+whichFileType+'.pdf'
+                    TheReview = document.getElementById("TheReview")
+                    //TheReview.href = filelinK.value 
+                    TheReview.innerHTML =  filelinK.value
+                    msgId.innerHTML  = null
+                    letterFrame = document.getElementById("letterFrame")
+                    letterFrame.src = filelinK.value
+                    document.getElementById("Ireview").hidden = false
+                    msgId.innerHTML += ' <i class="text-success">Uploaded</i>'
+                }
+              
+            })/*.catch(function(error){
+                console.log("error")
+                msgId.innerHTML  = null
+               // document.getElementById('OfficialLetterhead_selected').innerHTML= '<small class="text-danger"><b>Something went wrong, please try again.</b></small>'
+               msgId.innerHTML += ' <i class="text-danger">Something went wrong please try again</i>'
+
+            });*/
+            //OfficialLetterhead.value =null;
+         
+     
+            
+            
+        } 
+
+        function validatefile(file, whichFileType){
+            isValid = true
+            var ext = file.name.split('.').reverse()[0]
+            oldFilrName = file.name
+            id = "lbl"+whichFileType
+            lblError = document.getElementById(id)
+            console.log("Ext: "+ext)
+            thefile= document.getElementById(whichFileType)
+            msgId =document.getElementById('msg'+whichFileType) 
+            if (ext != 'pdf'){
+                
+                msgId.innerHTML += ' (<i style="color:red">Only PDF files accepted</i>)'
+               
+                return false;
+            }
+            if(file.size > (5*1024*1024)){
+                thefile.value =null;
+                msgId.innerHTML += ' (<i style="color:red">All files must be less than 5mb</i>)'
+                return false
+            }
+
+            
+            
+        }
+    </script>
+
+
+
+{% endblock %}
+
+
+
+

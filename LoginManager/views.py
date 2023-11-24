@@ -55,7 +55,7 @@ def ResertEmail(request, user, to_email):
     })
     print(to_email)
     try:
-        send_mail(mail_subject,f"{message}"  ,'hairforyoubymandy@gmail.com',[f'{to_email}'], fail_silently=False)
+        send_mail(mail_subject,f"{message}"  ,'',[f'{to_email}'], fail_silently=False)
         return messages.success(request,f"Click on the link that has been sent to {to_email}, to reset your password.")
     except:
         return messages.error(request, f"There was an erroe sening verification email, please ensure you enter the correct email")        
@@ -277,10 +277,14 @@ def password_reset_request(request):
 @login_required
 def account(request):
     user = request.user
-    
+    fedPerson = None
     if request.method == 'GET':
+        try:
+            fedPerson = get_object_or_404(FederationPersonel, user =  user)
+        except:
+            pass
         
-        return render(request, 'LoginManager/account.html')
+        return render(request, 'LoginManager/account.html', {"fedPerson":fedPerson})
     
     if request.method == 'POST':
         numUpdates = 0
@@ -295,6 +299,13 @@ def account(request):
         if user.email != request.POST["email"]:
             user.email = request.POST["email"]
             numUpdates += 1
+            
+            
+        if fedPerson:
+            if fedPerson.PersonelPhone != request.POST["PersonelPhone"]:
+                fedPerson.PersonelPhone = request.POST["PersonelPhone"]
+                fedPerson.save()
+                numUpdates += 1
             
         if numUpdates > 0:
             messages.success(request, "Account changes made succesfully.")
