@@ -33,7 +33,11 @@ urlpatterns = [
     path('Approved', views.Approved, name="Approved"),
     path('History', views.History, name="History"),
     path('Active', views.Active, name="Active"),
-    path('chooseFederation', views.chooseFederation, name="chooseFederation")
+    path('chooseFederation', views.chooseFederation, name="chooseFederation"),
+    
+    path('pendingFedPersonel/<str:FedName>', views.pendingFedPersonel, name="pendingFedPersonel"),
+    path('ApproveFedPersonel/<str:FedName>', views.ApproveFedPersonel, name="ApproveFedPersonel"),
+    path('DeclineFedPersonel/<str:FedName>', views.DeclineFedPersonel, name="DeclineFedPersonel"),
     
     
 ]

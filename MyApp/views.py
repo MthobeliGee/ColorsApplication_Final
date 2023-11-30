@@ -12,6 +12,10 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 import requests
 from .functions import *
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from django.http import JsonResponse
+
 
 
 
@@ -32,8 +36,21 @@ def Home(request):
                     pass
             
             
-        
-   
+        #Gov app code
+        Pendingcolors = None
+        # try:
+        user = request.user
+        fedP = get_object_or_404(FederationPersonel, user = request.user)
+        url = 'http://127.0.0.1:8000/pendingFedPersonel/'+ fedP.FederationName+'/'
+    
+        r = requests.get(url)
+        print(r.status_code)
+    
+        Pendingcolors = r.json()
+        print(Pendingcolors)
+        # except:
+        #     pass
+       
     return render(request,'MyApp/Home.html', {"application":application})
 @login_required
 def CreateApplication(request):
@@ -727,7 +744,7 @@ def Application_review(request, applicationId):
     if request.method == 'GET':
         
         apparel = None
-        if application.ApplicationStatus == "Active":
+        if application.ApplicationStatus == "Active" or application.ApplicationStatus == "Sattled":
             try:
                 apparel = get_object_or_404(Apparel, application= application)
             except:
@@ -1185,3 +1202,60 @@ def AlertGovManager(request, user, to_email, coloresUser, federationPersonel):
         pass        
 
     
+    
+@api_view(['GET'])
+@login_required
+def pendingFedPersonel(request, FedName):
+    
+    
+    federationPersonel = None
+    application = None
+    try:
+        federationPersonel = get_object_or_404(FederationPersonel, FederationName=FedName, Status = "Pending")
+        application = get_object_or_404(Application, FederationPersonel = federationPersonel)
+    except:
+        pass
+    
+    FedPerson = {
+        "first_name": federationPersonel.user.first_name,
+        "last_name":federationPersonel.user.last_name,
+        "email": federationPersonel.user.email,
+        "appStatus":application.ApplicationStatus,
+        "AppCreateDate":application.DateCreated
+        
+    }
+    
+    return JsonResponse(FedPerson)
+
+
+
+@api_view(['GET'])
+@login_required
+def ApproveFedPersonel(request, FedName):
+    federationPersonel = None
+    try:
+        federationPersonel = get_object_or_404(FederationPersonel, FederationName=FedName, Status = "Pending") 
+    except:
+        pass
+    if federationPersonel:
+        federationPersonel.Status = "Approved"
+        federationPersonel.save()   
+    return JsonResponse({"Status":"Approved"})
+
+
+@api_view(['GET'])
+@login_required
+def DeclineFedPersonel(request, FedName):
+    federationPersonel = None
+    try:
+        federationPersonel = get_object_or_404(FederationPersonel, FederationName=FedName, Status = "Pending") 
+        user = federationPersonel.user
+        user.delete()
+        
+        #alert user 
+    except:
+        pass
+   
+    return JsonResponse({"Status":"Declined"})
+
+
