@@ -278,11 +278,14 @@ def password_reset_request(request):
 def account(request):
     user = request.user
     fedPerson = None
+    
     if request.method == 'GET':
         try:
             fedPerson = get_object_or_404(FederationPersonel, user =  user)
         except:
             pass
+        
+        
         
         return render(request, 'LoginManager/account.html', {"fedPerson":fedPerson})
     
@@ -299,8 +302,12 @@ def account(request):
         if user.email != request.POST["email"]:
             user.email = request.POST["email"]
             numUpdates += 1
-            
-            
+        
+        try:
+            fedPerson = get_object_or_404(FederationPersonel, user =  user)
+        except:
+            pass   
+ 
         if fedPerson:
             if fedPerson.PersonelPhone != request.POST["PersonelPhone"]:
                 fedPerson.PersonelPhone = request.POST["PersonelPhone"]

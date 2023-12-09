@@ -39,15 +39,15 @@ def Home(request):
         #Gov app code
         Pendingcolors = None
         # try:
-        user = request.user
-        fedP = get_object_or_404(FederationPersonel, user = request.user)
-        url = 'http://127.0.0.1:8000/pendingFedPersonel/'+ fedP.FederationName+'/'
+        # user = request.user
+        # fedP = get_object_or_404(FederationPersonel, user = request.user)
+        # url = 'http://127.0.0.1:8000/pendingFedPersonel/'+ fedP.FederationName+'/'
     
-        r = requests.get(url)
-        print(r.status_code)
+        # r = requests.get(url)
+        # print(r.status_code)
     
-        Pendingcolors = r.json()
-        print(Pendingcolors)
+        # Pendingcolors = r.json()
+        # print(Pendingcolors)
         # except:
         #     pass
        
@@ -69,10 +69,25 @@ def CreateApplication(request):
     
     if request.method == 'GET':
         
-        
+        try:
+            application = get_object_or_404(Application, user = user, ApplicationStatus = "Complete")
+            if application:
+                messages.warning(request, "You have one application that is not yet submitted, please review details below")
+                return redirect("Application_review", applicationId = application.ApplicationId)
+            
+        except:
+            try:
+                application = get_object_or_404(Application, user = user, ApplicationStatus = "Oncreate")
+                if application:
+                    messages.warning(request, "You have one application that is not yet submitted, please scroll to move to complete the next step.")
+                    return redirect("home")
+                
+            except:
+                pass
+            
    
         
-        return render(request, 'MyApp/CreateApp.html')
+        return render(request, 'MyApp/CreateApp.html', {"federationPersonel":federationPersonel})
     
     if request.method == 'POST':
        
@@ -87,7 +102,7 @@ def CreateApplication(request):
                 NumberOfTeam = request.POST['NumberOfTeam'],
                 MethodOfSelection = request.POST['MethodOfSelection'],
                 SelectionApprovedDate = request.POST['SelectionApprovedDate'],
-                TravelDateTime = request.POST["TravelDateTime"],
+                TravelDateTime = request.POST["TravelDate"]+" "+ request.POST["TravelTime"],
                 ModeOfTravel = request.POST['ModeOfTravel'],
         
        )
@@ -102,7 +117,7 @@ def CreateApplication(request):
             return redirect("addTeamOfficial", applicationId= application.ApplicationId)
         else:
             application.delete()
-            messages.error(request, "you can only make applications for events 30 prior for submission")
+            messages.error(request, "you can only make applications for events 30 days prior for a successfull submission")
             return redirect("CreateApplication")
 @login_required
 def addTeamOfficial(request, applicationId):
@@ -930,7 +945,7 @@ def alert_admin_Application(request, to_email, application, admin_user):
 @login_required
 def my_applications(request):
     user = request.user
-    messages.success(request, "This is a test message!")
+   
     try:
         
         ActiveApplication = get_object_or_404(Application, user = user, ApplicationStatus = "Pending")
@@ -1131,7 +1146,8 @@ def chooseFederation(request):
     federations =[]
     try:
    
-        url = 'https://yonelahopewell1.pythonanywhere.com/GovApisComplayingFederations'
+       # url = 'https://yonelahopewell1.pythonanywhere.com/GovApisComplayingFederations'
+        url = 'https://kznsannualreport.pythonanywhere.com/GovApisComplayingFederations'
         r = requests.get(url)
     
      
@@ -1168,15 +1184,24 @@ def chooseFederation(request):
     if request.method == 'POST':
         
         user=  request.user
-        
-        FedPersonel = get_object_or_404(FederationPersonel, user = user)
-        FedPersonel.FederationName = request.POST["FederationName"]
-        FedPersonel.dateSelected = datetime.now()
-        FedPersonel.save()
+        try:
+            FedPersonel = get_object_or_404(FederationPersonel, user = user)
+            FedPersonel.FederationName = request.POST["FederationName"]
+            FedPersonel.dateSelected = datetime.now()
+            FedPersonel.save()
+        except:
+            FedPersonel = FederationPersonel.objects.create(
+                user = user,
+                FederationName = request.POST["FederationName"],
+                dateSelected = datetime.now()
+            )
+            
         AlertGovManager(request, user,request.POST["userEmail"],{"first_name": request.POST["userName"], "last_name":request.POST["userSurname"]},FedPersonel)
         messages.success(request, "Great you have selected your feration, you may continue with your application")
         #alert Governance manager by email
-        
+        if FedPersonel.PersonelPhone == None:
+            messages.warning(request, "please update your phone number and start again with the application process.")
+            return redirect("account")
         return redirect("CreateApplication")
     
     

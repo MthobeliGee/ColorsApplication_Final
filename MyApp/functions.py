@@ -14,22 +14,33 @@ def checkDate(dd, mm, yyyy):
     bMonths = mm - currentMonth
     
     if CurrentYear < yyyy and bMonths > 1:
-        
+        print("1")
         isValid = True
     if CurrentYear <= yyyy and bMonths <= 1:
-        
+        print("2")
         if bMonths > 1:
-            
+            print("4")
             isValid = True
         if bMonths == 1:
-            
-            days = dd+(lastDayMonth + currentday)
+            print("5")
+            days = dd+(lastDayMonth - currentday)
             
             if days >= 30:
+                print("6")
                 isValid = True
         if bMonths <1:
-            if dd >= 30:
-                isValid = True
+            print("7")
+            print("dd: ", dd)
+            if mm != currentMonth:
+                days = dd+(lastDayMonth - currentday)
+                if days >= 30:
+                    print(8)
+                    isValid = True
+            else:
+                print("8")
+                if dd >= 30:
+                    print("9")
+                    isValid = True
                    
                    
     return isValid

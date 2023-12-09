@@ -25,8 +25,13 @@
         <center style="padding:1rem">
             <div>
                 <div style="padding:1rem">
-                    <h3><b>Colors Application basic information</b></h3>
+                    <h1><b>Colors Application basic information</b></h1>
                 </div>
+                <hr/>
+                <h3>
+
+                    {{federationPersonel.FederationName}}
+                </h3>
                 
                 
             </div>
@@ -166,8 +171,9 @@
 
                         <div class="form-outline" style="display:flex;flex-direction: column">
                             
-                            <div style="display:flex; ">
-                                <input required  type="datetime-local" name="TravelDateTime" style=""  class="form-control form-control-lg">
+                            <div class="" style="display:flex;justify-content:center ">
+                                <input required  type="date" name="TravelDate" style=""  class="form-control form-control-lg">
+                                <input type="time" name="TravelTime" />
                                 
                             </div>
                             <label class="form-label" for="TravelDateTime">Travel Date And Time</label>

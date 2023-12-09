@@ -20,6 +20,16 @@
 
         {% endfor %}
     {% endif %}
+    <center>
+
+        <div>
+
+            <h3>
+
+                {{federationPersonel.FederationName}}
+            </h3>
+        </div>
+    </center>
     <div class="row"  style="display:flex;justify-content:center">
         {% if application.Step != 'Application_review' %} 
 
@@ -198,7 +208,7 @@
         <hr/>
         <div class="container">
             {% if teamOfficials %}
-            <div style="padding:1rem; display:flex;justify-content:space-between">
+            <div class="row" style="padding:1rem; display:flex;justify-content:space-between">
 
                 <div>
                     <h1><b>Selected team officials</b></h1>

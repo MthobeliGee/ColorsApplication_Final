@@ -8,7 +8,7 @@ class FederationPersonel(models.Model):
     user = models.ForeignKey(User,blank=True,null=True,on_delete=models.CASCADE)
     FederationName = models.CharField(max_length=255,blank=True,null=True)
     dateSelected = models.DateField(default=datetime.now())
-    PersonelPhone = models.CharField(max_length=255)
+    PersonelPhone = models.CharField(max_length=255 , null=True, blank=True)
     PersonelGender = models.CharField(max_length=6,null=True, blank=True)
     Status = models.CharField(max_length=20,default="Pending")
 

@@ -22,8 +22,20 @@
     {% endif %}
 
     <div class="container">
+        <div style="padding:1rem">
+
+            <center>
+
+                <h3>
+
+                    {{application.FederationPersonel.FederationName}}
+                </h3>
+            </center>
+
+        </div>
+      
         {% if represantatives %}
-            <div style="padding:1rem; display:flex;justify-content:space-between">
+            <div class="row" style="padding:1rem; display:flex;justify-content:space-between">
 
                 <div>
                     <h3><b>{{application.EventName}} team Applcants</b>    
