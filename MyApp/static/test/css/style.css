@@ -449,7 +449,7 @@ h6 {
     position: absolute;
     content: '';
     width: 100px;
-    height: 0px;
+    height: 1px;
     bottom: 0;
     left: calc(50% - 50px);
     background: #666;

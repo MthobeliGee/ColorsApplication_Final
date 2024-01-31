@@ -38,6 +38,7 @@ urlpatterns = [
     path('pendingFedPersonel/<str:FedName>', views.pendingFedPersonel, name="pendingFedPersonel"),
     path('ApproveFedPersonel/<str:FedName>', views.ApproveFedPersonel, name="ApproveFedPersonel"),
     path('DeclineFedPersonel/<str:FedName>', views.DeclineFedPersonel, name="DeclineFedPersonel"),
+    path('testTemp', views.testTemp, name="testTemp")
     
     
 ]

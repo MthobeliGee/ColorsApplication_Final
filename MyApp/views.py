@@ -18,6 +18,11 @@ from django.http import JsonResponse
 
 
 
+def testTemp(request):
+    
+    
+    return render(request, 'MyApp/test.html')
+
 
 def Home(request):
     application  = None
