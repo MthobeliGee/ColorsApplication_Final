@@ -73,7 +73,7 @@
                         <b style="font-size:25px" class="text-success"> | </b>
                         
                         <a href="{% url 'addTeamOfficial' applicationId=application.ApplicationId %}" >
-                            <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>
+                            <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>Edit
                         </a>
                     {% endif %}
 
@@ -94,9 +94,10 @@
                 </a> 
                 {% if user.is_superuser != True %}
                     {% if application.isHistory == False%}
+                    
                         <b style="font-size:25px" class="text-success"> | </b>
                         <a title="Go to Applicants editing page" href="{% url 'AddRepp' applicationId=application.ApplicationId %}" >
-                            <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>
+                            <i class="fas fa-1x  fa-pencil-alt edit-icon"></i> Edit
                         </a>
                     {% endif %}
                 {% endif %}
@@ -118,7 +119,7 @@
                     {% if application.isHistory == False%}
                         <b style="font-size:25px" class="text-success"> | </b>
                         <a title="Go to Committee members editing page"  href="{% url 'Add_Committee_Member' applicationId=application.ApplicationId %}" >
-                            <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>
+                            <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>Edit
                         </a>
                     {% endif %}
                 {% endif  %}
@@ -139,8 +140,8 @@
                 {% if user.is_superuser != True %}
                     {% if application.isHistory == False%}
                         <b style="font-size:25px" class="text-success"> | </b>
-                        <a title="Go to Documents editing page"  href="{% url 'Upload_Documents' applicationId=application.ApplicationId %}" >
-                            <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>
+                        <a title="Go to Documents editing page"  href="{% url 'Upload_DocumentsTest' applicationId=application.ApplicationId %}" >
+                            <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>Edit
                         </a>
                     {% endif %}
                 {% endif %}
@@ -513,7 +514,7 @@
                 {% if application.ApplicationStatus != "Pending"%}
                     {% if application.ApplicationStatus == 'Complete'%}
 
-                        <div>
+                        <div style="padding:1rem">
                         
                         
 

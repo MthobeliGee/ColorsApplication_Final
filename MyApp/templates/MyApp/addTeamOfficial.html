@@ -34,19 +34,23 @@
         {% if application.Step != 'Application_review' %} 
 
 
-            {% if application.Step != 'Pending'%}
+            {% if application.ApplicationStatus != 'Pending' and  application.ApplicationStatus != 'Complete'%}
 
-                {% if teamOfficials %}
-                    <div style="padding:0.5rem;">
-                        <a href="{% url 'AddRepp' applicationId=application.ApplicationId %}" title="See officials page" class="btn btn-info">
-                            <b>
-                                Move on to the next step>>
-                            </b>
-                        </a>
-                    
 
-                    </div>
-                {% endif %}
+     
+
+                    {% if teamOfficials %}
+                        <div style="padding:0.5rem;">
+                            <a href="{% url 'AddRepp' applicationId=application.ApplicationId %}" title="See officials page" class="btn btn-info">
+                                <b>
+                                    Move on to the next step>>
+                                </b>
+                            </a>
+                        
+
+                        </div>
+            
+                    {% endif %}
 
             {% else %}
 

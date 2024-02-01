@@ -43,7 +43,7 @@
                 
                 <div>
                     
-                    {% if application.Step != 'Application_review' %} 
+                    {% if application.ApplicationStatus != 'Application_review' and  application.ApplicationStatus != 'Complete' %} 
 
                         {% if application.Step != 'Pending' %}
                             <a href="{% url 'Add_Committee_Member' applicationId=application.ApplicationId %}" class="btn btn-default btn-success">

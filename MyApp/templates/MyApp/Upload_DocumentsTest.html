@@ -49,7 +49,36 @@
                         </div>
                           
                     {% endif %}
+                    
+                    {% if application.ApplicationStatus != 'Application_review' and  application.ApplicationStatus != 'Complete'%} 
 
+                    {% if application.Step != 'Pending' %}
+                        <a href="{% url 'Upload_DocumentsTest' applicationId=application.ApplicationId %}" class="btn btn-default btn-success">
+                            Move on to the next step>>
+                        </a>
+
+
+                    {% else %}
+
+                        <div style="padding:0.5rem;">
+                            <a href="{% url 'Application_review' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
+                                <b>
+                                    Back to Application
+                                </b>
+                            </a>
+                        
+        
+                        </div>
+                    {% endif %}
+
+                {% else %}
+                    <a href="{% url 'Application_review' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
+                        <b>
+                            Back to Application review
+                        </b>
+                    </a>
+
+                {% endif %}
 
                     {% if application.Step == 'Application_review' %}
                             <a href="{% url 'Application_review' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
@@ -216,32 +245,44 @@
 
 
 
-        {% if application.Step == 'Pending' %}
+        {% if application.Step == 'Pending' or application.ApplicationStatus == 'Complete' %}
             <div style="padding:1rem;  display:flex;justify-content:center">
                 <h2>
-                    <b>Documents</b>
+                    <b>Documents</b> 
                 </h2>
 
             </div>
-            <div class="row" >
-            
+           
+            <div class="row">
+                
+                
                 <div class="col-xl-3 col-md-6 mb-4">
                     <div class="card border-left-primary shadow h-100 py-2">
                         <div class="card-body">
                             <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
                                 {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
                                 {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
-                            
-                                <iframe id="iframe" src="{{docs.RegulationsInterestDeclaration}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
+                                <iframe id="iframe" src="http://{{Domain}}/media/{{docs.RegulationsInterestDeclaration}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
 
                                 </iframe>
+
+                               
                             </div>
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2" style="display:flex; justify-content: space-between;">
                                     <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
                                         Regulations Interest Declaration
                                     </div>
-                                    
+                                    <div>
+
+                                        <a href="http://{{Domain}}/media/{{docs.RegulationsInterestDeclaration}}">
+                                        <h4>
+                                                <b>
+                                                    view
+                                                </b>
+                                            </h4>
+                                        </a>
+                                    </div>
                                 </div>
                             
                             </div>
@@ -268,7 +309,7 @@
                                 {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
                                 {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
                             
-                                <iframe id="iframe" src="{{docs.SelectionCriteriaProtocols}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
+                                <iframe id="iframe" src="http://{{Domain}}/media/{{docs.SelectionCriteriaProtocols}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
 
                                 </iframe>
                             </div>
@@ -276,6 +317,16 @@
                                 <div class="col mr-2" style="display:flex; justify-content: space-between;">
                                     <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
                                         Selection Criteria Protocols
+                                    </div>
+                                    <div>
+
+                                        <a href="http://{{Domain}}/media/{{docs.SelectionCriteriaProtocols}}">
+                                        <h4>
+                                                <b>
+                                                    view
+                                                </b>
+                                            </h4>
+                                        </a>
                                     </div>
                                     
                                 </div>
@@ -304,7 +355,7 @@
                                 {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
                                 {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
                             
-                                <iframe id="iframe" src="{{docs.GeneralRegulationSelectionProcedure}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
+                                <iframe id="iframe" src="http://{{Domain}}/media/{{docs.GeneralRegulationSelectionProcedure}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
 
                                 </iframe>
                             </div>
@@ -315,6 +366,16 @@
                                     </div>
                                     
                                 </div>
+                                <div>
+
+                                    <a href="http://{{Domain}}/media/{{docs.GeneralRegulationSelectionProcedure}}">
+                                    <h4>
+                                            <b>
+                                                view
+                                            </b>
+                                        </h4>
+                                    </a>
+                                </div>
                             
                             </div>
                             <div class="row no-gutters align-items-center" style="padding:1rem">
@@ -340,7 +401,7 @@
                                 {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
                                 {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
                             
-                                <iframe id="iframe" src="{{docs.TeamOfficialDuties}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
+                                <iframe id="iframe" src="http://{{Domain}}/media/{{docs.TeamOfficialDuties}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
 
                                 </iframe>
                             </div>
@@ -349,6 +410,16 @@
                                     <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
                                         Team Official Duties
                                     </div>
+                                    <div>
+
+                                        <a href="http://{{Domain}}/media/{{docs.TeamOfficialDuties}}">
+                                        <h4>
+                                                <b>
+                                                    view
+                                                </b>
+                                            </h4>
+                                        </a>
+                                    </div>
                                     
                                 </div>
                             
@@ -376,7 +447,7 @@
                                 {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
                                 {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
                             
-                                <iframe id="iframe" src="{{docs.HighPerformancePlan}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
+                                <iframe id="iframe" src="http://{{Domain}}/media/{{docs.HighPerformancePlan}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
 
                                 </iframe>
                             </div>
@@ -385,7 +456,16 @@
                                     <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
                                         High Performance Plan
                                     </div>
-                                    
+                                    <div>
+
+                                        <a href="http://{{Domain}}/media/{{docs.HighPerformancePlan}}">
+                                        <h4>
+                                                <b>
+                                                    view
+                                                </b>
+                                            </h4>
+                                        </a>
+                                    </div>
                                 </div>
                             
                             </div>
@@ -412,7 +492,7 @@
                                 {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
                                 {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
                             
-                                <iframe id="iframe" src="{{docs.EventInvitation}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
+                                <iframe id="iframe" src="http://{{Domain}}/media/{{docs.EventInvitation}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
 
                                 </iframe>
                             </div>
@@ -421,7 +501,16 @@
                                     <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
                                         Event Invitation 
                                     </div>
-                                    
+                                    <div>
+
+                                        <a href="http://{{Domain}}/media/{{docs.EventInvitation}}">
+                                        <h4>
+                                                <b>
+                                                    view
+                                                </b>
+                                            </h4>
+                                        </a>
+                                    </div>
                                 </div>
                             
                             </div>
@@ -450,6 +539,12 @@
 
         {% endif %}
 
+
+
+
+
+        
+        
         {% if application.Step == 'Application_review' %}
 
             <div style="padding:1rem; display:flex;justify-content:center">

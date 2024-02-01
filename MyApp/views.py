@@ -66,7 +66,9 @@ def CreateApplication(request):
     try:
         federationPersonel = get_object_or_404(FederationPersonel, user = user)
         if federationPersonel.FederationName == None:
+         
             messages.error(request, "Please select your federation, in order to add a new application.")
+            print("Chhose!2")
             return redirect("chooseFederation")
     except:
         messages.error(request, "Please select your federation")
@@ -1304,7 +1306,7 @@ def Upload_DocumentsTest(request, applicationId):
     docs  = None
     
     try:
-        docs = get_object_or_404(FedDocuments, FederationPersonel = application.FederationPersonel, Year = str(datetime.now().date))
+        docs = get_object_or_404(FedDocuments, FederationPersonel = application.FederationPersonel, Year = str(datetime.now().year))
         
     except:
         pass
@@ -1313,8 +1315,8 @@ def Upload_DocumentsTest(request, applicationId):
         application.Step = 'Upload_Documents'
         application.save()
     if request.method == 'GET':
-        
-        return render(request, 'MyApp/Upload_DocumentsTest.html',{"application":application, "docs":docs}) 
+        Domain = get_current_site(request)
+        return render(request, 'MyApp/Upload_DocumentsTest.html',{"application":application, "docs":docs, "Domain":Domain}) 
     
     if request.method == 'POST':
        
@@ -1393,7 +1395,7 @@ def Upload_DocumentsTest(request, applicationId):
             else:
                 messages.error(request, 'No changes made')   
                 
-            #return redirect("Upload_Documents", applicationId = application.ApplicationId)
+            return redirect("Upload_DocumentsTest", applicationId = application.ApplicationId)
             
             
                     
