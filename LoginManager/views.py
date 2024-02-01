@@ -134,22 +134,23 @@ def signupuser(request):
         return render(request,'LoginManager/signup.html')
     else:
         if request.POST['password1'] == request.POST['password2']:
-            # try:
-            user = User.objects.create_user(first_name = request.POST["first_name"],last_name = request.POST["last_name"],username = request.POST['email'].lower(),email =request.POST['email'].lower(), password = request.POST['password1'],)# email = request.POST['email'],
-            user.is_active = False
-            user.save()
-            fedPersonel = FederationPersonel.objects.create(
-                user = user,
-                # FederationName = request.POST["FederationName"],
-                PersonelPhone = request.POST["PersonelPhone"]
-            )
-            ActivationEmail(request, user, request.POST['email'].lower())
-            #login(request,user)
-            messages.success(request,"Account created successfully, an email has been sent for activation please visit email ("+request.POST['email'].lower()+") to activate your account.")
-            return redirect('home')
-            # except IntegrityError:
-            #     messages.error(request, "something went wrong please try again.")
-            #     return render(request,'LoginManager/signup.html',{'form':UserCreationForm(), 'error':'Username Already Taken'})
+            try:
+                user = User.objects.create_user(first_name = request.POST["first_name"],last_name = request.POST["last_name"],username = request.POST['email'].lower(),email =request.POST['email'].lower(), password = request.POST['password1'],)# email = request.POST['email'],
+                user.is_active = False
+                user.save()
+                fedPersonel = FederationPersonel.objects.create(
+                    user = user,
+                    # FederationName = request.POST["FederationName"],
+                    PersonelPhone = request.POST["PersonelPhone"]
+                )
+                ActivationEmail(request, user, request.POST['email'].lower())
+                #login(request,user)
+                messages.success(request,"Account created successfully, an email has been sent for activation please visit email ("+request.POST['email'].lower()+") to activate your account.")
+                return redirect('home')
+            except IntegrityError:
+               
+                return render(request,'LoginManager/signup.html',{'form':UserCreationForm(), 'error':'Username Already Taken'})
+            
             
         else:
             return render(request,'LoginManager/signup.html',{'form':UserCreationForm(), 'error':'Passwords did not match'})

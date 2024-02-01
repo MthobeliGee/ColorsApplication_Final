@@ -38,7 +38,11 @@ urlpatterns = [
     path('pendingFedPersonel/<str:FedName>', views.pendingFedPersonel, name="pendingFedPersonel"),
     path('ApproveFedPersonel/<str:FedName>', views.ApproveFedPersonel, name="ApproveFedPersonel"),
     path('DeclineFedPersonel/<str:FedName>', views.DeclineFedPersonel, name="DeclineFedPersonel"),
-    path('testTemp', views.testTemp, name="testTemp")
+    path('testTemp', views.testTemp, name="testTemp"),
+    
+    
+    #test zone
+    path('Upload_DocumentsTest/<int:applicationId>',views.Upload_DocumentsTest, name="Upload_DocumentsTest")
     
     
 ]

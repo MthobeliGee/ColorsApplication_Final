@@ -1,3 +1,6 @@
+
+
+
 {% extends "MyApp/base.html" %}
 
 {% block content %}
@@ -14,71 +17,231 @@
                     </div>
                 </center>
             </div>
+
         {% endfor %}
     {% endif %}
-
-
-
+    <!--
+        <input required type="text" name="FirstName" placeholder="First name"  class="form-control form-control-lg">
+                        <label class="form-label" for="FirstName">First Name</label>
+    -->
     <div class="container">
-        <div style="display:flex; justify-content:space-between; padding:1rem">
-            <div>
-                <h2><b>{{application.EventName}} Documents</b></h2>
-            </div>
-            <div class="row">
-                
-                <div style="padding:1rem">
-                    <a href="{% url 'Application_review' applicationId=application.ApplicationId  %}" title="" class="btn btn-info">
-                        <b>
-                            << Back to application
-                        </b>
-                    </a>
+     
+            <div style="padding:1rem; display:flex;justify-content:space-between">
+
+                <div>
+                    <h3><b>{{application.EventName}} documents</b>    
                 </div>
-                {% if user.is_superuser != True %}
-                    <div style="padding:1rem">
-                        
-                            <a title="Go to Documents editing page" href="{% url 'Upload_Documents' applicationId=application.ApplicationId %}" >
-                                <i class="fas fa-2x  fa-pencil-alt edit-icon"></i>
+                <div>
+                   
+                    {% if application.Step == 'Pending' %} 
+
+                            
+                          
+
+                        <div style="padding:0.5rem;">
+                            <a href="{% url 'Application_review' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
+                                <b>
+                                    Back to Application
+                                </b>
+                            </a>
+                                
+                
+                        </div>
+                          
+                    {% endif %}
+
+
+                    {% if application.Step == 'Application_review' %}
+                            <a href="{% url 'Application_review' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
+                                <b>
+                                    Back to Application review
+                                </b>
                             </a>
 
-                        
-                    </div>
-                {% endif %}
+                    {% endif %}
+                </div>
             </div>
-        </div>
-        <hr/>
-        <br/>
-        {% if docs %}
+        
 
+
+        <form method="post"  enctype="multipart/form-data" style="width:inherit">
+            {% csrf_token %}
             <div class="row">
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline">
+                    
+                        <input id="RegulationsInterestDeclarationID"
+                        {% if application.Step != 'Application_review' and  application.Step == 'Pending' %}
+                            required
+                        {% endif %}
+                        
+                        type="file" name="RegulationsInterestDeclaration" class="form-control form-control-lg">
+                        <label class="form-label" for="FirstName" id="lblRegulationsInterestDeclaration">Regulations Interest Declaration <b id="msgRegulationsInterestDeclaration"> </b></label>
+                        
                 
+                    </div>
+
+                </div>
+
+            
+            
+                <div class="col-md-6 mb-4">
+
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    
+                    <input 
+                    {% if application.Step != 'Application_review' and  application.Step == 'Pending' %}
+                        required
+                    {% endif %}
+                    type="file"  name="SelectionCriteriaProtocols" id="SelectionCriteriaProtocolsId" placeholder="Last name"  class="form-control form-control-lg">
+                    <label class="form-label" for="Surname" id="lblSelectionCriteriaProtocols">Selection Criteria Protocols<b id="msgSelectionCriteriaProtocols"></b></label>
+     
+
                 
+                </div>
+
+                </div>
+            </div>
+
+
+            <!--******************************************************************************-->
+            <div class="row">
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline">
+                    
+                        <input id="GeneralRegulationSelectionProcedureID" 
+                        
+                        {% if application.Step != 'Application_review' and  application.Step == 'Pending' %}
+                            required
+                        {% endif %} 
+                        
+                        type="file" name="GeneralRegulationSelectionProcedure" class="form-control form-control-lg">
+                        <label class="form-label" for="GeneralRegulationSelectionProcedure" id="lblGeneralRegulationSelectionProcedure">General Regulation Selection Procedure<b id="msgGeneralRegulationSelectionProcedure"></b></label>
+                      
+                
+                    </div>
+
+                </div>
+
+            
+            
+                <div class="col-md-6 mb-4">
+
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    
+                    <input 
+                    
+                    {% if application.Step != 'Application_review' and  application.Step == 'Pending' %}
+                            required
+                    {% endif %}
+                    
+                    type="file" name="TeamOfficialDuties" id="TeamOfficialDutiesId" placeholder="Last name"  class="form-control form-control-lg">
+                    <label class="form-label" for="Surname" id="lblTeamOfficialDuties">Team Official Duties<b id="msgTeamOfficialDuties"></b></label>
+           
+
+                
+                </div>
+
+                </div>
+            </div>
+            <!--*************************************************************************-->
+            <div class="row">
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline">
+                    
+                        <input id="HighPerformancePlanId" 
+                        
+                        {% if application.Step != 'Application_review' and  application.Step == 'Pending' %}
+                            required
+                        {% endif %}
+                        
+                        type="file" name="HighPerformancePlan" class="form-control form-control-lg">
+                        <label class="form-label" for="HighPerformancePlan" id="lblHighPerformancePlan">High Performance Plan<b id="msgHighPerformancePlan"></b></label>
+                       
+                
+                    </div>
+
+                </div>
+
+            
+            
+                <div class="col-md-6 mb-4">
+
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    
+                    <input 
+                    
+                    {% if application.Step != 'Application_review' and  application.Step == 'Pending' %}
+                        required
+                    {% endif %}  
+                    
+                    type="file"  name="EventInvitation" id="EventInvitationId" placeholder="Last name"  class="form-control form-control-lg">
+                    <label class="form-label" for="EventInvitation" id="lblEventInvitation">Event Invitation <b id="msgEventInvitation"></b></label>
+     
+
+                
+                </div>
+
+                </div>
+            </div>
+
+            <div class="">
+           
+
+                    <div class="form-outline">
+                    
+                        <input id="DocumentationOfSelectionSubmittedId" 
+                        
+                        {% if application.Step != 'Application_review' and  application.Step == 'Pending' %}
+                            required
+                        {% endif %}
+                        
+                        type="file" name="DocumentationOfSelectionSubmitted" class="form-control form-control-lg">
+                        <label class="form-label" for="DocumentationOfSelectionSubmitted" id="lblDocumentationOfSelectionSubmitted">Documentation Of Selection<b id="msgDocumentationOfSelectionSubmitted"></b></label>
+                       
+                
+                    </div>
+
+          
+
+            
+            
+               
+            </div>
+            <input class="btn btn-default btn-primary" style="width:100%" type="submit" value="Save details"/> 
+        </form>
+
+
+
+        {% if application.Step == 'Pending' %}
+            <div style="padding:1rem;  display:flex;justify-content:center">
+                <h2>
+                    <b>Documents</b>
+                </h2>
+
+            </div>
+            <div class="row" >
+            
                 <div class="col-xl-3 col-md-6 mb-4">
                     <div class="card border-left-primary shadow h-100 py-2">
                         <div class="card-body">
                             <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
                                 {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
                                 {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
-                                <iframe id="iframe" src="http://{{Domain}}/media/{{docs.RegulationsInterestDeclaration}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
+                            
+                                <iframe id="iframe" src="{{docs.RegulationsInterestDeclaration}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
 
                                 </iframe>
-
-                               
                             </div>
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2" style="display:flex; justify-content: space-between;">
                                     <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
                                         Regulations Interest Declaration
                                     </div>
-                                    <div>
-
-                                        <a href="http://{{Domain}}/media/{{docs.RegulationsInterestDeclaration}}">
-                                        <h4>
-                                                <b>
-                                                    view
-                                                </b>
-                                            </h4>
-                                        </a>
-                                    </div>
+                                    
                                 </div>
                             
                             </div>
@@ -105,7 +268,7 @@
                                 {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
                                 {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
                             
-                                <iframe id="iframe" src="http://{{Domain}}/media/{{docs.SelectionCriteriaProtocols}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
+                                <iframe id="iframe" src="{{docs.SelectionCriteriaProtocols}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
 
                                 </iframe>
                             </div>
@@ -113,16 +276,6 @@
                                 <div class="col mr-2" style="display:flex; justify-content: space-between;">
                                     <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
                                         Selection Criteria Protocols
-                                    </div>
-                                    <div>
-
-                                        <a href="http://{{Domain}}/media/{{docs.SelectionCriteriaProtocols}}">
-                                        <h4>
-                                                <b>
-                                                    view
-                                                </b>
-                                            </h4>
-                                        </a>
                                     </div>
                                     
                                 </div>
@@ -151,7 +304,7 @@
                                 {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
                                 {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
                             
-                                <iframe id="iframe" src="http://{{Domain}}/media/{{docs.GeneralRegulationSelectionProcedure}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
+                                <iframe id="iframe" src="{{docs.GeneralRegulationSelectionProcedure}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
 
                                 </iframe>
                             </div>
@@ -162,16 +315,6 @@
                                     </div>
                                     
                                 </div>
-                                <div>
-
-                                    <a href="http://{{Domain}}/media/{{docs.GeneralRegulationSelectionProcedure}}">
-                                    <h4>
-                                            <b>
-                                                view
-                                            </b>
-                                        </h4>
-                                    </a>
-                                </div>
                             
                             </div>
                             <div class="row no-gutters align-items-center" style="padding:1rem">
@@ -197,7 +340,7 @@
                                 {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
                                 {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
                             
-                                <iframe id="iframe" src="http://{{Domain}}/media/{{docs.TeamOfficialDuties}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
+                                <iframe id="iframe" src="{{docs.TeamOfficialDuties}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
 
                                 </iframe>
                             </div>
@@ -206,16 +349,6 @@
                                     <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
                                         Team Official Duties
                                     </div>
-                                    <div>
-
-                                        <a href="http://{{Domain}}/media/{{docs.TeamOfficialDuties}}">
-                                        <h4>
-                                                <b>
-                                                    view
-                                                </b>
-                                            </h4>
-                                        </a>
-                                    </div>
                                     
                                 </div>
                             
@@ -243,7 +376,7 @@
                                 {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
                                 {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
                             
-                                <iframe id="iframe" src="http://{{Domain}}/media/{{docs.HighPerformancePlan}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
+                                <iframe id="iframe" src="{{docs.HighPerformancePlan}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
 
                                 </iframe>
                             </div>
@@ -252,16 +385,7 @@
                                     <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
                                         High Performance Plan
                                     </div>
-                                    <div>
-
-                                        <a href="http://{{Domain}}/media/{{docs.HighPerformancePlan}}">
-                                        <h4>
-                                                <b>
-                                                    view
-                                                </b>
-                                            </h4>
-                                        </a>
-                                    </div>
+                                    
                                 </div>
                             
                             </div>
@@ -288,7 +412,7 @@
                                 {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
                                 {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
                             
-                                <iframe id="iframe" src="http://{{Domain}}/media/{{docs.EventInvitation}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
+                                <iframe id="iframe" src="{{docs.EventInvitation}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
 
                                 </iframe>
                             </div>
@@ -297,16 +421,7 @@
                                     <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
                                         Event Invitation 
                                     </div>
-                                    <div>
-
-                                        <a href="http://{{Domain}}/media/{{docs.EventInvitation}}">
-                                        <h4>
-                                                <b>
-                                                    view
-                                                </b>
-                                            </h4>
-                                        </a>
-                                    </div>
+                                    
                                 </div>
                             
                             </div>
@@ -331,7 +446,19 @@
 
 
             </div>
-        {% else %}
+
+
+        {% endif %}
+
+        {% if application.Step == 'Application_review' %}
+
+            <div style="padding:1rem; display:flex;justify-content:center">
+                <h2>
+                    <b>Documents</b>
+                </h2>
+
+            </div>
+
             <div class="row">
             
                 <div class="col-xl-3 col-md-6 mb-4">
@@ -340,7 +467,8 @@
                             <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
                                 {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
                                 {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
-                                                            <iframe id="iframe" src="{{application.RegulationsInterestDeclaration}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
+                            
+                                <iframe id="iframe" src="{{docs.RegulationsInterestDeclaration}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
 
                                 </iframe>
                             </div>
@@ -349,16 +477,18 @@
                                     <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
                                         Regulations Interest Declaration
                                     </div>
+
                                     <div>
 
-                                        <a href="{{application.RegulationsInterestDeclaration}}">
-                                        <h4>
+                                        <a href="{{docs.RegulationsInterestDeclaration}}">
+                                           <h4>
                                                 <b>
                                                     view
                                                 </b>
                                             </h4>
                                         </a>
                                     </div>
+                                    
                                 </div>
                             
                             </div>
@@ -385,7 +515,7 @@
                                 {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
                                 {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
                             
-                                <iframe id="iframe" src="{{application.SelectionCriteriaProtocols}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
+                                <iframe id="iframe" src="{{docs.SelectionCriteriaProtocols}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
 
                                 </iframe>
                             </div>
@@ -396,15 +526,14 @@
                                     </div>
                                     <div>
 
-                                        <a href="{{application.SelectionCriteriaProtocols}}">
-                                        <h4>
+                                        <a href="{{docs.SelectionCriteriaProtocols}}">
+                                           <h4>
                                                 <b>
                                                     view
                                                 </b>
                                             </h4>
                                         </a>
                                     </div>
-                                    
                                 </div>
                             
                             </div>
@@ -431,7 +560,7 @@
                                 {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
                                 {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
                             
-                                <iframe id="iframe" src="{{application.GeneralRegulationSelectionProcedure}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
+                                <iframe id="iframe" src="{{docs.GeneralRegulationSelectionProcedure}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
 
                                 </iframe>
                             </div>
@@ -440,17 +569,16 @@
                                     <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
                                         General Regulation Selection Procedure
                                     </div>
-                                    
-                                </div>
-                                <div>
+                                    <div>
 
-                                    <a href="{{application.GeneralRegulationSelectionProcedure}}">
-                                    <h4>
-                                            <b>
-                                                view
-                                            </b>
-                                        </h4>
-                                    </a>
+                                        <a href="{{docs.GeneralRegulationSelectionProcedure}}">
+                                           <h4>
+                                                <b>
+                                                    view
+                                                </b>
+                                            </h4>
+                                        </a>
+                                    </div>
                                 </div>
                             
                             </div>
@@ -477,7 +605,7 @@
                                 {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
                                 {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
                             
-                                <iframe id="iframe" src="{{application.TeamOfficialDuties}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
+                                <iframe id="iframe" src="{{docs.TeamOfficialDuties}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
 
                                 </iframe>
                             </div>
@@ -488,8 +616,8 @@
                                     </div>
                                     <div>
 
-                                        <a href="{{application.TeamOfficialDuties}}">
-                                        <h4>
+                                        <a href="{{docs.TeamOfficialDuties}}">
+                                           <h4>
                                                 <b>
                                                     view
                                                 </b>
@@ -523,7 +651,7 @@
                                 {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
                                 {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
                             
-                                <iframe id="iframe" src="{{application.HighPerformancePlan}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
+                                <iframe id="iframe" src="{{docs.HighPerformancePlan}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
 
                                 </iframe>
                             </div>
@@ -534,14 +662,15 @@
                                     </div>
                                     <div>
 
-                                        <a href="{{application.HighPerformancePlan}}">
-                                        <h4>
+                                        <a href="{{docs.HighPerformancePlan}}">
+                                           <h4>
                                                 <b>
                                                     view
                                                 </b>
                                             </h4>
                                         </a>
                                     </div>
+                                    
                                 </div>
                             
                             </div>
@@ -568,7 +697,7 @@
                                 {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
                                 {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
                             
-                                <iframe id="iframe" src="{{application.EventInvitation}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
+                                <iframe id="iframe" src="{{docs.EventInvitation}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
 
                                 </iframe>
                             </div>
@@ -579,14 +708,15 @@
                                     </div>
                                     <div>
 
-                                        <a href="{{application.EventInvitation}}">
-                                        <h4>
+                                        <a href="{{docs.EventInvitation}}">
+                                           <h4>
                                                 <b>
                                                     view
                                                 </b>
                                             </h4>
                                         </a>
                                     </div>
+                                    
                                 </div>
                             
                             </div>
@@ -611,6 +741,251 @@
 
 
             </div>
+
+
         {% endif %}
+
+
     </div>
+    
+
+    {% comment %} <script>
+        RegulationsInterestDeclaration = document.getElementById('RegulationsInterestDeclarationID');
+        SelectionCriteriaProtocols = document.getElementById("SelectionCriteriaProtocolsId")
+
+        GeneralRegulationSelectionProcedure = document.getElementById("GeneralRegulationSelectionProcedureID")
+        AcceptanceOfTeamAppointment = document.getElementById("AcceptanceOfTeamAppointmentId")
+        DocumentationOfSelectionSubmitted = document.getElementById("DocumentationOfSelectionSubmittedId")
+        TeamOfficialDuties = document.getElementById("TeamOfficialDutiesId")
+
+        HighPerformancePlan = document.getElementById("HighPerformancePlanId")
+        EventInvitation = document.getElementById("EventInvitationId")
+        //federation = "Net ball fed"
+       
+        federation = "{{application.FederationPersonel.FederationName}}"
+        DocumentationOfSelectionSubmitted.addEventListener("change",function() {
+            // document.getElementById('OfficialLetterhead_selected').innerHTML= '<h6 class="text-info"><b>uploading file.. please wait.</b></h6>';
+            whichFileType = 'DocumentationOfSelectionSubmitted'
+            file = DocumentationOfSelectionSubmitted.files[0]
+            msgId = document.getElementById('msg'+whichFileType)
+            if (msgId){
+                 msgId.innerHTML=null
+             }
+            if (validatefile(file, whichFileType) ==false){
+                DocumentationOfSelectionSubmitted.value = null
+                 return;
+             }
+             else{
+ 
+                 uploadFile(file,federation,whichFileType)
+             }
+             return null;
+        });
+
+ 
+
+        RegulationsInterestDeclaration.addEventListener("change",function() {
+           // document.getElementById('OfficialLetterhead_selected').innerHTML= '<h6 class="text-info"><b>uploading file.. please wait.</b></h6>';
+           whichFileType = 'RegulationsInterestDeclaration'
+           file = RegulationsInterestDeclaration.files[0]
+           msgId = document.getElementById('msg'+whichFileType)
+           if (msgId){
+                msgId.innerHTML=null
+            }
+           if (validatefile(file, whichFileType) ==false){
+                RegulationsInterestDeclaration.value = null
+                console.log(RegulationsInterestDeclaration.files )
+                return;
+            }
+            else{
+
+                uploadFile(file,federation,whichFileType)
+            }
+            return null;
+        }); 
+
+        SelectionCriteriaProtocols.addEventListener("change",function() {
+            // document.getElementById('OfficialLetterhead_selected').innerHTML= '<h6 class="text-info"><b>uploading file.. please wait.</b></h6>';
+            whichFileType = 'SelectionCriteriaProtocols'
+            file = SelectionCriteriaProtocols.files[0]
+            msgId = document.getElementById('msg'+whichFileType)
+            if (msgId){
+                msgId.innerHTML=null
+            }
+            if (validatefile(file, whichFileType) ==false){
+                SelectionCriteriaProtocols.value = null
+                return;
+            }
+            else{
+               
+                uploadFile(file,federation,whichFileType)
+            }
+             return null;
+        });
+
+        GeneralRegulationSelectionProcedure.addEventListener("change",function() {
+            // document.getElementById('OfficialLetterhead_selected').innerHTML= '<h6 class="text-info"><b>uploading file.. please wait.</b></h6>';
+            whichFileType = 'GeneralRegulationSelectionProcedure'
+            file = GeneralRegulationSelectionProcedure.files[0]
+            msgId = document.getElementById('msg'+whichFileType)
+            if (msgId){
+                msgId.innerHTML=null
+            }
+            if (validatefile(file, whichFileType) ==false){
+                GeneralRegulationSelectionProcedure.value = null
+                return;
+            }
+            else{
+                
+                uploadFile(file,federation,whichFileType)
+            }
+            return null;
+        });
+
+        TeamOfficialDuties.addEventListener("change",function() {
+            // document.getElementById('OfficialLetterhead_selected').innerHTML= '<h6 class="text-info"><b>uploading file.. please wait.</b></h6>';
+            whichFileType = 'TeamOfficialDuties'
+            file = TeamOfficialDuties.files[0]
+            msgId = document.getElementById('msg'+whichFileType)
+            if (msgId){
+                msgId.innerHTML=''
+            }
+            
+            if (validatefile(file, whichFileType) ==false){
+                TeamOfficialDuties.value =null;
+                return;
+            }
+            else{
+                
+                uploadFile(file,federation,whichFileType)
+            }
+             return null;
+        });
+
+        HighPerformancePlan.addEventListener("change",function() {
+            // document.getElementById('OfficialLetterhead_selected').innerHTML= '<h6 class="text-info"><b>uploading file.. please wait.</b></h6>';
+            whichFileType = 'HighPerformancePlan'
+            file = HighPerformancePlan.files[0]
+            msgId = document.getElementById('msg'+whichFileType)
+            if (msgId){
+                msgId.innerHTML=null
+            }
+            if (validatefile(file, whichFileType) ==false){
+                HighPerformancePlan.value = null;
+                return;
+            }
+            else{
+                
+                uploadFile(file,federation,whichFileType)
+            }
+            return null;
+        });
+
+        EventInvitation.addEventListener("change",function() {
+            // document.getElementById('OfficialLetterhead_selected').innerHTML= '<h6 class="text-info"><b>uploading file.. please wait.</b></h6>';
+            whichFileType = 'EventInvitation'
+            file = EventInvitation.files[0]
+            msgId = document.getElementById('msg'+whichFileType)
+            if (msgId){
+                msgId.innerHTML=null
+            }
+            if (validatefile(file, whichFileType) ==false){
+                EventInvitation.value
+                return;
+            }
+            else{
+                
+                uploadFile(file,federation,whichFileType)
+            }
+            return null;
+        });
+    
+
+
+
+
+
+
+        const uploadFile = (file, federation, whichFileType) =>{
+           
+            var ext = file.name.split('.').reverse()[0]
+            oldFilrName = file.name
+            
+           
+           // document.getElementById('OfficialLetterhead_selected').innerHTML= '<h6 class="text-info"><b>uploading file... please wait.</b></h6>';
+            
+            const form_data = new FormData();
+            form_data.append('fileUpload',file);
+            form_data.append('whichFileType',whichFileType);
+            form_data.append('Federation', federation);
+          
+            //email
+            //upload.php https://governance.kznsc.com/upload.php   http://localhost/code1/upload.php"  
+            fetch("http://localhost/Colors_Documents/upload.php",{
+                method:"POST",
+                
+               // mode:'no-cors',
+                
+                body:form_data
+            }).then(function(response){
+                console.log(response.status)
+                id = "lbl"+whichFileType
+                lblError = document.getElementById(id)
+                if(response.status == "200"){
+                    console.log("Uploaded!")
+                    filelinK = document.getElementById(whichFileType)
+                    
+                    filelinK.value = 'http://localhost/Colors_Documents/uploads/'+federation+whichFileType+'.pdf'
+                    TheReview = document.getElementById("TheReview")
+                    msgId.innerHTML  = null
+                    
+                    msgId.innerHTML += ' (<i class="text-success">Uploaded</i>)'
+                }
+              
+            }).catch(function(error){
+                console.log("error")
+                msgId.innerHTML  = null
+               // document.getElementById('OfficialLetterhead_selected').innerHTML= '<small class="text-danger"><b>Something went wrong, please try again.</b></small>'
+               msgId.innerHTML += ' (<i class="text-danger">Something went wrong please try again</i>)'
+
+            });
+            //OfficialLetterhead.value =null;
+         
+     
+            
+            
+        } 
+
+        function validatefile(file, whichFileType){
+            isValid = true
+            var ext = file.name.split('.').reverse()[0]
+            oldFilrName = file.name
+            id = "lbl"+whichFileType
+            lblError = document.getElementById(id)
+            console.log("Ext: "+ext)
+            thefile= document.getElementById(whichFileType)
+            msgId =document.getElementById('msg'+whichFileType) 
+            if (ext != 'pdf'){
+                
+                msgId.innerHTML += ' (<i style="color:red">Only PDF files accepted</i>)'
+               
+                return false;
+            }
+            if(file.size > (5*1024*1024)){
+                thefile.value =null;
+                msgId.innerHTML += ' (<i style="color:red">All files must be less than 5mb</i>)'
+                return false
+            }
+
+            
+            
+        }
+    </script> {% endcomment %}
+
+
+
 {% endblock %}
+
+
+
+

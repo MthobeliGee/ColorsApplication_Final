@@ -13,7 +13,23 @@ class FederationPersonel(models.Model):
     Status = models.CharField(max_length=20,default="Pending")
 
 
-
+class FedDocuments(models.Model):
+    DocumentsId = models.AutoField(primary_key=True, auto_created=True, blank=False,null=False)
+    FederationPersonel = models.ForeignKey(FederationPersonel,blank=True,null=True,on_delete=models.CASCADE)
+    RegulationsInterestDeclaration  = models.FileField(blank=False,null=False,upload_to='MyApp/Docs')
+    RegulationsInterestDeclaration  = models.FileField(blank=False,null=False,upload_to='MyApp/Docs')
+    SelectionCriteriaProtocols = models.FileField(blank=False,null=False,upload_to='MyApp/Docs')
+    GeneralRegulationSelectionProcedure  =models.FileField(blank=False,null=False,upload_to='MyApp/Docs')
+    DocumentationOfSelectionSubmitted = models.FileField(blank=False,null=False,upload_to='MyApp/Docs')
+    TeamOfficialDuties = models.FileField(blank=False,null=False,upload_to='MyApp/Docs')
+    AcceptanceOfTeamAppointment = models.FileField(blank=False,null=False,upload_to='MyApp/Docs')
+    HighPerformancePlan = models.FileField(blank=False,null=False,upload_to='MyApp/Docs')
+    EventInvitation  = models.FileField(blank=False,null=False,upload_to='MyApp/Docs')
+    
+    DateAdded = models.DateTimeField(default = datetime.now())
+    Year = models.CharField(max_length = 12, default = str(datetime.now().year))
+    
+    
 # Create your models here.
 class Application(models.Model):
     ApplicationId = models.AutoField(primary_key=True)

@@ -8,6 +8,7 @@ admin.site.register(Application)
 admin.site.register(TeamOfficial)
 admin.site.register(FederationPersonel)
 admin.site.register(Apparel)
+admin.site.register(FedDocuments)
 
 
 

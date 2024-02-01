@@ -842,9 +842,11 @@ def Documents(request, applicationId):
     
     
     application = get_object_or_404(Application,pk = applicationId)
+    docs = get_object_or_404(FedDocuments, Year = datetime.now().year, FederationPersonel = application.FederationPersonel)
     if request.method == 'GET':
+        Domain = get_current_site(request)
         
-        return render(request, 'MyApp/Documents.html', {"application":application})
+        return render(request, 'MyApp/Documents.html', {"application":application, "docs":docs, "Domain":Domain})
     
     
 # detalis pages 
@@ -962,8 +964,12 @@ def my_applications(request):
             try:
                 ActiveApplication = get_object_or_404(Application, user = user, ApplicationStatus = "Active")
             except:
-                ActiveApplication = None 
-                pass  
+                
+                try:
+                    ActiveApplication = get_object_or_404(Application, user = user, ApplicationStatus = "Complete")
+                except:    
+                    ActiveApplication = None 
+                  
     
     historyApplications  = []
     if ActiveApplication:
@@ -1289,3 +1295,111 @@ def DeclineFedPersonel(request, FedName):
     return JsonResponse({"Status":"Declined"})
 
 
+
+
+
+def Upload_DocumentsTest(request, applicationId):
+    
+    application = get_object_or_404(Application, pk = applicationId)
+    docs  = None
+    
+    try:
+        docs = get_object_or_404(FedDocuments, FederationPersonel = application.FederationPersonel, Year = str(datetime.now().date))
+        
+    except:
+        pass
+    if application.Step != 'Application_review' and application.Step != 'Pending':
+        
+        application.Step = 'Upload_Documents'
+        application.save()
+    if request.method == 'GET':
+        
+        return render(request, 'MyApp/Upload_DocumentsTest.html',{"application":application, "docs":docs}) 
+    
+    if request.method == 'POST':
+       
+            
+            
+        if docs == None:
+            
+            docs = FedDocuments.objects.create(
+                FederationPersonel = application.FederationPersonel,
+                RegulationsInterestDeclaration = request.FILES["RegulationsInterestDeclaration"],
+                SelectionCriteriaProtocols = request.FILES["SelectionCriteriaProtocols"],
+                GeneralRegulationSelectionProcedure = request.FILES["GeneralRegulationSelectionProcedure"],
+                TeamOfficialDuties = request.FILES["TeamOfficialDuties"],
+                HighPerformancePlan = request.FILES["HighPerformancePlan"],
+                EventInvitation = request.FILES["EventInvitation"],
+                DocumentationOfSelectionSubmitted = request.FILES["DocumentationOfSelectionSubmitted"],
+                
+                Year = str(datetime.now().year)
+            )
+
+        else:
+            numUpdates = 0
+            try:
+                if request.POST["RegulationsInterestDeclaration"] != '':
+                    docs.RegulationsInterestDeclaration = request.FILES["RegulationsInterestDeclaration"]
+                
+                    numUpdates += 1
+            except:
+                pass
+            
+            try:
+                if request.POST["SelectionCriteriaProtocols"] !='':
+                    docs.SelectionCriteriaProtocols = request.FILES["SelectionCriteriaProtocols"]
+                    numUpdates += 1
+            except:
+                pass
+            
+            try:
+                if request.POST["GeneralRegulationSelectionProcedure"] != '':
+                    docs.GeneralRegulationSelectionProcedure = request.FILES["GeneralRegulationSelectionProcedure"]
+                    numUpdates += 1
+            except:
+                pass
+            
+            try:
+                if request.POST["TeamOfficialDuties"] != '':
+                    docs.TeamOfficialDuties = request.FILES["TeamOfficialDuties"]
+                    numUpdates += 1
+            except:
+                pass
+            
+            try:
+                if request.POST["HighPerformancePlan"] != '':
+                    docs.HighPerformancePlan = request.FILES["HighPerformancePlan"]
+                    numUpdates += 1
+            except:
+                pass
+                
+            try:
+                if request.POST["EventInvitation"] != '':
+                    docs.EventInvitation = request.FILES["EventInvitation"]
+                    numUpdates += 1
+            except:
+                pass
+            
+            try:
+                if request.POST["DocumentationOfSelectionSubmitted"] != '':
+                    docs.DocumentationOfSelectionSubmitted = request.FILES["DocumentationOfSelectionSubmitted"]
+                    numUpdates += 1
+            except:
+                pass
+            
+            if numUpdates > 0:
+                messages.success(request, "Changes saved successfully "+str(numUpdates))
+                docs.save()
+            else:
+                messages.error(request, 'No changes made')   
+                
+            #return redirect("Upload_Documents", applicationId = application.ApplicationId)
+            
+            
+                    
+                        
+        
+        messages.success(request, "Documents uploaded successfully, please proceed to accept code of conduct terms.")
+        
+        return redirect("termsAndConditions", applicationId = application.ApplicationId)
+    

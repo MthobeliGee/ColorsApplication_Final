@@ -34,7 +34,7 @@
                         {% if application.Step != 'Application_review' %} 
 
                             {% if application.Step != 'Pending' %}
-                                <a href="{% url 'Upload_Documents' applicationId=application.ApplicationId %}" class="btn btn-default btn-success">
+                                <a href="{% url 'Upload_DocumentsTest' applicationId=application.ApplicationId %}" class="btn btn-default btn-success">
                                     Move on to the next step>>
                                 </a>
 
@@ -186,7 +186,7 @@
                         {% if application.Step != 'Application_review' %} 
 
                             {% if application.Step != 'Pending' %}
-                                <a href="{% url 'Upload_Documents' applicationId=application.ApplicationId %}" class="btn btn-default btn-success">
+                                <a href="{% url 'Upload_DocumentsTest' applicationId=application.ApplicationId %}" class="btn btn-default btn-success">
                                     Move on to the next step>>
                                 </a>
 
