@@ -39,10 +39,13 @@ urlpatterns = [
     path('ApproveFedPersonel/<str:FedName>', views.ApproveFedPersonel, name="ApproveFedPersonel"),
     path('DeclineFedPersonel/<str:FedName>', views.DeclineFedPersonel, name="DeclineFedPersonel"),
     path('testTemp', views.testTemp, name="testTemp"),
-    
+    path('newFed', views.newFed, name="newFed"),
+
     
     #test zone
-    path('Upload_DocumentsTest/<int:applicationId>',views.Upload_DocumentsTest, name="Upload_DocumentsTest")
+    path('Upload_DocumentsTest/<int:applicationId>',views.Upload_DocumentsTest, name="Upload_DocumentsTest"),
+    path('checkDateAp/<str:date>', views.checkDateAp, name="checkDateAp"),
+    path('Select_Event', views.Select_Event, name="Select_Event")
     
     
 ]

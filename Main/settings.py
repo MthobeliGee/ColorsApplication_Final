@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'MyApp',
     'LoginManager',
-    'ProcessApplication'
+    'ProcessApplication',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -53,6 +54,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'Main.urls'
+
 
 TEMPLATES = [
     {

@@ -43,9 +43,9 @@
 
                 <p class="text-danger" style="font-size:17px">
                     <b>
-                        Please note the event you are applying for must be in 30 days or above, else you will not be allowed to continue with the application
-
+                        Please note that the event you are applying for must be at least 30 days away. Otherwise, you will not be allowed to continue with the application.
                     </b>
+                    
                 </p>
             </div>
             <br/>
@@ -69,8 +69,11 @@
 
                     <div class="form-outline" style="display:flex;flex-direction: column">
                         
-                        <input required  type="date" name="StartDate"  class="form-control form-control-lg">
+                        <input  required  type="date" id="StartDate" name="StartDate" onchange="dateChanged(this)" class="form-control form-control-lg">
                         <label class="form-label" for="Middlename">Start Date</label>
+                        <div id="datemsg">
+                            
+                        </div>
                     
                     </div>
 
@@ -173,7 +176,7 @@
                             
                             <div class="" style="display:flex;justify-content:center ">
                                 <input required  type="date" name="TravelDate" style=""  class="form-control form-control-lg">
-                                <input type="time" name="TravelTime" />
+                                <input required type="time" name="TravelTime" />
                                 
                             </div>
                             <label class="form-label" for="TravelDateTime">Travel Date And Time</label>
@@ -192,13 +195,66 @@
 
     </div>
 
+    <script>
 
+        //checking date
+
+        function dateChanged(input){
+
+            let date = input.value
+            let dateComps = date.split('-')
+            console.log("Date has been changed!", dateComps)
+            let year = parseInt(dateComps[0])
+            let month = parseInt(dateComps[1])
+            let day = parseInt(dateComps[3])
+
+            verifyDate(date)
+
+        }
+        
+        function verifyDate(datestr){
+            console.log("datestr: ",datestr)
+            
+            fetch("http://127.0.0.1:8000/checkDateAp/"+datestr,{
+                method:"GET",
+                
+               // mode:'no-cors',
+                
+               
+            }).then(function(response){
+                
+               
+                return response.json()
+            }).then(function(data) {
+               
+                console.log(data.isValid); 
+                if(data.isValid){
+                    datemsg = document.getElementById("datemsg")
+                    datemsg.innerHTML = '<i class="text-success">Date valid</i>'
+                }
+                else{
+                    datemsg = document.getElementById("datemsg")
+                    datemsg.innerHTML = '<i class="text-danger">Date must be 30 days or above before the event</i>'
+                    date = document.getElementById("StartDate")
+                    date.value =null
+                    return;
+                }
+            }).catch(function(error){
+                console.log(error)
+                datemsg = document.getElementById("datemsg")
+               // document.getElementById('OfficialLetterhead_selected').innerHTML= '<small class="text-danger"><b>Something went wrong, please try again.</b></small>'
+               datemsg.innerHTML += ' (<i class="text-danger">Something went wrong while validating date please try again</i>)'
+
+            });
+        }
+
+    </script>
 
 {% endblock %}
 
 
 
-<hr/>
+
 
 
 {% comment %} 

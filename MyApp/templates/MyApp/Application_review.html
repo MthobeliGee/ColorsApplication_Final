@@ -140,7 +140,7 @@
                 {% if user.is_superuser != True %}
                     {% if application.isHistory == False%}
                         <b style="font-size:25px" class="text-success"> | </b>
-                        <a title="Go to Documents editing page"  href="{% url 'Upload_DocumentsTest' applicationId=application.ApplicationId %}" >
+                        <a title="Go to Documents editing page"  href="{% url 'Upload_Documents' applicationId=application.ApplicationId %}" >
                             <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>Edit
                         </a>
                     {% endif %}

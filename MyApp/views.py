@@ -69,10 +69,10 @@ def CreateApplication(request):
          
             messages.error(request, "Please select your federation, in order to add a new application.")
             print("Chhose!2")
-            return redirect("chooseFederation")
+            return redirect("newFed")
     except:
         messages.error(request, "Please select your federation")
-        return redirect("chooseFederation")
+        return redirect("newFed")
     
     if request.method == 'GET':
         
@@ -115,17 +115,12 @@ def CreateApplication(request):
        )
         application = get_object_or_404(Application, user = user, ApplicationStatus = "Oncreate")
         print("application.StartDate: ", type(application.StartDate))
-        valid = checkDate(application.StartDate.day,application.StartDate.month,application.StartDate.year)
-        if valid:
-            messages.success(request, 'The information has been saved successfully, proceed to add the team officials.')
+       
+        messages.success(request, 'The information has been saved successfully, proceed to add the team officials.')
                 
                 
                 
-            return redirect("addTeamOfficial", applicationId= application.ApplicationId)
-        else:
-            application.delete()
-            messages.error(request, "you can only make applications for events 30 days prior for a successfull submission")
-            return redirect("CreateApplication")
+        return redirect("addTeamOfficial", applicationId= application.ApplicationId)
 @login_required
 def addTeamOfficial(request, applicationId):
     application = get_object_or_404(Application, pk = applicationId)
@@ -389,11 +384,15 @@ def AddRepp(request, applicationId):
             AcceptanceofTeamAppointment = isAceptencSubmited
             
         )
-        messages.success(request, "Team represantative add successfully")
+       
         
-        
+        if request.user == application.user or request.user.is_superuser:
+            messages.success(request, "Team represantative add successfully")
             
-        return redirect("AddRepp",applicationId=application.ApplicationId)
+            return redirect("AddRepp",applicationId=application.ApplicationId)
+        else:
+            return redirect("home")
+            pass
 
 
 @login_required
@@ -727,6 +726,7 @@ def termsAndConditions(request, applicationId):
         
         if IsAccepted == 'Yes':
             application.CodeOfConductAcceped = True
+            application.Step = 'Application_review'
             application.ApplicationStatus = 'Complete'
             messages.success(request, "Code Of Conduct Acceped, please review the application and submit for approval.")
         else:
@@ -787,7 +787,7 @@ def Application_review(request, applicationId):
     
     if request.method == 'POST':
         
-        valid = checkDate(application.StartDate.day,application.StartDate.month,application.StartDate.year)
+        valid = checkDate(str(application.StartDate))
         if valid:
             application.ApplicationStatus = 'Pending'
             application.Step = 'Pending'
@@ -1390,12 +1390,12 @@ def Upload_DocumentsTest(request, applicationId):
                 pass
             
             if numUpdates > 0:
-                messages.success(request, "Changes saved successfully "+str(numUpdates))
+                messages.success(request, "Changes saved successfully ")
                 docs.save()
             else:
                 messages.error(request, 'No changes made')   
                 
-            return redirect("Upload_DocumentsTest", applicationId = application.ApplicationId)
+            return redirect("Upload_Documents", applicationId = application.ApplicationId)
             
             
                     
@@ -1405,3 +1405,196 @@ def Upload_DocumentsTest(request, applicationId):
         
         return redirect("termsAndConditions", applicationId = application.ApplicationId)
     
+
+
+
+# def chooseFederation():
+#     federations =[]
+#     try:
+   
+#        # url = 'https://yonelahopewell1.pythonanywhere.com/GovApisComplayingFederations'
+#         url = 'https://kznsannualreport.pythonanywhere.com/GovApisComplayingFederations'
+#         r = requests.get(url)
+    
+     
+#         data = r.json()
+        
+#         print()
+#         federations = data["federations"]
+#         #print("The request data fed list: ", data["federations"][0]["federationName"])
+#     except :
+#         federations =[
+#                 {
+#                     "federationName":"KZN AQUATICS",
+#                     "userName":"Yonela",
+#                     "userSurname":"Sitshaka",
+#                     "userEmail":"livesoundsmusic@gmail.com"
+                    
+#                 },
+#                 {
+#                     "federationName":"SAFA",
+#                     "userName":"Hopewell",
+#                     "userSurname":"Sitshaka",
+#                     "userEmail":"yonela@kznsc.com"
+                    
+#                 }
+#             ]
+        
+#         pass
+    
+    
+        
+#         return federations
+    
+  
+    
+    
+
+
+def newFed(request):
+    
+    # try:
+   
+    #    # url = 'https://yonelahopewell1.pythonanywhere.com/GovApisComplayingFederations'
+    #     url = 'https://kznsannualreport.pythonanywhere.com/GovApisComplayingFederations'
+    #     r = requests.get(url)
+    
+     
+    #     data = r.json()
+        
+    #     print()
+    #     federations = data["federations"]
+    #     #print("The request data fed list: ", data["federations"][0]["federationName"])
+    # except :
+    #     pass
+    federations =[
+            {
+                "federationName":"KZN AQUATICS",
+                "userName":"Yonela",
+                "userSurname":"Sitshaka",
+                "userEmail":"livesoundsmusic@gmail.com"
+
+            },
+            {
+                "federationName":"SAFA",
+                "userName":"Hopewell",
+                "userSurname":"Sitshaka",
+                "userEmail":"yonela@kznsc.com"
+
+            },
+            {
+                "federationName":"SAFA2",
+                "userName":"Hopewell",
+                "userSurname":"Sitshaka",
+                "userEmail":"yonela@kznsc.com"
+
+            },
+            {
+                "federationName":"SAFA3",
+                "userName":"Hopewell",
+                "userSurname":"Sitshaka",
+                "userEmail":"yonela@kznsc.com"
+
+            },
+            {
+                "federationName":"SAFA4",
+                "userName":"Hopewell",
+                "userSurname":"Sitshaka",
+                "userEmail":"yonela@kznsc.com"
+
+            },
+            {
+                "federationName":"SAFA5",
+                "userName":"Hopewell",
+                "userSurname":"Sitshaka",
+                "userEmail":"yonela@kznsc.com"
+
+            }
+        ]
+    
+    if request.method == 'GET':
+
+        return render(request,  'MyApp/federations.html',{"federations":federations})
+    
+    if request.method == 'POST':
+        
+        user=  request.user
+        try:
+            FedPersonel = get_object_or_404(FederationPersonel, user = user)
+            FedPersonel.FederationName = request.POST["FederationName"]
+            FedPersonel.dateSelected = datetime.now()
+            FedPersonel.save()
+        except:
+            FedPersonel = FederationPersonel.objects.create(
+                user = user,
+                FederationName = request.POST["FederationName"],
+                dateSelected = datetime.now()
+            )
+            
+        AlertGovManager(request, user,request.POST["userEmail"],{"first_name": request.POST["userName"], "last_name":request.POST["userSurname"]},FedPersonel)
+        messages.success(request, "Great you have selected your feration, you may continue with your application")
+        #alert Governance manager by email
+        if FedPersonel.PersonelPhone == None:
+            messages.warning(request, "please update your phone number and start again with the application process.")
+            return redirect("account")
+        return redirect("CreateApplication")
+    
+    
+    
+    
+    
+@api_view(['GET'])
+def checkDateAp(request, date):
+    try:
+        provided_date = datetime.strptime(date, '%Y-%m-%d').date()
+    except ValueError:
+        return Response({'error': 'Invalid date format'}, status=400)
+
+    current_date = datetime.now().date()
+    difference = (provided_date - current_date).days
+
+    if difference >= 30:
+        return Response({'isValid': True})
+    else:
+        return Response({'isValid': False})
+    
+def checkDate(date):
+    try:
+        provided_date = datetime.strptime(date, '%Y-%m-%d').date()
+    except ValueError:
+        return Response({'error': 'Invalid date format'}, status=400)
+
+    current_date = datetime.now().date()
+    difference = (provided_date - current_date).days
+
+    if difference >= 30:
+        return Response({'isValid': True})
+    else:
+        return Response({'isValid': False})
+    
+    
+    
+    
+def Select_Event(request):
+    
+    
+    openApplications = Application.objects.filter(is_App_taking = True)
+    
+    if request.method == 'GET':
+       # messages.success(request, "The test mes")
+        return render(request, 'MyApp/Select_Event.html', {"openApplications": openApplications})
+    pass
+
+    if request.method =='POST':
+        
+        application = None
+        
+        try:
+            application = get_object_or_404(Application, pk = request.POST["ApplicationId"])
+            
+        except:
+            messages.error(request, "The application you tried to access was not found.")
+            return redirect("Select_Event")
+        
+        
+  

@@ -2,6 +2,14 @@ from django.db import models
 from datetime import date, datetime
 from django.contrib.auth.models import User 
 
+
+class Federation(models.Model):
+    FederationId = models.AutoField(primary_key=True, null= False, blank=False)
+    FederationName = models.TextField(blank=False, null = False)
+    
+    
+
+
 class FederationPersonel(models.Model):
     #I am last adding this class on the user but wondering about the other part where I get the applications by user, fix that too 
     PersonelId = models.AutoField(primary_key=True)
@@ -65,7 +73,7 @@ class Application(models.Model):
     DateCreated = models.DateTimeField(default=datetime.now())
     DeclineReason = models.TextField(blank=True, null=True)
     CancelReason = models.TextField(blank=True, null=True)
-    
+    is_App_taking = models.BooleanField(default = False)
     ApparelLetters = models.CharField(max_length=300, blank=True, null=True)
 
 
