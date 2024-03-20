@@ -38,9 +38,12 @@
             <div class="row" style="padding:1rem; display:flex;justify-content:space-between">
 
                 <div>
-                    <h3><b>{{application.EventName}} team Applcants</b>    
+                    <h3><b>{{application.EventName}} team Applcants</b>   </h3>
+                    <hr/>
+                    <h5>{{application.Federation.FederationName}}</h5>
+                    
                 </div>
-                
+                {% if user == application.user %}
                 <div>
                     
                     {% if application.ApplicationStatus != 'Application_review' and  application.ApplicationStatus != 'Complete' %} 
@@ -78,24 +81,36 @@
                     {% endif %}
                 
                 </div>
+                {% endif %}
             </div>
         {% else %}
 
             <center>
                 <div style="padding:1rem">
                     <h3><b>{{application.EventName}}  team Applicants</b> 
+                    <hr/>
+                    <h5>{{application.Federation.FederationName}}</h5>
                 </div>
             </center>
         {% endif %}
-
+        {% if user != application.user and user.is_superuser == False %}
         <form method="post"  enctype="multipart/form-data" style="width:inherit; padding:1rem; border:solid 1px ">
             {% csrf_token %}
+            <div class="form-outline">
+                    
+                <input required type="text"  maxlength="13" onkeyup="changed(this.value)"  name="Id_number" placeholder=" Applicant Id number" id="id_number"  class="form-control form-control-lg">
+                <label class="form-label" for="FirstName">Id Number</label>
+                <div hidden class="text-center" id="Id_msg">
+
+                </div>
+            </div>
             <div class="row">
+                
                 <div class="col-md-6 mb-4">
 
                     <div class="form-outline">
                     
-                        <input required type="text" name="FirstName" placeholder="First name"  class="form-control form-control-lg">
+                        <input required type="text" value="{{user.first_name}}" name="FirstName" placeholder="First name"  class="form-control form-control-lg">
                         <label class="form-label" for="FirstName">First Name</label>
                 
                     </div>
@@ -108,7 +123,7 @@
 
                 <div class="form-outline" style="display:flex;flex-direction: column">
                     
-                    <input required  type="text" name="Surname" placeholder="Last name"  class="form-control form-control-lg">
+                    <input required  type="text" value="{{user.last_name}}" name="Surname" placeholder="Last name"  class="form-control form-control-lg">
                     <label class="form-label" for="Surname">Last Name</label>
                 
                 </div>
@@ -157,7 +172,7 @@
 
                     <div class="form-outline" style="display:flex;flex-direction: column">
                     
-                        <input required  type="email" name="Email"   class="form-control form-control-lg">
+                        <input required   value="{{user}}" type="email" name="Email"   class="form-control form-control-lg">
                         <label class="form-label" for="Email">Email Address</label>
                     
                     </div>
@@ -250,12 +265,27 @@
                 </div>
             </div>
             
-      
+            <div class="form-outline" style="display:flex;flex-direction: column">
+                    
+                <select required   name="is_parent"  class="form-control form-control-lg">
+                   
+                    <option value="no">
+                        No 
+                    </option>
+                    <option value="yes">
+                        Yes
+                    </option>
+                <select>
+                <label class="form-label" for="is_parent">Is the application conducted by parent?</label>
+            
+            </div>
+            <button onclick="sub()" class="btn btn-default btn-primary" style="width:100%" >
+                Save details
+            </button>
 
-
-            <input class="btn btn-default btn-primary" style="width:100%" type="submit" value="Save details"/> 
+            <input id="subsub" hidden   type="submit" /> 
         </form>
-
+        {% endif %}
 
 
     </div>
@@ -374,6 +404,37 @@
     {% endif %}
 
 
+    <script>
+        id_number = document.getElementById("id_number")
+        Id_msg = document.getElementById("Id_msg")
+        subsub = document.getElementById("subsub")
+        let num = 0
+        function changed(value){
+            check = /^\d+$/.test(value);
+            num += 1
+            is_valid = false
+            if(check){
+                id_number.style = 'border: solid green; color:green'
+                is_valid = true
+
+            }
+            else{
+                id_number.value = null
+                Id_msg.hidden = false
+                id_number.style = 'border: solid red; color:red'
+                id_number.placeholder = 'Identity number must consist of digits only'
+                
+
+            }
+            return is_valid
+        }
+
+        function sub(){
+            if(changed(id_number.value)){
+                subsub.click()
+            }
+        }
+    </script>
 
 {% endblock %}
 

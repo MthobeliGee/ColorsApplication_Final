@@ -66,19 +66,28 @@
 
 
             <div class="text-center" style="padding:1rem">
-                <h3><b>{{application.EventName}} Committee members</b>    
+                <h3><b>{{application.EventName}} Committee member</b>    
             </div>
         {% endif %}
 
         <div style="border:solid 1px grey; padding:1rem; border-radius:12px">
             <form method="post"  enctype="multipart/form-data" style="width:inherit">
                 {% csrf_token %}
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                        
+                    <input required id="id_number"  type="text" name="id_number" placeholder="Identity Number" maxlength="13" onkeyup="changed(this.value)"   class="form-control form-control-lg">
+                    <label class="form-label" for="id_number">Identity Number </label>
+                    <div hidden class="text-center" id="Id_msg">
+
+                    </div>
+                
+                </div>
                 <div class="row">
                     <div class="col-md-6 mb-4">
 
                         <div class="form-outline">
                         
-                            <input required type="text" name="FirstName" placeholder="First name"  class="form-control form-control-lg">
+                            <input required type="text" value="{{user.first_name}}" name="FirstName" placeholder="First name"  class="form-control form-control-lg">
                             <label class="form-label" for="FirstName">First Name</label>
                     
                         </div>
@@ -91,7 +100,7 @@
 
                     <div class="form-outline" style="display:flex;flex-direction: column">
                         
-                        <input required  type="text" name="Surname" placeholder="Last name"  class="form-control form-control-lg">
+                        <input required  type="text" value="{{user.last_name}}" name="Surname" placeholder="Last name"  class="form-control form-control-lg">
                         <label class="form-label" for="Surname">Last Name</label>
                     
                     </div>
@@ -140,7 +149,7 @@
 
                         <div class="form-outline" style="display:flex;flex-direction: column">
                         
-                            <input required  type="email" name="Email"   class="form-control form-control-lg">
+                            <input required value="{{user.email}}"  type="email" name="Email"   class="form-control form-control-lg">
                             <label class="form-label" for="Email">Email Address</label>
                         
                         </div>
@@ -160,10 +169,18 @@
                     </div>
                 </div>
                 <!--*****************************************-->
-                <div >
-
-                        
-                    <input required  type="text" name="Province"   class="form-control form-control-lg">
+                <div>
+                    <select name="Province"   class="form-control form-control-lg">
+                        <option value="KwaZulu-Natal">KwaZulu-Natal</option>
+                        <option value="Eastern Cape">Eastern Cape</option>
+                        <option value="Free State">Free State</option>
+                        <option value="Gauteng">Gauteng</option>
+                        <option value="Limpopo">Limpopo</option>
+                        <option value="Mpumalanga">Mpumalanga</option>
+                        <option value="Northern Cape">Northern Cape</option>
+                        <option value="North West">North West</option>
+                        <option value="Western Cape">Western Cape</option>
+                    </select>
                     <label class="form-label" for="Province">Province</label>
     
                 </div>
@@ -276,7 +293,36 @@
         </div>
     {% endif %}
 
+    <script>
+        id_number = document.getElementById("id_number")
+        Id_msg = document.getElementById("Id_msg")
+   
+        let num = 0
+        function changed(value){
+            console.log("hello from change!", value)
 
+
+            check = /^\d+$/.test(value);
+
+
+            console.log("The check: ", check)
+            num += 1
+            if(check){
+                id_number.style = 'border: solid green; color:green'
+            }
+            else{
+                
+                id_number.value = null
+                Id_msg.hidden = false
+                id_number.style = 'border: solid red; color:red'
+                id_number.placeholder = 'Identity number must consist of digits only'
+                Id_msg.innerHTML =  '<b style="color:red">Identity number must consist of digits only</b>'
+               
+
+            }
+        }
+
+    </script>
 
 {% endblock %}
 

@@ -43,9 +43,9 @@
         <form method="post" style="padding:3rem; display:flex; justify-content:center"  >
             {% csrf_token %}
             <input id="FederationName" name="FederationName" type="hidden">
-            <input id="userName" name="userName" value="" type="hidden"/>
-            <input id="userSurname" name="userSurname" value="" type="hidden"/>
-            <input id="userEmail" name="userEmail" value="" type="hidden"/>
+            <input id="userName" name="gov_first_name" value="" type="hidden"/>
+            <input id="userSurname" name="gov_last_name" value="" type="hidden"/>
+            <input id="userEmail" name="govEmail" value="" type="hidden"/>
             <br/> 
 
             <div  id="FedDisplay" hidden style="border:solid;padding:1.5rem">

@@ -1,0 +1,19 @@
+{% autoescape off %}
+
+    Hello {{admin_user.first_name}}, I hope this email finds you well.
+    Please be informed that the application for colors commitee has been "Canceled" by {{committeeMember.FirstName}} {{committeeMember.Surname}}, basic details are as follow.
+    First name: {{committeeMember.FirstName}}
+    Last name: {{committeeMember.Surname}}
+    Date Requested: {{committeeMember.RequestDate}}
+    ____________________________________________________
+
+    For the rest of the details, please use the link below to log in on the colors application.
+    {{protocol}}://{{ domain }}{% url 'login' %}
+
+
+    Best regard
+
+    KZNSC Colors
+
+
+{% endautoescape %}

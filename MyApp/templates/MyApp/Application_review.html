@@ -2,7 +2,7 @@
 
 {% block content %}
     {% load static %}
-
+    <link href="{% static "MyApp/reviewCss.css" %}" rel="stylesheet"/>
     <style>
         table{
             border:solid 1px;
@@ -20,6 +20,7 @@
         }
 
     </style>
+    
     {% if messages %}
         {% for message in messages %}
             <br/>
@@ -35,7 +36,9 @@
 
         {% endfor %}
     {% endif %}
+
     <div class="row"  style="display:flex;justify-content:center; padding:1rem">
+        
         {% if user.is_superuser != True %}
 
             <div style="padding:0.5rem;">
@@ -153,12 +156,26 @@
        
 
     </div>
-
+    
 
 <div class="container">
 
+    <input type="hidden" id="domain" value="{{domain}}"/>
 
-    
+
+    <div id="app_pop" hidden>
+        <input type="hidden" id="applicationId" value="{{application.applicationId}}"/>
+        <div class="card">
+            <div id="pop_header" class="card-header">
+                
+            </div>
+            <div id="pop_body" class="card-body">   
+
+
+            </div>
+
+        </div>
+    </div>
     <div>
         {% if user.is_superuser != True %}
             {% if application.isHistory == False%}
@@ -175,12 +192,49 @@
 
         <div class=" " style="width:100%">
             <div class="card border-left-primary shadow h-100 py-2">
-                <div class="card-header">
+                <div class="card-header row">
 
-                    <h2>
-                        {{application.EventName}}
+                   <div>
+                        <h2>
+                            {{application.EventName}}
 
-                    </h2> <b>application review</b>
+                        </h2> <b>application review</b>
+                   </div>
+                   {% if user.is_superuser != True %}
+                    <div>
+
+                        <button
+                            id="app_take"
+
+                            
+                            {% if application.is_App_taking%}
+                                class="btn btn-default "
+                                onclick="app_take(true)"
+                            {% else %}
+                                class="btn btn-default "
+                                onclick="app_take(false)"
+                            {% endif %}
+                            
+                            >
+                            {% if application.is_App_taking%}
+                                Close Athlets, officials, commitee Applications
+                            {% else %}
+                                Allow Athlets, officials, commitee Applications
+                            {% endif %}
+                        
+                        </button>
+                        <form hidden action="{% url 'allowAppTake' %}" method="POST" >
+                            {% csrf_token %}
+
+                            <input type="number" value="{{application.ApplicationId}}" name="applicationId"/>
+                            <input type="text" id="action" name="action"/>
+
+                            <input type="submit" id="sub_App_take" />
+
+                        </form>
+                        
+                    </div>
+                   {% endif %}
                 </div>
                 <div class="card-body">
                     <div class="no-gutters align-items-center">
@@ -568,15 +622,19 @@
 
 
 
-
+<input type="hidden" id="csrf_token" value=" {% csrf_token %}"/>
 
 
 <script>
 
     iframe = document.getElementById("iframe");
     console.log(iframe);
-</script>
+    
 
+
+    csrf_token = document.getElementById("csrf_token").value
+   </script>
+<script src="{% static "MyApp/reviewJs.js" %}"></script>
 
 
 {% endblock %}

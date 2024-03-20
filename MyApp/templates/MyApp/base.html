@@ -11,7 +11,8 @@
         <!-- Favicons -->
         <link href=" {% static 'imanageProfile/images/kzn-sports-confederation-logo.png' %}" rel="icon">
         <link href="{% static 'manageProfile/images/kzn-sports-confederation-logo.png' %}" rel="apple-touch-icon">
-
+        <link rel="stylesheet" href="{% static 'manage_personnel/global_personel.css' %}">
+        
         <!-- Google Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,700|Raleway:100,200,300,400,500,600,700,800,900" rel="stylesheet"> 
 
@@ -31,36 +32,24 @@
         <!-- Header Section Start -->
         <header id="header">
             <a href="{% url 'home' %}" class="logo"><img src="{% static 'manageProfile/images/kzn-sports-confederation-logo.png' %}" alt="logo"></a>
-            {% comment %} <div class="phone"><i class="fa fa-phone"></i></div>
-            <div class="mobile-menu-btn">
-                {% if user.is_authenticated %}
-
-                <a class="text-danger" href="{% url 'logoutuser' %}">Logout</a>
-
-                {% endif %}
-            </div> {% endcomment %}
-            {% comment %} <nav class="main-menu top-menu">
-                <ul>
-                    <li class="active"><a href="index.html">Home</a></li>
-                    <li><a href="about.html">About Us</a></li>
-                    <li><a href="room.html">Apartments</a></li>
-                    <li><a href="amenities.html">Amenities</a></li>
-                    <li><a href="booking.html">Booking</a></li>
-                    <li><a href="login.html">Login</a></li>
-                    <li><a href="contact.html">Contact Us</a></li>
-                </ul>
-            </nav> {% endcomment %}
+           
+            <div class="mobile-menu-btn"><i class="fa fa-bars"></i></div>
             <nav class="main-menu top-menu" >
                 <ul>
                     <li class="active"><a href="{% url 'home' %}">Home</a></li>
 
                     {% if user.is_authenticated %}
                         {% if user.is_superuser %}
-                        
-
+                            <li class="nav-item text-uppercase font-weight-bold">
+                                <a href="{% url 'Committee' type="Approved" %}" style="color: green;" class="nav-link" href="">Committee</a>
+                            </li>
+                            
                             <li class="nav-item text-uppercase font-weight-bold">
                                 <a href="{% url 'Applications' %}" style="color: green;" class="nav-link" href="">Applications</a>
                             </li>
+                            {% if user.is_staff %}
+                            <b>I am staff</b>
+                            {% endif %}
                         {% else %}
                         
                            
@@ -68,7 +57,7 @@
                                 <a class="nav-link" href="{%   url 'my_applications' %}" >Applications</a>
                             </li> 
                             <li class="nav-item text-uppercase font-weight-bold">
-                                <a class="nav-link" href="{%   url 'Select_Event' %}" >Athlete Applications</a>
+                                <a class="nav-link" href="{%   url 'Select_Event' %}" >Events</a>
                             </li>   
                     
                         {% endif %}

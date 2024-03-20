@@ -1,0 +1,93 @@
+.card-header{
+    display: flex;
+    justify-content: space-between;
+   
+
+}
+.card-header>div>.btn{
+    border: solid 1px;
+    border-radius: 12px;
+}
+.allow{
+    color: green;
+}
+.allow:hover{
+    background-color: green;
+    color: white;
+}
+.close{
+    color: red;
+}
+.close:hover{
+    background-color: red;
+    color: white;
+}
+
+#app_pop{
+    display: flex;
+   
+    justify-content: center     ;
+  
+
+    width: 100%;
+    height: 100%;
+
+    opacity: 1;
+}
+
+#app_pop>div{
+    border: solid;
+    
+
+    display: block;
+    background-color: rgb(255, 255, 255);
+    padding: 1rem;
+
+
+
+
+}
+.close2>label{
+    cursor: pointer;
+
+}
+.close2>label:hover{
+    border: solid 1px;
+    color: red;
+    padding: 0.5rem;
+}
+.action_btn{
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+   
+}
+.action_btn>div{
+    padding: 0.2rem;
+}
+    /* .action_btn>div>button{
+    
+    } */
+
+
+#app_take:hover{
+    background-color: navy;
+    color: white;
+}
+.reps_holder{
+    border: solid 1px green;
+}
+.reps_holder>.row{
+    display: flex;
+    justify-content: center;
+  
+    padding: 1rem;
+}
+.container{
+    padding: 1rem;
+}
+
+.rep_type:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}

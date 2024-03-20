@@ -2,6 +2,8 @@
 
 {% block content %}
     {% load static %}
+    <link href="{% static "MyApp/reviewCss.css" %}" rel="stylesheet"/>
+
     {% if messages %}
         {% for message in messages %}
             <br/>
@@ -19,51 +21,105 @@
     {% endif %}
 
 
-<div class="row justify-content-center mt-5">
-    <div class="col-md-5">
-        <h1>User Account</h1>
-    </div>
-</div>
-<div class="row justify-content-center mt-5">
-    <div class="col-md-5">
-        {% if error %}
-            <div class="alert alert-danger" role="alert">
-                {{ error }}
-            </div>
-        {% endif %}
-            
-        
-        <form method="POST" action="">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="first_name">First name</label>
-                <input type="text" value="{{user.first_name}}"  name="first_name" class="form-control" id="first_name" aria-describedby="emailhelp">
-                
-            </div>
-            <div class="form-group">
-                <label for="last_name">Last name</label>
-                <input type="text"  name="last_name" value="{{user.last_name}}" class="form-control" id="last_name" aria-describedby="emailhelp">
-                
-            </div>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email"  value="{{user.email}}" name="email" class="form-control" id="email" aria-describedby="emailhelp">
-                <small id="emailhelp" class="form-text text-muted">Your username must be unique. We'll let you know if someone has taken it already.</small>
-            </div>
-            <div class="form-group">
-                <label for="email">Phone number</label>
-                <input type="text"  value="{{fedPerson.PersonelPhone}}" name="PersonelPhone" class="form-control" >
-               
-            </div>
-           
-              
-            <button style="width:100%" type="submit" class="btn btn-primary">Save changes</button>
-        </form>
-        <hr>
-        <div class="text-center">
-            You can change your password<a href="{% url 'change_password' %}" style="color:blue"> here</a>
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-5">
+            <h1>User Account</h1>
         </div>
     </div>
-</div>
 
+
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-5">
+            {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endif %}
+                
+            
+            <form method="POST" action="">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="first_name">First name</label>
+                    <input type="text" value="{{user.first_name}}"  name="first_name" class="form-control" id="first_name" aria-describedby="emailhelp">
+                    
+                </div>
+                <div class="form-group">
+                    <label for="last_name">Last name</label>
+                    <input type="text"  name="last_name" value="{{user.last_name}}" class="form-control" id="last_name" aria-describedby="emailhelp">
+                    
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email"  value="{{user.email}}" name="email" class="form-control" id="email" aria-describedby="emailhelp">
+                    <small id="emailhelp" class="form-text text-muted">Your username must be unique. We'll let you know if someone has taken it already.</small>
+                </div>
+                <div class="form-group">
+                    <label for="email">Phone number</label>
+                    <input type="text"  value="{{fedPerson.PersonelPhone}}" name="PersonelPhone" class="form-control" >
+                
+                </div>
+            
+                
+                <button style="width:100%" type="submit" class="btn btn-primary">Save changes</button>
+            </form>
+            <hr>
+            <div class="text-center">
+                You can change your password<a href="{% url 'change_password' %}" style="color:blue"> here</a>
+            </div>
+        </div>
+    </div>
+
+    {% if user.is_superuser == False %}
+        <div class="reps_holder card" style="padding:1rem" >
+            <div class="text-center" style="padding:1rem;">
+                <h5>Make Colors  Commitee Member Application Below</h5>
+            </div>
+            <div class="row">
+
+                <div onclick="go_Commitee1()" id="rep_type" class="col-xl-3 col-md-6 mb-4 rep_type">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        
+                        <div class="card-body">
+                        
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2" style="display:flex; justify-content: space-between;">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
+                                    <img src="{% static "MyApp/images/people-2625804_1280.jpg" %}" style="width:100%"/>
+                                    </div>
+                                </div>
+                            
+                            </div>
+                        
+                            
+                    
+                        </div>
+                        <div class="card-footer">
+                            <h2>Commitee</h2>
+                            <a id="go_Commitee" hidden href="{% url 'Add_Committee_Member'%}"></a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+
+            go_Athlete = document.getElementById("go_Athlete")
+            go_Official = document.getElementById("go_Official")
+            go_Commitee = document.getElementById("go_Commitee")
+            function go_Athlete1(){
+                go_Athlete.click()
+            }
+
+            function go_Official1(){
+                go_Official.click()
+            }
+
+            function go_Commitee1(){
+                go_Commitee.click()
+            }
+        </script>
+    {% endif %}
 {% endblock %}

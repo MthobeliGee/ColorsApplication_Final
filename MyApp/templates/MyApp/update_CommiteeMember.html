@@ -10,7 +10,7 @@
             <br/>
             <div>
                 <center>
-                    <div style="padding:1rem; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% elif message.tags == 'info' %}info{% endif %}">
+                    <div style="padding:1rem; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% elif message.tags == 'info' %}alert-info{% endif %}">
                         <p style="font-size:20px">
                             <b> {{ message }}</b>
                         </p>
@@ -22,30 +22,25 @@
     {% endif %}
     
     <div class="container">
-        {% if application.Step != 'Application_review' %}
 
-            {% if application.Step != 'Pending' %}
-                <div>
-                    <a style="color:white" href="{% url 'Add_Committee_Member' applicationId=application.ApplicationId %}" class="btn btn-default btn-danger">
-                        Abort action
-                    </a>
-                </div>
-
-            {% endif %} 
+        <div class="row" style="display:flex; justify-content:space-between;">
     
-
-        {% else %}
-
-        
-
-            <div>
-                <a href="{% url 'Committee' applicationId=application.ApplicationId %}" class="btn btn-default btn-danger">
-                    Abort Action
+            <div style="padding:1rem;padding-left:2rem">
+    
+               <h1>
+                    KZNSC Commitee
+               </h1>
+            </div>
+            <div style="padding:1rem; padding-right: 1.5rem">
+                <a href="{% url 'CommitteeMemberDetails' MemberId=committeeMember.CommitteeMemberId %}" class="btn btn-info">
+                    Back to commitee members details
                 </a>
             </div>
+        </div>
+            
+    
 
-
-        {% endif %}
+  
         <hr/>
         <div class="container" style="display:flex; justify-content:center; padding:1rem">
                 <h1 class="text">
@@ -148,41 +143,36 @@
                 </div>
             </div>
             <!--*****************************************-->
-            <div >
-
-                    
-                <input  type="text" name="Province" value="{{committeeMember.Province}}"   class="form-control form-control-lg">
-                <label class="form-label" for="Province">Province</label>
- 
-            </div>
-           
-            <input class="btn btn-default btn-primary" style="width:100%" type="submit" value="Save changes"/> 
-            <div>
-                <br/>
-                {% if application.Step != 'Application_review' %}
-
-                    {% if application.Step != 'Pending' %}
-                        <div>
-                            <a style="color:white" href="{% url 'Add_Committee_Member' applicationId=application.ApplicationId %}" class="btn btn-default btn-danger">
-                                Abort action
-                            </a>
-                        </div>
-
-                    {% endif %} 
-               
-            
-                {% else %}
         
+            <div>
+                <select name="Province"   class="form-control form-control-lg">
+                    <option value="{{committeeMember.Province}}">{{committeeMember.Province}}(current)</option>
+
+                    <option value="KwaZulu-Natal">KwaZulu-Natal</option>
+                    <option value="Eastern Cape">Eastern Cape</option>
+                    <option value="Free State">Free State</option>
+                    <option value="Gauteng">Gauteng</option>
+                    <option value="Limpopo">Limpopo</option>
+                    <option value="Mpumalanga">Mpumalanga</option>
+                    <option value="Northern Cape">Northern Cape</option>
+                    <option value="North West">North West</option>
+                    <option value="Western Cape">Western Cape</option>
+                </select>
+                <label class="form-label" for="Province">Province</label>
+
+            </div>
+            
+            <div style="padding:1rem">
+                <div style="padding:0.3rem">
+                    <input class="btn btn-default btn-primary" style="width:100%" type="submit" value="Save changes"/>
+                </div>
                 
-
-                    <div>
-                        <a href="{% url 'Committee' applicationId=application.ApplicationId %}" class="btn btn-default btn-danger">
-                            Abort Action
-                        </a>
-                    </div>
-
-
-                {% endif %}
+                
+                <div style="padding:0.3rem">
+                    <a style="color:white; width:100%" href="{% url 'CommitteeMemberDetails' MemberId=committeeMember.CommitteeMemberId %}" class="btn btn-default btn-danger">
+                        Back To Member Details
+                    </a>
+                </div>
             </div>
             
         </form>

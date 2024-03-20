@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'LoginManager',
     'ProcessApplication',
     'rest_framework',
+    'manage_personnel',
+      'corsheaders',
+      
 ]
 
 MIDDLEWARE = [
@@ -51,6 +54,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    
+]
+CORS_ORIGIN_WHITELIST = [
+    'http://127.0.0.1:5500','http://127.0.0.1:8000'
+    #'http://localhost:5173',  # Add your Vue.js application's origin here
+    # Add more origins if necessary
 ]
 
 ROOT_URLCONF = 'Main.urls'
@@ -131,7 +141,7 @@ STATIC_ROOT = os.path.join(BASE_DIR,'static')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_USE_TLS = False
 # EMAIL_USE_SSL = True
 # EMAIL_HOST = 'mail.kznsc.com'
@@ -143,7 +153,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 #email config
-#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# #EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'livesoundsmusic@gmail.com'
 EMAIL_FROM = 'livesoundsmusic@gmail.com'

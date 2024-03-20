@@ -18,6 +18,12 @@
             background-color:green;
             color:white
         }
+        .here:hover{
+            padding:0.7rem;
+            border:solid 1px;;
+            border-radius:60px
+
+        }
 
     </style>    
     {% if messages %}
@@ -278,7 +284,7 @@
         <div class="text-center text-warning">
 
             <h3><b>You do not have any active application</b></h3><br/>
-            <p style="font-size:20px"><b>You may add a new application <a href="{%  url 'CreateApplication'  %}"> here</a></p>
+            <p style="font-size:20px;"><b>You may add a new application <a class="here" style=" color:blue" href="{%  url 'CreateApplication'  %}"> <b><u>here</u></b></a></p>
         </div>
 
 

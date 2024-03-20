@@ -1,0 +1,146 @@
+{% extends "MyApp/base.html" %}
+
+{% block content %}
+
+    {% load static %}
+    <link href="{% static "MyApp/reviewCss.css" %}" rel="stylesheet"/>
+    {% if messages %}
+        {% for message in messages %}
+            <br/>
+            <div>
+                <center>
+                    <div style="padding:1rem; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% elif message.tags == 'info' %}info{% endif %}">
+                        <p style="font-size:20px">
+                            <b> {{ message }}</b>
+                        </p>
+                    </div>
+                </center>
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+    
+
+    <div class="container">
+
+        <div class="row" style="padding:1rem; display:flex;justify-content:space-between">
+            <h2>
+                Select your type of represantation
+            </h2>
+          
+            
+           <div style="padding:0.5rem">
+                <p>
+                    {{application.Federation.FederationName }}
+                </p>
+            </div>
+
+
+        </div>
+        <hr/>
+       
+        <div class="reps_holder card" style="padding:1rem" >
+            <div class="text-center" style="padding:1rem;">
+                <h4>{{application.EventName}}</h4>
+            </div>
+            <div class="row">
+                <div onclick="go_Athlete1()" class="col-xl-3 col-md-6 mb-4 rep_type">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        
+                        <div class="card-body">
+                           
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2" style="display:flex; justify-content: space-between;">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
+                                       <img src="{% static "MyApp/images/athlete-1840437_1280.jpg" %}" style="width:100%"/>
+                                    </div>
+                                </div>
+                               
+                            </div>
+                           
+                            
+                    
+                        </div>
+                        <div class="card-footer">
+                            <h2>Athlete</h2>
+                            <a id="go_Athlete" hidden href="{% url 'AddRepp' applicationId=application.ApplicationId %}"></a>
+                        </div>
+                    </div>
+                </div>
+                <!--official***********************************************-->
+                <div onclick="go_Official1()" class="col-xl-3 col-md-6 mb-4 rep_type">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        
+                        <div class="card-body">
+                           
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2" style="display:flex; justify-content: space-between;">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
+                                       <img src="{% static "MyApp/images/referee-4217535_1280.jpg" %}" style="width:100%"/>
+                                    </div>
+                                </div>
+                               
+                            </div>
+                           
+                            
+                    
+                        </div>
+                        <div class="card-footer">
+                            <h2>Official</h2>
+                            <a id="go_Official" hidden href="{% url 'addTeamOfficial' applicationId=application.ApplicationId %}"></a>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- committee member********************************************-->
+                <div onclick="go_Commitee1()" id="rep_type" class="col-xl-3 col-md-6 mb-4 rep_type">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        
+                        <div class="card-body">
+                           
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2" style="display:flex; justify-content: space-between;">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
+                                       <img src="{% static "MyApp/images/people-2625804_1280.jpg" %}" style="width:100%"/>
+                                    </div>
+                                </div>
+                               
+                            </div>
+                           
+                            
+                    
+                        </div>
+                        <div class="card-footer">
+                            <h2>Commitee</h2>
+                            <a id="go_Commitee" hidden href="{% url 'Add_Committee_Member' applicationId=application.ApplicationId %}"></a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+
+        go_Athlete = document.getElementById("go_Athlete")
+        go_Official = document.getElementById("go_Official")
+        go_Commitee = document.getElementById("go_Commitee")
+        function go_Athlete1(){
+            go_Athlete.click()
+        }
+
+        function go_Official1(){
+            go_Official.click()
+        }
+
+        function go_Commitee1(){
+            go_Commitee.click()
+        }
+    </script>
+
+
+{% endblock %}

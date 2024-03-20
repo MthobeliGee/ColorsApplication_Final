@@ -1,16 +1,160 @@
-<div><h2>Represantative details</h2></div>
-<hr/>
+{% extends "MyApp/base.html" %}
 
-<table>
+{% block content %}
+    {% load static %}
+    <link href="{% static "MyApp/applicantReviewCss.css" %}" rel="stylesheet"/>
+    {% if messages %}
+        {% for message in messages %}
+            <br/>
+            <div>
+                <center>
+                    <div style="padding:1rem; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% elif message.tags == 'info' %}info{% endif %}">
+                        <p style="font-size:20px">
+                            <b> {{ message }}</b>
+                        </p>
+                    </div>
+                </center>
+            </div>
 
-    <tr>
-        <th>First Name</th><td>{{Rep.FirstName}}</td>
-    </tr>
-    <tr>
-        <th>Surname</th><td>{{Rep.Surname}}</td>
-    </tr>
-    <tr>
-        <th>Gender</th><td>{{Rep.Gender}}</td>
-    </tr>
-    
-    </table>
+        {% endfor %}
+    {% endif %}
+
+
+
+    <div class="container">
+        {% if athlete %}
+            <div >
+               <div class="applicant_holder_header"> 
+
+                    <h3>
+                        {{athlete.FirstName}} {{athlete.Surname}} Athlete colors Review
+                    </h3>
+                    <hr/>
+                    <h5>
+                        {{application.Federation.FederationName}}
+                    </h5>
+
+               </div>
+          
+
+                <div  class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body applicant_info" >
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2" style="display:flex; justify-content: space-between;">
+
+                                <div  class="text-center">
+
+                                    <p >
+                                        <label>Athlete Id Number: {{athlete.Id_number}}</label><br/>
+                                        <label>First Name: {{athlete.FirstName}} </label><br/>
+                                        <label>Last Name: {{athlete.Surname}}</label><br/>
+                                        <label>Gender: {{athlete.Gender}}</label><br/>
+                                        <label>Phone Number: {{athlete.PhoneNumber}}</label><br/>
+                                        <label>Email: {{athlete.Email}}</label><br/>
+                                        
+                                        <label>Represatative Type: {{athlete.RepresatativeType}}</label><br/>
+                                        {% if athlete.is_parent %}
+                                            <label>Application is perfomed by parent</label><br/>
+                                        {% endif %}
+                                        {% if athlete.is_terms_accepted%}
+                                            <label>terms and condition accepted</label><br/>
+                                        {% endif %}
+                                        <label>Application Status: {{athlete.status}}</label><br/>
+                                        
+                                    </p>
+                                </div>
+
+                               
+                                
+                            </div>
+                        
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        {% if athlete.status == 'OnCreate'%}
+
+                            
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="submit" name="" value="Subit Colors Application" class="btn btn-default btn-success"/>
+                            </form>
+                            
+                        {% endif %}
+
+                        <div class="actions row">
+
+                            <div>
+                                <a href="{% url 'update_Representative' represantativeId=athlete.RepresantativeId %}" style="color:white; border-radius:12px" class="btn btn-default btn-info">
+                                    <b>Update details</b>
+                                </a>
+                            </div>
+                            {% if athlete.status == "Pending" %}
+                                <div id="btn_cancel_holder">
+                                    <button id="btn_cancel" onclick="initCancel('on')"  style="color:white; border-radius:12px" class="btn btn-default btn-danger">
+                                        <b>Cancel Application</b>
+                                    </button>
+
+                                </div>
+                            {% endif %}
+
+                            
+                            
+                        </div>
+                        <div id="div_cancel"    >
+                            <form method="post" action="{% url 'cancel_applicant_app' applicantId=athlete.RepresantativeId  applicant_type="Athlete" %}">
+                                {% csrf_token %}
+
+                                <div class="text-center">
+                                    <h4 class="text-danger"><b>Are you sure you want to cancel the application?</b></h4>
+                                </div>
+                                <hr/>
+                                <div class="actions row">
+                                    <div>   
+                                        <button type="submit" class="btn btn-default btn-success">
+                                           <b> Confirm Cancelling</b>
+                                        </button>
+                                    </div>
+                                    <div>   
+                                        <a style="color:white" class="btn btn-default btn-danger" preventdefault onclick="initCancel('off')"  >
+                                            <b>Abort Action</b>
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+        {% endif %}
+
+    </div>
+
+    <script>
+        const btn_cancel = document.getElementById("btn_cancel")
+        const div_cancel = document.getElementById("div_cancel")
+        const btn_cancel_holder = document.getElementById("btn_cancel_holder")
+
+        function initCancel(action){
+            console.log( action)
+            if(action  == 'on'){
+              
+                div_cancel.hidden =false
+                btn_cancel_holder.hidden = true
+            }
+            else if( action == 'off'){
+                div_cancel.hidden = true
+                btn_cancel_holder.hidden = false
+                console.log(" btn_cancel.hidden :" ,btn_cancel_holder.hidden )
+            }
+            console.log("div_cancel.hidden : ", div_cancel.hidden )
+        }
+        div_cancel.hidden =true
+
+    </script>
+
+{% endblock %}

@@ -1,0 +1,189 @@
+{% extends "MyApp/base.html" %}
+
+{% block content %}
+    {% load static %}
+    <style>
+        td,th{
+            padding:0.3rem;
+            border:solid 1px;
+        }
+      
+        .card-body{
+            padding:0.3rem;
+           
+    </style>
+    {% if messages %}
+        {% for message in messages %}
+            <br/>
+            <div>
+                <center>
+                    <div style="padding:1rem; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% elif message.tags == 'info' %}alert-info{% endif %}">
+                        <p style="font-size:20px">
+                            <b> {{ message }}</b>
+                        </p>
+                    </div>
+                </center>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    
+
+    <div class="container">
+        
+        <div class="card text-center">
+            <div class="card-header ">
+               <h1>
+                    KZNSC Colors Commitee Member
+               </h1>
+            </div>
+           
+                <table  class="card-body">
+                    <tr>
+                        <th>
+                            <label>First name:</label>
+                        </th>
+                        <td>
+                            <label>
+                                {{committeeMember.FirstName}}
+                            </label>
+                        </td>
+
+                    </tr/>
+                    <tr>
+                        <th>
+                            <label>Last name:</label>
+                        </th>
+                        <td>
+                            <label>
+                                {{committeeMember.Surname}}
+                            </label>
+                        </td>
+
+                    </tr/>
+                    <tr>
+                        <th>
+                            <label>Gender:</label>
+                        </th>
+                        <td>
+                            <label>
+                                {{committeeMember.Gender}}
+                            </label>
+                        </td>
+
+                    </tr/>
+                    <tr>
+                        <th>
+                            <label>Email Address:</label>
+                        </th>
+                        <td>
+                            <label>
+                                {{committeeMember.Email}}
+                            </label>
+                        </td>
+
+                    </tr/>
+                    <tr>
+                        <th>
+                            <label>Phone number:</label>
+                        </th>
+                        <td>
+                            <label>
+                                {{committeeMember.PhoneNumber}}
+                            </label>
+                        </td>
+
+                    </tr/>
+                    <tr>
+                        <th>
+                            <label>City:</label>
+                        </th>
+                        <td>
+                            <label>
+                                {{committeeMember.City}}
+                            </label>
+                        </td>
+
+                    </tr/>
+                    <tr>
+                        <th>
+                            <label>Province:</label>
+                        </th>
+                        <td>
+                            <label>
+                                {{committeeMember.Province}}
+                            </label>
+                        </td>
+
+                    </tr/>
+                
+                </table>
+                <div class="card-footer">
+            
+                    <div style="border:solid 1px red; padding:0.6rem">
+                    {% if user.is_superuser %}
+                        <h6 class="text-danger">
+                            Are you sure you want to "Remove" this commitee member from the KZNSC Colors Commitee?
+                        </h6>
+
+                    {% else %}
+                        <h6 class="text-danger">
+                            Are you sure you want to "Cancel" the application for commitee membership at the KZNSC Colors?
+                        </h6>
+                    {% endif %}
+                        <hr/>
+                        <form method="post"  enctype="multipart/form-data" style="width:inherit;padding:0.4rem">
+                            {% csrf_token %}
+
+                            <input type="hidden" name="CommitteeMemberId" value="{{committeeMember.CommitteeMemberId}}"/>
+                            
+                            <input type="hidden" name="is_super" 
+                                {% if user.is_superuser %}
+                                    value="yes"
+                                {% else %}
+                                    value="no"
+                                {% endif %}
+                            />
+                                
+
+                            <div style="padding:0.3rem">
+                                <input type="submit" class="btn btn-default btn-danger"
+                                {% if user.is_superuser %}
+                                    value="Confirm Member Removal"
+                                {% else %}
+                                    value="Confirm Application Cancellation"
+                                {% endif %}
+                                    style="color:white;width:100%"/>
+                            </div>
+                               
+                           <div style="padding:0.3rem">
+                                <a style="color:white;width:100%" class="btn btn-default btn-success" href="{% url 'CommitteeMemberDetails' MemberId=committeeMember.CommitteeMemberId %}">
+                                    Back to Member Details
+                                </a>
+                            </div>
+
+                        </form>
+
+
+                        </div>
+                    
+
+
+       
+                </div>
+
+            
+           
+            
+            
+
+
+        <div>
+
+
+    </div>
+
+
+
+
+{% endblock %}

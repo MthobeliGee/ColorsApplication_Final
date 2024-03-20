@@ -27,15 +27,16 @@
             <div>
                 <h3><b>{{application.EventName}} represantatives</b> 
             </div>
+            <div>
+                <a style="color:white" href="{% url 'ApplicantInfo' applicantId=represantative.RepresantativeId applicant_type='Athlete'%}" class="btn btn-default btn-warning">
+                    << Back To Application
+                </a>
+            </div>
             
             {% if application.Step != 'Application_review' %}
                     
             {% if application.Step != 'Pending' %}
-                <div>
-                    <a style="color:white" href="{% url 'AddRepp' applicationId=application.ApplicationId %}" class="btn btn-default btn-warning">
-                        Abort action
-                    </a>
-                </div>
+                
             {% endif %}
        
 
@@ -57,6 +58,14 @@
 
         <form method="post"  enctype="multipart/form-data" style="width:inherit">
             {% csrf_token %}
+            <div class="form-outline">
+                    
+                <input required type="text" value="{{represantative.Id_number}}"  maxlength="13" onkeyup="changed(this.value)"  name="Id_number" placeholder=" Applicant Id number" id="id_number"  class="form-control form-control-lg">
+                <label class="form-label" for="FirstName">Id Number</label>
+                <div hidden class="text-center" id="Id_msg">
+
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-6 mb-4">
 
@@ -76,7 +85,7 @@
                 <div class="form-outline" style="display:flex;flex-direction: column">
                     
                     <input   type="text" name="Surname" value="{{represantative.Surname}}"  class="form-control form-control-lg">
-                    <label class="form-label" for="Surname">Last Name</label>
+                    <label class="form-label" for="Surname">Last Name {{represantative.PhoneNumber}}</label>
                 
                 </div>
 
@@ -105,7 +114,7 @@
                             <option value="Male">
                                 Male
                             </option>
-                            <option value="Femal">
+                            <option value="Female">
                                 Female
                             </option>
                             <option value="Other">
@@ -253,31 +262,14 @@
 
             <input class="btn btn-default btn-primary" style="width:100%" type="submit" value="Save details"/> 
             <div style="display:flex; justify-content:center;padding:1rem">
-
-                {% if application.Step != 'Application_review' %}
-                    
-                    {% if application.Step != 'Pending' %}
-                        <div>
-                            <a style="color:white" href="{% url 'AddRepp' applicationId=application.ApplicationId %}" class="btn btn-default btn-warning">
-                                Abort action
-                            </a>
-                        </div>
-                    {% endif %}
-               
-
-                    
-
-            
-                {% else  %}
-                    <div>
-                        <a style="color:white" href="{% url 'Applcants' applicationId=application.ApplicationId %}" class="btn btn-default btn-warning">
-                            Abort action
-                        </a>
-                    </div>
-                    
-
-
-                {% endif %}
+                <div>
+                    <a style="color:white" href="{% url 'ApplicantInfo' applicantId=represantative.RepresantativeId applicant_type='Athlete'%}" class="btn btn-default btn-warning">
+                        <b>
+                            << Back To Application
+                        </b>
+                    </a>
+                </div>
+                
 
             </div>
         </form>
@@ -287,7 +279,37 @@
     </div>
 
 
+    <script>
+        id_number = document.getElementById("id_number")
+        Id_msg = document.getElementById("Id_msg")
+        subsub = document.getElementById("subsub")
+        let num = 0
+        function changed(value){
+            check = /^\d+$/.test(value);
+            num += 1
+            is_valid = false
+            if(check){
+                id_number.style = 'border: solid green; color:green'
+                is_valid = true
 
+            }
+            else{
+                id_number.value = null
+                Id_msg.hidden = false
+                id_number.style = 'border: solid red; color:red'
+                id_number.placeholder = 'Identity number must consist of digits only "REFRESH PAGE"'
+                
+
+            }
+            return is_valid
+        }
+
+        function sub(){
+            if(changed(id_number.value)){
+                subsub.click()
+            }
+        }
+    </script>
 
 {% endblock %}
 

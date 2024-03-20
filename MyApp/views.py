@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect, get_object_or_404
 from .models import *
+from manage_personnel.models import *
 from django.contrib import messages
 from django.contrib.auth.models import User 
 from django.contrib.auth.decorators import login_required
@@ -26,6 +27,7 @@ def testTemp(request):
 
 def Home(request):
     application  = None
+    
     if request.user.is_authenticated:
        
         try:
@@ -57,22 +59,26 @@ def Home(request):
         #     pass
        
     return render(request,'MyApp/Home.html', {"application":application})
+
+
+
 @login_required
 def CreateApplication(request):
     user = request.user
     
     federationPersonel = None
+    federation = None
 
     try:
         federationPersonel = get_object_or_404(FederationPersonel, user = user)
-        if federationPersonel.FederationName == None:
-         
-            messages.error(request, "Please select your federation, in order to add a new application.")
-            print("Chhose!2")
-            return redirect("newFed")
+        try:
+            federation = get_object_or_404(Federation, FederationPersonel =federationPersonel, year = datetime.now().year )   
+        except:
+            messages.error(request, "Please Select your federation")
+            return redirect("getFederation")
     except:
-        messages.error(request, "Please select your federation")
-        return redirect("newFed")
+        messages.error(request, "Please add your personal information.")
+        return redirect("new_personnel")
     
     if request.method == 'GET':
         
@@ -94,13 +100,13 @@ def CreateApplication(request):
             
    
         
-        return render(request, 'MyApp/CreateApp.html', {"federationPersonel":federationPersonel})
+        return render(request, 'MyApp/CreateApp.html', {"federationPersonel":federationPersonel, "federation":federation})
     
     if request.method == 'POST':
        
         application = Application.objects.create(
                 user = user,
-                FederationPersonel = federationPersonel,
+                Federation = federation,
                 EventName = request.POST['EventName'],
                 StartDate = request.POST['StartDate'],
                 EndDate = request.POST['EndDate'],
@@ -116,11 +122,11 @@ def CreateApplication(request):
         application = get_object_or_404(Application, user = user, ApplicationStatus = "Oncreate")
         print("application.StartDate: ", type(application.StartDate))
        
-        messages.success(request, 'The information has been saved successfully, proceed to add the team officials.')
+        messages.success(request, 'The information has been saved successfully, proceed to upload documents.') 
                 
                 
                 
-        return redirect("addTeamOfficial", applicationId= application.ApplicationId)
+        return redirect("Upload_Documents", applicationId= application.ApplicationId)
 @login_required
 def addTeamOfficial(request, applicationId):
     application = get_object_or_404(Application, pk = applicationId)
@@ -180,6 +186,12 @@ def addTeamOfficial(request, applicationId):
         messages.success(request,"Official add successfully, you may proceed to add more.")
         
         return redirect("addTeamOfficial",applicationId = teamOfficial.application.ApplicationId)
+    
+    
+@login_required
+def event_fderations(request):
+    
+    applications = Application.objects.filter(is_App_taking=True)
     
     
     
@@ -349,14 +361,12 @@ def AddRepp(request, applicationId):
     represantatives = Represantative.objects.filter(application = application)
         
     if request.method == 'GET':
-        
-        
-        
         return render(request, 'MyApp/AddRepp.html', {"application":application, "represantatives":represantatives})
         
     if request.method == 'POST':
         isIdSubmit = False
         isAceptencSubmited = False
+        is_parent = False 
       
         Repps = Represantative.objects.filter(application = application)
         
@@ -369,9 +379,13 @@ def AddRepp(request, applicationId):
         if request.POST["IDCopySubmited"] == 'yes':
             isIdSubmit = True
             
+        if request.POST["is_parent"] == 'yes':
+            is_parent = True
+            
         Rep = Represantative.objects.create(     
           
            application = application,
+           Id_number = request.POST["Id_number"],
             FirstName = request.POST['FirstName'],
             Surname = request.POST['Surname'],
             Gender = request.POST['Gender'],
@@ -381,20 +395,245 @@ def AddRepp(request, applicationId):
             Province = request.POST["Province"],
             RepresatativeType = request.POST["RepresatativeType"],
             IDCopySubmited = isIdSubmit,
-            AcceptanceofTeamAppointment = isAceptencSubmited
+            AcceptanceofTeamAppointment = isAceptencSubmited,
+            is_parent = is_parent,
             
         )
        
         
-        if request.user == application.user or request.user.is_superuser:
-            messages.success(request, "Team represantative add successfully")
+    
+        messages.success(request, "Your information has been saved successfully, please accept team and conditions provided by ", application.Federation.FederationName)
+        
+        return redirect("applicatntTerms",applicantId = Rep.RepresantativeId,applicant_type ="Athlete",applicationId=application.ApplicationId)
+
             
-            return redirect("AddRepp",applicationId=application.ApplicationId)
-        else:
+
+@login_required
+def applicatntTerms(request, applicantId, applicant_type, applicationId):
+    application = get_object_or_404(Application, pk = applicationId)
+    athlete = None
+    official = None
+    comittee = None
+    if applicant_type == 'Athlete':
+        try:
+            athlete = get_object_or_404(Represantative, pk = applicantId)
+        except:
+            messages.error(request, "The record you tried to access was not found")
             return redirect("home")
+    elif applicant_type == 'Official':
+        try:
+            official = get_object_or_404(TeamOfficial, pk = applicantId )
+            
+        except:
+            messages.error(request, "The record you tried to access was not found")
+            return redirect("home")
+    elif applicant_type == 'Comittee':
+        try:
+            comittee = get_object_or_404(CommitteeMember, pk = applicantId)
+        except:
+            messages.error(request, "The record you tried to access was not found")
+            return redirect("home")
+        
+    applicantTeams = ApplicantTeams.objects.filter( Federation =application.Federation )
+    if request.method == 'GET':
+        obj = {
+            "application":application,
+            "athlete":athlete,
+            "official":official,
+            "comittee":comittee,
+            "applicantTeams":applicantTeams
+            
+            
+        }
+            
+        return render(request, 'MyApp/applicatntTerms.html',obj)      
+    elif request.method == 'POST':
+        is_saved = False
+        if applicant_type == 'Athlete':
+            try:
+                athlete.is_terms_accepted = True
+                athlete.save()
+                is_saved = True
+            except:
+               pass
+        elif applicant_type == 'Official':
+            try:
+                official.is_terms_accepted = True
+                athlete.save()
+                is_saved = True
+            except:
+               pass
+        elif applicant_type == 'Comittee':
+            try:
+                comittee.is_terms_accepted = True
+                athlete.save()
+                is_saved = True
+            except:
+                messages.error(request, "The record you tried to access was not found")
+                return redirect("home")          
+        if is_saved:
+            
+            messages.success(request, "Terms and conditions accepted, please review application and submit.")
+        return redirect("ApplicantInfo",  applicantId, applicant_type)
+   
+@login_required
+def ApplicantInfo(request, applicantId, applicant_type):
+    application = None
+    athlete = None
+    official = None
+    comittee = None
+    instance = None
+    if applicant_type == 'Athlete':
+        try:
+            athlete = get_object_or_404(Represantative, pk = applicantId)
+            application = athlete.application
+            instance = athlete
+        except:
+            messages.error(request, "The record you tried to access was not found")
+            return redirect("home")
+    elif applicant_type == 'Official':
+        try:
+            official = get_object_or_404(TeamOfficial, pk = applicantId )
+            application = official.application
+            instance = official
+        except:
+            messages.error(request, "The record you tried to access was not found")
+            return redirect("home")
+    elif applicant_type == 'Comittee':
+        try:
+            comittee = get_object_or_404(CommitteeMember, pk = applicantId)
+            application = comittee.application
+            instance = comittee
+            
+        except:
+            messages.error(request, "The record you tried to access was not found")
+            return redirect("home")
+        
+    if request.method == 'GET':
+        obj = {
+            "application":application,
+            "athlete":athlete,
+            "official":official,
+            "comittee":comittee,  
+        }
+        return render(request, 'MyApp/RepDetails.html', obj)
+    elif request.method == 'POST':
+        
+        instance.status = "Pending"
+        instance.user = request.user
+        instance.save()
+        messages.success(request, "Application for colors has been submitted successfully and is pending approval by manager.")
+        #Alert colors federation manageer
+        is_alert = alertFedColorsManager(request,applicant_type, instance)
+        
+        if is_alert == False:
+            msg = "Something went wrong while alerting the federation colors manager\n"
+            msg += "Please contact the manager at: "+application.Federation.FederationPersonel.user.email+" | "+application.Federation.FederationPersonel.Phone
+            messages.warning(request, msg)
+        else:
+            msg = "The federation manager has been notified of the application."
+            messages.success(request, msg)
+            
+        return redirect("ApplicantInfo", applicantId = applicantId, applicant_type = applicant_type)
+            
+        
+        
+        
+@login_required
+def cancel_applicant_app(request, applicantId, applicant_type ):
+   
+    if applicant_type == "Athlete":
+       instance = get_object_or_404(Represantative, pk = applicantId)
+    if applicant_type == "Official" :  
+       instance = get_object_or_404(TeamOfficial, pk = applicantId)
+    if applicant_type == "Comittee" :  
+       instance = get_object_or_404(CommitteeMember, pk = applicantId)
+       
+    
+
+    is_alert = False
+    if   instance.status  == "Pending":
+        is_alert = True
+    instance.status = "Canceled"
+    instance.save()
+    
+    messages.success(request, 'Your  application has been cancelled successfully')
+    if is_alert:
+        pass#alert colors fed admin
+    
+    return redirect("ApplicantInfo", applicantId =applicantId, applicant_type =applicant_type)
+    
+        
+def alertFedColorsManager(request, appType, instance):
+    is_sent = False
+    application = instance.application
+    to_email = application.user.email
+    first_name = None 
+    
+    colors_user =get_colors_user(application)
+    mail_subject = "Pending Colors application."
+    message = render_to_string("MyApp/alerts/applicantManager_alert.html",{
+        "colors_user":colors_user,
+        'applicant':get_applicant_user(appType,instance),
+        'application':application,
+        'domain': get_current_site(request).domain,
+        "protocol": 'https' if request.is_secure() else 'http'
+    })
+    print(to_email)
+    if to_email:
+        try:
+            send_mail(mail_subject,f"{message}"  ,'',[to_email], fail_silently=False)
+            is_sent = True
+        except:
             pass
+    
+    return is_sent
 
 
+def get_colors_user(application):
+    
+    return {
+        "first_name":application.user.first_name,
+        "last_name":application.user.last_name,
+        
+    }
+    
+    
+
+
+def get_applicant_user(type, instance):
+    
+    applicant_user = {}
+    
+    if type == "Athlete":
+        applicant_user = {
+            "first_name":instance.FirstName,
+            "last_name":instance.Surname,
+            "email":instance.Email,
+            "Phone":instance.PhoneNumber
+            
+        }
+    elif type == "Official":
+        applicant_user = {
+            "first_name":instance.FirstName,
+            "last_name":instance.LastName,
+            "email":instance.user.email,
+            "Phone":instance.PhoneNumber
+            
+        }
+    elif type == "Comittee":
+        applicant_user = {
+            "first_name":instance.FirstName,
+            "last_name":instance.LastName,
+            "email":instance.user.email,
+            "Phone":instance.PhoneNumber
+            
+        }
+        
+    return applicant_user
+    
+    
+      
 @login_required
 def update_Representative(request, represantativeId):
     
@@ -419,7 +658,9 @@ def update_Representative(request, represantativeId):
             if request.POST["IDCopySubmited"] == 'yes':
                 isIdSubmit = True
                 
-                
+        if request.POST["Id_number"] != represantative.Id_number:
+            represantative.Id_number = request.POST["Id_number"]
+            numUpdates += 1    
         if request.POST["FirstName"] != represantative.FirstName:
             represantative.FirstName = request.POST["FirstName"]
             numUpdates += 1
@@ -471,7 +712,7 @@ def update_Representative(request, represantativeId):
             messages.success(request, "Changes saved successfully")
         else:
             messages.info(request, "There were no changes made on the record.")
-        return redirect("AddRepp", applicationId = application.ApplicationId)
+        return redirect("ApplicantInfo",applicantId=represantative.RepresantativeId, applicant_type = "Athlete")
             
 
 @login_required
@@ -498,23 +739,28 @@ def RepDetails(request, RepresantativeId):
     
     return render (request, 'MyApp/RepDetails.html',{"Rep":Rep}) 
 @login_required
-def Add_Committee_Member(request, applicationId):
-    application = get_object_or_404(Application, pk=applicationId)
-    CommitteeMembers = CommitteeMember.objects.filter(application = application)
-    
+def Add_Committee_Member(request):
+
+    #CommitteeMemberDetails(request, ):'
+    try:
+        member = get_object_or_404(CommitteeMember, is_history = False)
+        if member:
+            messages.info(request, "You already have an active committee profile, see details below")
+            return redirect("CommitteeMemberDetails", MemberId = member.CommitteeMemberId)
+    except:
+        pass
+        
     if request.method == 'GET':
         
-        return render(request, 'MyApp/Add_Committee_Member.html',{"CommitteeMembers":CommitteeMembers,"application":application})
+        return render(request, 'MyApp/Add_Committee_Member.html')
     
     if request.method == 'POST':
         
-        if Thefunctions.getObjectCount(CommitteeMembers) == 0:
-            application.Step = 'Add_Committee_Member'
-            application.save()
+        
         committeeMember = CommitteeMember.objects.create(
             
-            application = application,
-         
+            user = request.user,
+            Id_number = request.POST["id_number"],
             FirstName = request.POST['FirstName'],
             Surname = request.POST['Surname'],
             Gender = request.POST['Gender'],
@@ -523,31 +769,182 @@ def Add_Committee_Member(request, applicationId):
             City = request.POST["City"],
             Province = request.POST["Province"]
         )
-        messages.success(request, "Committee member added successfully")
-        return redirect("Add_Committee_Member",applicationId=application.ApplicationId)
+        messages.success(request, "Your details have been saved successfully please reciew and submit application")
+        return redirect("CommitteeMemberDetails",MemberId=committeeMember.CommitteeMemberId)
+    
+@login_required
+def CommitteeMemberDetails(request, MemberId):
+    try:
+        committeeMember = get_object_or_404(CommitteeMember, pk= MemberId)
+    except:
+        messages.error(request, "The record you tried to access does not exit, you may add a new committe application below.")
+        return redirect("Add_Committee_Member")
+    
+    if request.method == "GET":
+       
+    
+        return render(request, 'MyApp/CommitteeMemberDetails.html', {"committeeMember":committeeMember})
+    elif request.method == 'POST':
+        committeeMember = None
+        try:
+            committeeMember = get_object_or_404(CommitteeMember, pk = int(request.POST["CommitteeMemberId"]))
+        except:
+            messages.error(request, "The record you tried to access does not exit")
+            return redirect("home")
+        
+        committeeMember.status = "Pending"
+        committeeMember.RequestDate = datetime.now()
+        committeeMember.save()
+        messages.success(request, "You application for committee membership has been submitted successfully.")
+        #alert federation admins
+        
+        is_alert = new_committee_alert(request,committeeMember)
+        if is_alert:
+            messages.success(request, "The KZNSC executives have been notified of your application")
+        else:
+            messages.error(request, "We could not reach any of our KZNSC colors executives please contact them manually, find information on the contact page.")
+            
+        return redirect("CommitteeMemberDetails", MemberId= MemberId)
+        
+        
+@login_required
+def cancel_committee_app(request, memberId):
+    member = None
+    try:
+        
+        member = get_object_or_404(CommitteeMember, pk = memberId)
+    except:
+        
+        messages.error(request, "The record you tried to access was not found")
+        return redirect("home")
+    
+    if request.method == 'GET':
+        
+        return render(request,'MyApp/cancel_committee_app.html',  {"committeeMember":member}) 
+    elif request.method == 'POST':
+        
+        member.is_history = True
+        
+        
+        if request.POST["is_super"] == 'yes':
+            member.is_deleted = True
+            member.status = "Removed"
+            member.ResponseDate = datetime.now()
+            remove_committee_alert(request,member)
+            messages.success(request, "Member has been removed successfully.")
+            
+        else:
+            member.status = "Canceled"
+            messages.success(request, "The application has been canceled successfully.")
+            cancel_committee_alert(request,member)
+            
+            
+            
+        member.save()    
+        
+        #alert admins
+        return redirect("CommitteeMemberDetails",MemberId=memberId)
+    
+def remove_committee_alert(request,member):
+    is_sent = False
+    mail_subject = "KZNSC Colors Committee."
+    to_email =member.user.email 
+    message = render_to_string("MyApp/alerts/remove_committee_alert.html",{
+        'admin_user':request.user,
+        'member':member,
+        'domain': get_current_site(request).domain,
+        "protocol": 'https' if request.is_secure() else 'http'
+    })
+    
+    if to_email:
+        try:
+            send_mail(mail_subject,f"{message}"  ,'',[to_email], fail_silently=False)
+            is_sent =  True
+        except:
+            pass
+    return is_sent
 
+def cancel_committee_alert(request,committeeMember):
+    
+    is_sent = False
+    num_alert = 0
+    mail_subject = "Canceled Colors Committee Application."
+    admin_users = User.objects.filter(is_superuser = True)
+    for admin_user in admin_users:
+        to_email =admin_user.email 
+        message = render_to_string("MyApp/alerts/cancel_committee_alert.html",{
+            'admin_user':admin_user,
+            'committeeMember':committeeMember,
+            'domain': get_current_site(request).domain,
+            "protocol": 'https' if request.is_secure() else 'http'
+        })
+        
+        if to_email:
+            try:
+                send_mail(mail_subject,f"{message}"  ,'',[to_email], fail_silently=False)
+                num_alert += 1
+            except:
+                pass
+    if num_alert > 0:
+           is_sent = True
+    return is_sent
+         
+       
+     
+def new_committee_alert(request,committeeMember):
+    
+    is_sent = False
+    num_alert = 0
+    mail_subject = "Pending Colors Committe Application."
+    admin_users = User.objects.filter(is_superuser = True)
+    for admin_user in admin_users:
+        to_email =admin_user.email 
+        message = render_to_string("MyApp/alerts/new_committee_alert.html",{
+            'admin_user':admin_user,
+            'committeeMember':committeeMember,
+            'domain': get_current_site(request).domain,
+            "protocol": 'https' if request.is_secure() else 'http'
+        })
+        
+        if to_email:
+            try:
+                send_mail(mail_subject,f"{message}"  ,'',[to_email], fail_silently=False)
+                num_alert += 1
+            except:
+                pass
+    if num_alert > 0:
+           is_sent = True
+    return is_sent
+         
+   
 @login_required
 def update_CommiteeMember(request, CommitteeMemberId):
     
     committeeMember = get_object_or_404(CommitteeMember, pk=CommitteeMemberId)
-    application = committeeMember.application
+  
 
     if request.method =='GET':
         
-        return render(request, 'MyApp/update_CommiteeMember.html', {"committeeMember":committeeMember,"application":application})
+        return render(request, 'MyApp/update_CommiteeMember.html', {"committeeMember":committeeMember})
     
     if request.method =='POST':
-        
+        user = request.user
         numUpdates = 0
+        numUserChange = 0
         
         if committeeMember.FirstName != request.POST["FirstName"]:
             committeeMember.FirstName = request.POST["FirstName"]
             numUpdates += 1
+            user.first_name = request.POST["FirstName"]
+            numUserChange +=1
+            
             
         if committeeMember.Surname  != request.POST["Surname"]:
             
             committeeMember.Surname = request.POST["Surname"]
             numUpdates += 1
+            user.last_name = request.POST["Surname"]
+            numUserChange +=1
         
         if request.POST["Gender"] != 'none':
             if committeeMember.Gender != request.POST["Gender"]:
@@ -558,6 +955,9 @@ def update_CommiteeMember(request, CommitteeMemberId):
             
             committeeMember.Email = request.POST["Email"]
             numUpdates += 1
+            user.email = request.POST["Email"]
+            user.username = request.POST["Email"]
+            numUserChange +=1
             
         if committeeMember.PhoneNumber != request.POST["PhoneNumber"]:
             
@@ -575,25 +975,17 @@ def update_CommiteeMember(request, CommitteeMemberId):
             numUpdates += 1
             
         if numUpdates > 0:
-            
+            if numUserChange > 0:
+                user.save()
             committeeMember.save()
             messages.success(request, "The changes were saved successfully.")
         else:
             messages.info(request, "No changes made on the record.")
             
         
-        return redirect("Add_Committee_Member", applicationId=application.ApplicationId)            
+        return redirect("update_CommiteeMember", CommitteeMemberId=CommitteeMemberId)            
 
-@login_required
 
-def CommitteeMemberDetails(request, MemberId):
-    
-    obj = get_object_or_404(CommitteeMember, pk= MemberId)
-    print(obj)
-    
-    return render(request, 'MyApp/CommitteeMemberDetails.html', {"obj":obj})
-         
-   
     
 @login_required
     
@@ -674,10 +1066,10 @@ def Upload_Documents(request, applicationId):
                 pass
             
             if numUpdates > 0:
-                messages.success(request, "Changes saved successfully "+str(numUpdates))
+               
                 application.save()
             else:
-                messages.error(request, 'No changes made')   
+              pass   
                 
             #return redirect("Upload_Documents", applicationId = application.ApplicationId)
              
@@ -771,7 +1163,7 @@ def Application_review(request, applicationId):
                 apparel = get_object_or_404(Apparel, application= application)
             except:
                 pass
-            
+        domain = get_current_site(request)
         informationOBJ = {
             "numCommitee":numCommitee,
             "numOfficials":numOfficials,
@@ -781,7 +1173,8 @@ def Application_review(request, applicationId):
             "teamOfficials":teamOfficials,
             "numApplicants":numApplicants,
             "FederationPersonel":fedPerson, 
-            "apparel":apparel
+            "apparel":apparel,
+            "domain":domain
             }
         return render(request, 'MyApp/Application_review.html', informationOBJ)
     
@@ -831,14 +1224,104 @@ def Applcants(request,applicationId):
         
         return render(request,'MyApp/Applcants.html', {"application":application,"Applicants": Applicants})
     
-def Committee(request, applicationId):
+def Committee(request, type):
     
-    application = get_object_or_404(Application,pk = applicationId)
-    commitee = CommitteeMember.objects.filter(application = application)
+    
+    commitee = CommitteeMember.objects.all()
+    
     
     if request.method =='GET':
         
-        return render(request, 'MyApp/Committee.html', {"application":application, "commitee":commitee})
+        
+        commiteeObj = {
+            "numPending":countObj(CommitteeMember.objects.filter(status ="Pending")),
+            "numAppved":countObj(CommitteeMember.objects.filter(status ="Approved")),
+            "numHistory":countObj(CommitteeMember.objects.filter(is_history = True)),
+            "Pending":CommitteeMember.objects.filter(status ="Pending"),
+            "Approved":CommitteeMember.objects.filter(status ="Approved"),
+            "history":CommitteeMember.objects.filter(is_history = True),
+            "commitee":getCommittee(type),
+            "type":type
+        }
+        
+        return render(request, 'MyApp/Committee.html', commiteeObj)
+    
+    
+def getCommittee(type):
+    
+    committee = []
+    if type=="Pending":
+        committee =CommitteeMember.objects.filter(status ="Pending")
+    elif type=="Approved":
+        committee = CommitteeMember.objects.filter(status ="Approved")
+    elif type == 'history':
+        CommitteeMember.objects.filter(is_history = True)
+        
+    return committee
+        
+        
+        
+@login_required
+def committee_response(request, memberId, response):
+    if request.user.is_superuser == False:
+        messages.error(request, 'The action you are trying to take is for KZNSC high renking officials.')
+        return redirect("home")
+        
+    member = None
+    try:
+        member = get_object_or_404(CommitteeMember, pk = memberId)
+    except:
+        messages.error(request, "The record you tried to access was not found.")
+        return redirect("home")
+    
+    if request.method == 'GET':
+        
+        return render(request, 'MyApp/committee_response.html',{"CommitteeMember":member,"response":response })
+    
+    if request.method =='POST':
+        member.status = request.POST["response"]
+        member.save()
+        committee_response_alert(request,member,response)
+        
+        if request.POST["response"] == "Approved":
+            memberUser = member.user
+            memberUser.is_staff = True
+            memberUser.save()
+            messages.success(request, "The appication has been approved successfully. Applicant has been notified")
+        elif request.POST["response"] == "Declined":
+            messages.success(request, "The appication has been declened successfully. Applicant has been notified") 
+            
+        return redirect("CommitteeMemberDetails", MemberId=member.CommitteeMemberId)
+        
+        
+def committee_response_alert(request, member, response):
+    #committee_Approve
+    #committee_Decline
+    res_teplate = 'committee_'+response+'.html'
+    
+    is_sent = False
+    
+    mail_subject = "KZNSC Colors, Committe Application."
+    admin_user =request.user
+    
+    to_email =member.Email 
+    message = render_to_string('MyApp/alerts/'+res_teplate,{
+        'admin_user':admin_user,
+        'member':member,
+        'domain': get_current_site(request).domain,
+        "protocol": 'https' if request.is_secure() else 'http'
+    })
+    
+    if to_email:
+        try:
+            send_mail(mail_subject,f"{message}"  ,'',[to_email], fail_silently=False)
+            is_sent = True
+        except:
+            pass
+    
+    return is_sent
+    
+    
     
 def Documents(request, applicationId):
     
@@ -866,13 +1349,7 @@ def represantativeDetails(request, represantativeId):
     application = represantative.application
     return render(request, 'MyApp/represantativeDetails.html',{"represantative":represantative,"application":application})
             
-def CommitteeMemberDetails(request, committeeMemberId):
-    
-    committeeMember = get_object_or_404(CommitteeMember, pk = committeeMemberId)
-    application = committeeMember .application
-    
-    return render(request, 'MyApp/CommitteeMemberDetails.html', {"committeeMember":committeeMember,"application":application})   
-@login_required
+
 def ContinueApplication(request, applicationId):
     #Step refers to the already comleted step
     user = request.user
@@ -1209,7 +1686,13 @@ def chooseFederation(request):
                 dateSelected = datetime.now()
             )
             
-        AlertGovManager(request, user,request.POST["userEmail"],{"first_name": request.POST["userName"], "last_name":request.POST["userSurname"]},FedPersonel)
+        AlertGovManager(
+            request,
+            user,
+            request.POST["govEmail"],
+            {"first_name": request.POST["gov_first_name"], "last_name":request.POST["gov_last_name"]},
+            FedPersonel
+        )
         messages.success(request, "Great you have selected your feration, you may continue with your application")
         #alert Governance manager by email
         if FedPersonel.PersonelPhone == None:
@@ -1220,11 +1703,13 @@ def chooseFederation(request):
     
     
 
-def AlertGovManager(request, user, to_email, coloresUser, federationPersonel):
+def AlertGovManager(request, to_email, coloresUser, federation):
+    user = request.user
+    is_sent = False
     print(f"To user: {user.username}")
     mail_subject = "Colours application  representative."
     message = render_to_string("MyApp/AlertGovManager.html",{
-        'federationPersonel':federationPersonel,
+        'federationPersonel':federation,
         'user':user,
         'coloresUser':coloresUser,
         'domain': get_current_site(request).domain,
@@ -1235,9 +1720,12 @@ def AlertGovManager(request, user, to_email, coloresUser, federationPersonel):
     print(to_email)
     try:
         send_mail(mail_subject,f"{message}"  ,'',[f'{to_email}'], fail_silently=False)
-        
+        is_sent = True
     except:
-        pass        
+        
+        pass     
+    
+    return is_sent   
 
     
     
@@ -1573,6 +2061,40 @@ def checkDate(date):
         return Response({'isValid': False})
     
     
+@login_required
+def allowAppTake(request):
+    print("request: ", request)
+    if request.method == 'POST':
+        try:
+            application = get_object_or_404(Application, pk = request.POST["applicationId"])
+            msg = ''
+
+            if request.POST["action"] == "Allowed":
+                application.is_App_taking = True
+                msg ='Athletes, officials, and commitee members are allowed to make colors application.'
+
+                messages.success(request, msg)
+            elif request.POST["action"] == "DisAllowed":
+                application.is_App_taking = False
+                msg ='Athletes, officials, and commitee members are not longer allowed to make colors application.'
+            
+                messages.error(request, msg)  
+            application.save()
+        except:
+            messages.error(request, "Something went wrong please try again")
+            pass
+        return redirect("Application_review", applicationId = application.ApplicationId)
+    else:
+        messages.error(request, "Something went wrong please try again")
+        
+        return redirect("home")
+    
+    
+        
+    
+    
+    
+    
     
     
 def Select_Event(request):
@@ -1597,4 +2119,17 @@ def Select_Event(request):
             return redirect("Select_Event")
         
         
+        
+@login_required
+def Represantation(request, applicationId):
+    
+    application = None
+    try:
+        application  = get_object_or_404(Application, pk = applicationId)
+        
+    except:
+        messages.error(request, "The application you tried to acces was not found")
+        return redirect("home")
+    
+    return render(request, 'MyApp/chooseRepType.html', {"application":application})
   

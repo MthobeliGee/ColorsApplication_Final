@@ -1,0 +1,126 @@
+{% extends "MyApp/base.html" %}
+
+{% block content %}
+    {% load static %}
+
+    <style>
+
+        .heading{
+            padding:2rem;
+            display:flex;
+            justify-content:center;
+        }
+    </style>
+    {% if messages %}
+        {% for message in messages %}
+            <br/>
+            <div>
+                <center>
+                    <div style="padding:1rem; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% elif message.tags == 'info' %}alert-info{% endif %}">
+                        <p style="font-size:20px">
+                            <b> {{ message }}</b>
+                        </p>
+                    </div>
+                </center>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+
+    <div class="container">
+        <div class="heading">
+            <h1>
+                KZNSC Commitee Member Application Response
+            </h1>
+        </div>
+        <div style="width:100%padding:1rem;display:flex;justify-content:center">
+
+        
+                <div class="card border-left-primary shadow h-100 py-" style="width:max-width:100%">
+                    <div class="card-header">
+
+                        <h6
+                            {% if response == "Approve" %}
+
+                                class="text-success"
+                            {% else %}
+                                class="text-danger"
+
+                            {% endif %}
+                        >
+                            "{{response}} "the KZNSC Colors Commitee appllication?
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
+                            {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
+                            <img style="width:inherit; width:100%;border:solid;max-height:320px" src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/>
+                            
+                        </div>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2" style="display:flex; justify-content: space-between;">
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
+                                    {{ CommitteeMember.FirstName}} {{CommitteeMember.Surname}}
+                                </div>
+                                
+                            </div>
+                           
+                        </div>
+                        <div class="row no-gutters align-items-center" style="padding:1rem">
+                            <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;justify-content:center" >
+                               
+                                    {% if response == "Approve" %}
+                                        <form method="post" class="row"  enctype="multipart/form-data" style="width:inherit;padding:0.4rem;display:flex; justify-content:center">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="response" value="Approved"/>
+
+                                            <div style="padding:0.1rem">
+                                                <button class="btn btn-default btn-success">
+                                                    <b>Confirm Approval</b>
+                                                </button>
+                                            </div>
+                                            <div style="padding:0.1rem">
+                                                <a href="{% url 'CommitteeMemberDetails' MemberId=CommitteeMember.CommitteeMemberId %}" class="btn btn-default btn-warning">
+                                                    <b>
+                                                        Abort action
+                                                    </b>
+                                                </a>
+                                            </div>
+                                        </form>
+                                    {% elif response == "Decline" %}
+                                        <form method="post" class="row"  enctype="multipart/form-data" style="width:inherit;padding:0.4rem;display:flex; justify-content:center">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="response" value="Declined"/>
+                                            <div style="padding:0.1rem">
+                                                <button class="btn btn-default btn-danger">
+                                                    <b>
+                                                        Confirm declinal
+                                                    </b>
+                                                </button>
+                                            </div>
+                                            <div style="padding:0.1rem">
+                                                <a href="{% url 'CommitteeMemberDetails' MemberId=CommitteeMember.CommitteeMemberId %}" class="btn btn-default btn-warning">
+                                                    <b>
+                                                        Abort action
+                                                    </b>
+                                                </a>
+                                            </div>
+                                        </form>
+                                    {% endif %}
+                           
+                                </div>
+                        </div>
+                        
+                
+                    </div>
+                </div>
+           
+        </div>
+
+    </div>
+
+
+
+
+
+{% endblock %}

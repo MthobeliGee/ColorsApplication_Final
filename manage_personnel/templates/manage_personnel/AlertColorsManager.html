@@ -1,0 +1,21 @@
+{% autoescape off %}
+
+    Hello {{coloresUser.first_name}} {{coloresUser.last_name}}, I hope this email finds you well.
+    this email is to inform you about the results of your request to manage color applications for the the federation "{{federation.FederationName}}".
+    
+    Your request has been {{Status}}
+
+    {% if status == 'Declined'%}
+        We regret to inform you that your account has been removed from the Colors web application, to release the federation for the right personnel. 
+        Should you have interest of any kind on the colors application you shall create a new account.
+
+
+    {% endif %}
+    _________________________
+    Best Regards 
+    The colors application
+
+
+
+
+{% endautoescape %}
