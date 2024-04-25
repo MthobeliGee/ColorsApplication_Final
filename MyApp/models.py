@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import date, datetime
+from django.utils import timezone
 from django.contrib.auth.models import User 
 
 class FederationPersonel(models.Model):
@@ -7,7 +8,7 @@ class FederationPersonel(models.Model):
     PersonelId = models.AutoField(primary_key=True)
     user = models.ForeignKey(User,blank=True,null=True,on_delete=models.CASCADE)
     FederationName = models.CharField(max_length=255,blank=True,null=True)
-    dateSelected = models.DateField(default=datetime.now())
+    dateSelected = models.DateField(default=timezone.now())
     PersonelPhone = models.CharField(max_length=255 , null=True, blank=True)
     PersonelGender = models.CharField(max_length=6,null=True, blank=True)
     Status = models.CharField(max_length=20,default="Pending")
@@ -65,6 +66,7 @@ class Application(models.Model):
     DateCreated = models.DateTimeField(default=datetime.now())
     DeclineReason = models.TextField(blank=True, null=True)
     CancelReason = models.TextField(blank=True, null=True)
+    LateAppMotivation = models.TextField(max_length=255)
     
     ApparelLetters = models.CharField(max_length=300, blank=True, null=True)
 
