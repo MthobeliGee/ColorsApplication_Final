@@ -44,7 +44,7 @@ class Application(models.Model):
     HostCity = models.CharField(max_length=255)
     HostProvince =models.CharField(max_length=255)
     ReportSubmitAgreement = models.BooleanField(default=False)
-    NumberOfTeam = models.IntegerField()
+    NumberOfTeam = models.IntegerField(default=0)
     MethodOfSelection = models.CharField(max_length=255)
     SelectionApprovedDate = models.DateField(max_length=255)
     TravelDateTime = models.DateTimeField(max_length=255)
