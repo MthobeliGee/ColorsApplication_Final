@@ -1,0 +1,127 @@
+{% extends "MyApp/base.html" %}
+
+{% block content %}
+   
+    {% load static %}
+    <style>
+
+        p:{
+            padding:0.5rem;
+            font-size:20px
+        }
+    </style>
+    {% if messages %}
+        {% for message in messages %}
+            <br/>
+            <div>
+                <center>
+                    <div style="padding:1rem; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% elif message.tags == 'info' %}info{% endif %}">
+                        <p style="font-size:20px">
+                            <b> {{ message }}</b>
+                        </p>
+                    </div>
+                </center>
+            </div>
+
+        {% endfor %}
+    {% endif %}
+
+
+
+<div class="container">
+
+    <div>
+        <center style="padding:1rem">
+           <div style="padding:1rem">
+
+                <h1><b>Code of conduct</b></h1>
+           </div>
+            <br/>
+            <div class="card" style="padding:1rem;border-radius:12px">
+                            
+                
+
+                {% for condition in applicantTeams %}
+
+                    <p style="padding:1rem; font-size:20px; color:black">
+                        {{condition.teams}}
+
+                    <p/>
+                {% endfor %}
+              
+              <hr/>
+              <div>
+                    <div>
+                            
+                               <p>
+                                    <b>Agree to the tearms and contitions?</b><br/>
+                               </p>
+                                
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <div>
+                                            
+                                                <div>
+                                                    <label style="padding:0.3rem"><input name="IsAccepted" id="IsAcceptedYes" value="Yes" type="radio"/><b>Yes</b></label><label style="padding:0.3rem"><input id="IsAcceptedNo" name="IsAccepted" value="No" type="radio"/><b>NO</b></label>
+                                                </div>
+                                                <div>
+                                                    
+                                                </div>
+                                           
+                                        </div>
+                                        <div>
+                                            <button disabled id="btnContinue" class="btn btn-default btn-success">
+                                                Continue application
+                                            </button>
+                                            <input hidden type="submit" id="btnSubmit"/>
+                                        </div>
+                                        <br/>
+                                    </form>
+                                    <div id="NoteMSG" hidden style="padding:1rem">
+                                        <center>
+                                            <div style="padding:1rem;  border:solid 2px red; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center; " class="alert-danger">
+                                            <p >
+                                                <b>Please note the application will be canceled if the terms and conditions are not aligned with your ageement.</b>
+                                            </p>
+                                            </div>
+                                        </center>
+                                    </div>
+                       
+                    </div>
+              </div>
+
+
+
+            </div>
+        </center>
+    </div>
+</div>
+
+
+<script>
+    IsAcceptedYes = document.getElementById("IsAcceptedYes")
+    IsAcceptedNo =document.getElementById("IsAcceptedNo")
+    btnContinue = document.getElementById("btnContinue")
+    btnSubmit = document.getElementById("btnSubmit")
+    NoteMSG = document.getElementById("NoteMSG")
+
+
+    IsAcceptedNo.addEventListener('click', function(){
+        btnContinue.disabled = false;
+        btnContinue.innerHTML = "Cancel application";
+        btnContinue.style = "background-color:red";
+        NoteMSG.hidden = false;
+
+
+    })
+    IsAcceptedYes.addEventListener('click', function(){
+        btnContinue.disabled = false;
+        btnContinue.innerHTML = "Continue application";
+        btnContinue.style = ""
+        NoteMSG.hidden = true;
+    })
+   // IsAcceptedNo.click()
+
+</script>
+
+{% endblock %}

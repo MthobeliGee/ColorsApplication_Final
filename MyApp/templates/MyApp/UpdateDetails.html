@@ -35,155 +35,108 @@
 
         <form method="post"  enctype="multipart/form-data" style="width:inherit">
             {% csrf_token %}
-            <div class="row">
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline">
-                    
-                        <input required type="text" name="EventName" value="{{application.EventName}}" placeholder="Name of event"  class="form-control form-control-lg">
-                        <label class="form-label" for="EventName">Event Name</label>
-                
-                    </div>
-
-                </div>
-
-            
-            
-                <div class="col-md-6 mb-4">
-
-                <div class="form-outline" style="display:flex;flex-direction: column">
-                    
-                    <input required  type="date" name="StartDate"  class="form-control form-control-lg">
-                    <label class="form-label" for="Middlename">Start Date: {{application.StartDate}}</label>
-                
-                </div>
-
-                </div>
+            <div class="form-outline">
+                <label class="form-label" for="EventName">Event Name</label> 
+                <input required type="text" name="EventName" value="{{application.EventName}}" class="form-control form-control-lg">
+        
             </div>
-            <div class="row">
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline">
-                    
-                        <input required type="date" name="EndDate" class="form-control form-control-lg">
-                        <label class="form-label" for="EndDate">End Date: {{application.StartDate}}</label>
+            <div class="form-outline" style="display:flex;flex-direction: column">
+                <label class="form-label" for="Middlename">Host Province</label>
+                <select onchange="setCities(this.value)" required  type="text" name="HostProvince" id="drpListProvince"  class="form-control form-control-lg">
+                    <option value="{{ application.HostProvince}}">
+                        {{ application.HostProvince}}
+                    </option>
+                </select>
                 
-                    </div>
-
-                </div>
-
             
-            
-                <div class="col-md-6 mb-4">
-
-                <div class="form-outline" style="display:flex;flex-direction: column">
-                    
-                    <input required  type="number" name="NumberOfTeam" value="{{application.NumberOfTeam}}" class="form-control form-control-lg">
-                    <label class="form-label" for="NumberOfTeam">Number Of Team Members</label>
-                
-                </div>
-
-                </div>
             </div>
-            <div class="row">
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline">
-                    
-                        <input required type="text" name="HostCity" value="{{application.HostCity}}" class="form-control form-control-lg">
-                        <label class="form-label" for="HostCity">Host City</label>
-                
-                    </div>
-
-                </div>
-
-            
-            
-                <div class="col-md-6 mb-4">
-
-                <div class="form-outline" style="display:flex;flex-direction: column">
-                    
-                    <input required  type="text" name="HostProvince" value="{{application.HostProvince}}"  class="form-control form-control-lg">
-                    <label class="form-label" for="Middlename">Host Province</label>
-                
-                </div>
-
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline">
-                    
-                        <input required type="text" name="MethodOfSelection" value="{{application.MethodOfSelection}}" class="form-control form-control-lg">
-                        <label class="form-label" for="MethodOfSelection">Method Of Selection</label>
-                
-                    </div>
-
-                </div>
-
-            
-            
-                <div class="col-md-6 mb-4">
-
-                <div class="form-outline" style="display:flex;flex-direction: column">
-                    
+            <div class="form-outline">
+                <label class="form-label" for="HostCity">Host city/town</label>
+                <input type="hidden" value="{{application.HostCity}}" id="dbValue" />
+                <select onchange="whenCitChange(this.value)" id="drpCities" required type="text" name="HostCity" class="form-control form-control-lg">
                    
-                    <input type="date" name="SelectionApprovedDate" class="form-control form-control-lg" />
-                        
-                    <label class="form-label" for="RepresatativeType">Team Selection Approved  Date: {{application.SelectionApprovedDate}}</label>
+ 
+                </select>
                 
-                </div>
+                <div id="txt_HostCity_holder" hidden >
+                    <label>Please specify city/town</label>
+                    <input type="text"  class="form-control form-control-lg" id="txt_HostCity" />
 
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline">
-                    
-                        <input required type="text" name="ModeOfTravel" value="{{application.ModeOfTravel}}" class="form-control form-control-lg">
-                        <label class="form-label" for="ModeOfTravel">Mode of travel</label>
-                
-                    </div>
-
-                </div>
-
-            
-            
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline" style="display:flex;flex-direction: column">
-                        
-                        <div style="display:flex; ">
-                            <input required  type="date" name="TravelDate" style="border-right:none"  class="form-control form-control-lg">
-                            <input required type="time" name="TravelTime" style="padding:0.5rem; border:solid 1px grey; border-left:none; border-raduis:12px"/>
-                        </div>
-                        <label class="form-label" for="TravelDateTime">Travel Date And Time: {{application.TravelDateTime}}</label>
-                    
-                    </div>
-
-                </div>
+        
             </div>
 
+        
+        
+            <div class="form-outline" style="display:flex;flex-direction: column">
+                <label class="form-label" for="Middlename">Start Date</label>
+                <input  required value="{{ application.StartDate|date:'Y-m-d' }}"   type="date" id="StartDate" name="StartDate" onchange="validateDate(this.value, 'start')" class="form-control form-control-lg">
+                <div id="datemsg">
+                    
+                </div>
+            
+            </div>
+            
+            <div class="form-outline">
+                <label class="form-label" for="EndDate">End Date</label>
+                <input required  value="{{ application.EndDate|date:'Y-m-d' }}"  type="date" onchange="validateDate(this.value, 'end')" id="endDate" name="EndDate" class="form-control form-control-lg">
+                <div id="datemsgend">
+                    
+                </div>
+            </div>
+           
+                       
+            
+            <div class="form-outline" style="display:flex;flex-direction: column">
+                    
+                <label class="form-label" for="RepresatativeType">Team Selection Approved  Date</label>
+                <input required type="date" value="{{ application.SelectionApprovedDate|date:'Y-m-d' }}" name="SelectionApprovedDate" class="form-control form-control-lg" />
+                    
+                
+            
+            </div>
+     
+            <div class="form-outline" style="display:flex;flex-direction: column">
+                <label class="form-label" for="TravelDateTime">Travel Date And Time</label>
+                <div class="" style="display:flex;justify-content:center ">
+                    <input value="{{ application.TravelDateTime|date:'Y-m-d\TH:i' }}" required  type="datetime-local" name="TravelDateTime" style=""  class="form-control form-control-lg">
+                    
+                </div>
+               
+            
+            </div>
+            <br/>
+            
 
             <input class="btn btn-default btn-primary" style="width:100%" type="submit" value="Save changes"/> 
-            <div style="padding:1rem; display:flex; justify-content:center; ">
-                <a style="color:white;width:30%" href="{% url 'Application_review' applicationId=application.ApplicationId %}" class="btn btn-default btn-warning">
-                    Abort action
-                </a>
-            </div>
         </form>
-
-
+        
+        <br/>
 
     </div>
 
 
+    <script src="{% static 'MyApp/myjs/basiccolorsjs.js' %}"></script>
+
+    <script>
+        function setCities(provinceName){
+
+
+            const provinceOBJ = provinces.find(province => province.ProvinceName === provinceName/*provinceName"Eastern Cape*/);
+          
+            const cities = provinceOBJ.cities
+          
+            const drpCities2 = document.getElementById("drpCities2")
+            console.log("drpCities2: ", drpCities2)
+            console.log(drpCities)
+            drpCities.innerHTML =null
+            cities.forEach(function(city){
+              drpCities.innerHTML +='<option value="'+city+'">'+city+'</option>'
+            });
+          }
+    </script>
+
 
 {% endblock %}
 
-
-
-<hr/>
 

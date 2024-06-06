@@ -1,5 +1,4 @@
 #from asyncio.windows_events import NULL
-import email
 from email import message
 from hashlib import new
 from tracemalloc import DomainFilter
@@ -19,7 +18,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django import forms
 from .tokens import account_activation_token, Password_Reset_token
-from django.core.mail import send_mail, BadHeaderError
+from django.core.mail import send_mail
 from django.db.models.query_utils import Q
 from django.contrib.auth.tokens import default_token_generator
 from MyApp.models import *
@@ -138,11 +137,7 @@ def signupuser(request):
                 user = User.objects.create_user(first_name = request.POST["first_name"],last_name = request.POST["last_name"],username = request.POST['email'].lower(),email =request.POST['email'].lower(), password = request.POST['password1'],)# email = request.POST['email'],
                 user.is_active = False
                 user.save()
-                fedPersonel = FederationPersonel.objects.create(
-                    user = user,
-                    # FederationName = request.POST["FederationName"],
-                    PersonelPhone = request.POST["PersonelPhone"]
-                )
+               
                 ActivationEmail(request, user, request.POST['email'].lower())
                 #login(request,user)
                 messages.success(request,"Account created successfully, an email has been sent for activation please visit email ("+request.POST['email'].lower()+") to activate your account.")
@@ -215,22 +210,13 @@ def resetPassword(request, **kwargs):
                             
                     if request.POST['username']:
                         user.username = request.POST['username']
-                    
-                    #
-                   
-                        
-                
+               
+           
                     user.password =  request.POST['password1']
-                   
-                            
-                    #  user.save(commit=False)
+
                     user.save()
                     messages.success(request,f"{user.username} your account infomation has been updated successfully, you can proceed to login")
-                    #print(ActivationEmail(request, user, request.POST['email'].lower()))
-                    
-                    # login(request,user)
-                    
-                    
+                
                     return redirect('home')
                 except IntegrityError:
                     return render(request,'LoginManager/signup.html',{ 'error':'Username Already Taken'})

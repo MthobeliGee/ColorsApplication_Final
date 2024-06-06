@@ -10,7 +10,7 @@
             <br/>
             <div>
                 <center>
-                    <div style="padding:1rem; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% elif message.tags == 'info' %}info{% endif %}">
+                    <div style="padding:1rem; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% elif message.tags == 'info' %}alert-info{% endif %}">
                         <p style="font-size:20px">
                             <b> {{ message }}</b>
                         </p>
@@ -21,31 +21,29 @@
         {% endfor %}
     {% endif %}
     
-    <div class="container">
-        {% if application.Step != 'Application_review' %}
+    <div class="container" style="padding:1rem">
 
-            {% if application.Step != 'Pending' %}
-                <div>
-                    <a style="color:white" href="{% url 'Add_Committee_Member' applicationId=application.ApplicationId %}" class="btn btn-default btn-danger">
-                        Abort action
-                    </a>
-                </div>
-
-            {% endif %} 
+        <div class="row" style="display:flex; justify-content:space-between;">
     
+            <div style="padding:1rem;padding-left:2rem">
+    
+               <h1>
+                    KZNSC Commitee
+               </h1>
+            </div>
+            Committee
 
-        {% else %}
-
-        
-
-            <div>
-                <a href="{% url 'Committee' applicationId=application.ApplicationId %}" class="btn btn-default btn-danger">
-                    Abort Action
+            
+            <div style="padding:1rem; padding-right: 1.5rem">
+                <a href="{% url 'Committee' %}" class="btn btn-info">
+                    Go to Committee 
                 </a>
             </div>
+        </div>
+            
+    
 
-
-        {% endif %}
+  
         <hr/>
         <div class="container" style="display:flex; justify-content:center; padding:1rem">
                 <h1 class="text">
@@ -56,135 +54,143 @@
     
 
 
-        <form method="post"  enctype="multipart/form-data" style="width:inherit">
+        <form method="post"  enctype="multipart/form-data" style="width:inherit" >
+
             {% csrf_token %}
-            <div class="row">
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline">
-                    
-                        <input type="text" name="FirstName" value="{{committeeMember.FirstName}}"  class="form-control form-control-lg">
-                        <label class="form-label" for="FirstName">First Name</label>
+            <div class="form-outline" style="display:flex;flex-direction: column">
+                <label class="form-label" for="id_number">Identity Number </label>  
+                <input required id="txtIdNumber"  type="text" value="{{committeeMember.Id_number}}" name="Id_number" placeholder="Identity Number" maxlength="13" onkeyup="changed(this.value)"   class="form-control form-control-lg">
                 
-                    </div>
+                <div hidden class="text-center" id="Id_msg">
 
                 </div>
-
             
-            
-                <div class="col-md-6 mb-4">
-
-                <div class="form-outline" style="display:flex;flex-direction: column">
-                    
-                    <input   type="text" name="Surname" value="{{committeeMember.Surname}}"  class="form-control form-control-lg">
-                    <label class="form-label" for="Surname">Last Name</label>
+            </div>
+            <div class="form-outline">
+                <label class="form-label" for="FirstName">First Name</label>  
+                <input required type="text" value="{{committeeMember.FirstName}}" name="FirstName" placeholder="First name"  class="form-control form-control-lg">
                 
-                </div>
-
-                </div>
+        
             </div>
-            <div class="row">
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline">
-
-                    
-                        <select  name="Gender" class="form-control form-control-lg">
-                            <option value="none">
-                                Select
-                            </option>
-                            <option value="Male">
-                                Male
-                            </option>
-                            <option value="Femal">
-                                Female
-                            </option>
-                            <option value="Other">
-                                Other
-                            </option>
-                        </select>
-
-                        <label class="form-label" for="EndDate">Gender: <b>{{committeeMember.Gender}}</b></label>
+            <div class="form-outline" style="display:flex;flex-direction: column">
+                <label class="form-label" for="Surname">Last Name</label>   
+                <input required  type="text" value="{{committeeMember.Surname}}" name="Surname" placeholder="Last name"  class="form-control form-control-lg">
                 
-                    </div>
-
-                </div>
-
             
-            
-                <div class="col-md-6 mb-4">
+            </div>
+            <div class="form-outline">
 
-                <div class="form-outline" style="display:flex;flex-direction: column">
+                <label class="form-label" for="EndDate">Gender</label>
+                <select required name="Gender" class="form-control form-control-lg">
+
+                    {% if commiteeMember.Gender == "Male"%}
+                        <option value="Male">
+                            Male
+                        </option>
+                        <option value="Female">
+                            Female
+                        </option>
+                        <option value="Other">
+                            Other
+                        </option>
+                    {% elif commiteeMember.Gender == "Female" %}
+                        <option value="Female">
+                            Female
+                        </option>
+                        <option value="Male">
+                            Male
+                        </option>
                     
-                    <input   type="text" name="PhoneNumber" value="{{committeeMember.PhoneNumber}}"  class="form-control form-control-lg">
-                    <label class="form-label" for="PhoneNumber">Phone Number</label>
+                        <option value="Other">
+                            Other
+                        </option>
+
+                    {% else %}
+                        <option value="Other">
+                            Other
+                        </option>
+                        <option value="Male">
+                            Male
+                        </option>
+                        <option value="Female">
+                            Female
+                        </option>
+                        <option value="Other">
+                            Other
+                        </option>
+                    {% endif %}
+                </select>
+
+               
+        
+            </div>
+            <div class="form-outline" style="display:flex;flex-direction: column">
+                <label class="form-label" for="Surname">Position</label>   
+                <select name="position" id="drpPosition"  class="form-control form-control-lg">
+                   <option value="{{committeeMember.position}}">
+                        {{committeeMember.position}}
+                   </option>
+                </select>
+                <div class="text-warning">
+                    <ul>
+                        {% if committeeMember.is_history and committeeMember.position == "Demoted" %}
+                            <li>
+                                <p>Kindly note that to repromote former committee member simple update position above.</p>
+                            </li>
+
+                        {% endif %}
+                        <li>
+                            <p>Kindly note that once a position is filled, any incumbent in that role will be removed (demoted) from the committee.</p>
+                        </li>
+                        
+
+                    </ul>
+                </div>
                 
-                </div>
-
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline" style="display:flex;flex-direction: column">
-                    
-                        <input  type="email" name="Email" value="{{committeeMember.Email}}"   class="form-control form-control-lg">
-                        <label class="form-label" for="Email">Email Address</label>
-                    
-                    </div>
-                </div>
-
+                
             
-            
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline" style="display:flex;flex-direction: column">
-                    
-                        <input  type="text" name="City"  value="{{committeeMember.City}}" class="form-control form-control-lg">
-                        <label class="form-label" for="City">City</label>
-                    
-                    </div>
-
-                </div>
             </div>
-            <!--*****************************************-->
-            <div >
-
-                    
-                <input  type="text" name="Province" value="{{committeeMember.Province}}"   class="form-control form-control-lg">
-                <label class="form-label" for="Province">Province</label>
- 
-            </div>
-           
-            <input class="btn btn-default btn-primary" style="width:100%" type="submit" value="Save changes"/> 
-            <div>
-                <br/>
-                {% if application.Step != 'Application_review' %}
-
-                    {% if application.Step != 'Pending' %}
-                        <div>
-                            <a style="color:white" href="{% url 'Add_Committee_Member' applicationId=application.ApplicationId %}" class="btn btn-default btn-danger">
-                                Abort action
-                            </a>
-                        </div>
-
-                    {% endif %} 
+            <div class="form-outline" style="display:flex;flex-direction: column">
+                <label class="form-label" for="PhoneNumber">Phone Number</label>  
+                <input required  type="text" name="PhoneNumber"  value="{{committeeMember.PhoneNumber}}" class="form-control form-control-lg">
                
             
-                {% else %}
-        
+            </div>
+            <div class="form-outline" style="display:flex;flex-direction: column">
+                <label class="form-label" for="Email">Email Address</label>
+                <input required value="{{committeeMember.Email}}"  type="email" name="Email"   class="form-control form-control-lg">
                 
-
-                    <div>
-                        <a href="{% url 'Committee' applicationId=application.ApplicationId %}" class="btn btn-default btn-danger">
-                            Abort Action
-                        </a>
-                    </div>
-
-
-                {% endif %}
+            
             </div>
             
+            <!--*****************************************-->
+            <div>
+                <label class="form-label" for="Province">Province</label>
+                <select onchange="setCities(this.value)" id="drpListProvince" name="Province"   class="form-control form-control-lg">
+                    <option value="{{committeeMember.Province}}">
+                        {{committeeMember.Province}}
+                    </option>
+                </select>
+
+            </div>
+            <div>
+                <input type="hidden" value="{{committeeMember.City}}" id="dbValue"/>
+                <label class="form-label" for="Province">City/Town: {{committeeMember.City}}</label>
+                <select onchange="whenCitChange(this.value)"  id="drpCities" name="City"   class="form-control form-control-lg">
+                    <option>
+                        committeeMember
+                </select>
+                <div id="txt_HostCity_holder" style="display:flex;flex-direction: column; padding:1rem" hidden>
+                    <label class="form-label" for=""> please Specify City/Town</label>
+                    <input style="border:dotted 1px red" required id="txt_HostCity" type="text" placeholder="Enter City/Town here"  class="form-control form-control-lg">
+                   
+                
+                </div>
+
+            </div>
+            <br/>
+            
+            <input class="btn btn-default btn-primary" style="width:100%" type="submit" value="Save changes"/> 
         </form>
 
 
@@ -192,7 +198,29 @@
     </div>
 
 
+    <script src="{% static 'MyApp/myjs/committeeJs.js ' %}"></script>
 
+    <script>
+
+        const PositionsOptions = ` <option value="Secretary">Secretary</option>
+        <option value="Chairperson">Chairperson</option>
+        <option value="Vice Chairperson">Vice Chairperson</option>
+        <option value="Secretary">Secretary</option>
+        <option value="Treasurer">Treasurer</option>
+        <option value="Member-at-Large">Member-at-Large</option>
+        <option value="Subcommittee Chair">Subcommittee Chair</option>
+        <option value="Event Coordinator">Event Coordinator</option>
+        <option value="Public Relations Officer">Public Relations Officer</option>
+        <option value="Membership Coordinator">Membership Coordinator</option>
+        <option value="Policy Advisor">Policy Advisor</option>
+        <option value="Technology Officer">Technology Officer</option>
+        <option value="Legal Advisor">Legal Advisor</option>`
+        const drpPosition = document.getElementById("drpPosition")
+        drpPosition.innerHTML +=PositionsOptions 
+
+
+
+    </script>
 
 {% endblock %}
 

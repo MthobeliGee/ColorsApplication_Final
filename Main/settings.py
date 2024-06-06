@@ -9,8 +9,18 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+
+
 import os
 from pathlib import Path
+
+
+# Access the environment variable
+COMPLAYING_FEDERATIONS_LINK = os.environ.get('COMPLAYING_FEDERATIONS_LINK', default='https://kznsannualreport.pythonanywhere.com')
+# Read .env file
+#environ.Env.read_env()
+# Access the environment variable
+#COMPLAYING_FEDERATIONS_LINK = env('COMPLAYING_FEDERATIONS_LINK')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,13 +30,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-n0ujlyxp!8v$#106vocy-zo#4*+f9gduc9zc@p=c!cza77!igl'
+SECRET_KEY = 'cjdncjcnjdcnjdjdcnjcnjdcndjcnjddjango-insecure-n0ujlyxp!8v$#106vocy-zo#4*+f9gduc9zc@p=c!cza77!igl'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -39,7 +48,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'MyApp',
     'LoginManager',
-    'ProcessApplication'
+    'ProcessApplication',
+    'rest_framework',
+    'manage_personnel',
+      'corsheaders',
+      
 ]
 
 MIDDLEWARE = [
@@ -50,9 +63,17 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    
+]
+CORS_ORIGIN_WHITELIST = [
+    'http://127.0.0.1:5500','http://127.0.0.1:8000'
+    #'http://localhost:5173',  # Add your Vue.js application's origin here
+    # Add more origins if necessary
 ]
 
 ROOT_URLCONF = 'Main.urls'
+
 
 TEMPLATES = [
     {
@@ -129,7 +150,7 @@ STATIC_ROOT = os.path.join(BASE_DIR,'static')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_USE_TLS = False
 # EMAIL_USE_SSL = True
 # EMAIL_HOST = 'mail.kznsc.com'
@@ -141,7 +162,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 #email config
-#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# #EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'livesoundsmusic@gmail.com'
 EMAIL_FROM = 'livesoundsmusic@gmail.com'

@@ -1,0 +1,12 @@
+{% autoescape off %}
+
+Dear {{committeeMember.FirstName}} {{committeeMember.Surname}},
+
+I hope this email finds you well. We are regret to inform you that you have been demoted as a KZNSC colors committee member, and your account will no longer have committee member abilities.
+
+Please login to the Colors Application at: http://{{ domain }}{% url 'login'  %}.
+
+Best Regards,
+The KZNSC Colors
+
+{% endautoescape %}

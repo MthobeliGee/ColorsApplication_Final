@@ -5,6 +5,21 @@
 
 {% block content %}
     {% load static %}
+
+    <style>
+        #txt_HostCity_holder{
+            padding:1rem;
+
+        }
+        #txt_HostCity_holder > input{
+            border:dotted 1px red;
+
+        }
+        #datemsg, #datemsgend{
+            padding:0.5rem;
+            color:red
+        }
+    </style>
     {% if messages %}
         {% for message in messages %}
             <br/>
@@ -43,14 +58,81 @@
 
                 <p class="text-danger" style="font-size:17px">
                     <b>
-                        Please note the event you are applying for must be in 30 days or above, else you will not be allowed to continue with the application
-
+                        Please note that the event you are applying for must be at least 30 days away. Otherwise, you will not be allowed to continue with the application.
                     </b>
+                    
                 </p>
             </div>
             <br/>
             <form method="post"  enctype="multipart/form-data" style="width:inherit">
                 {% csrf_token %}
+<<<<<<< HEAD
+                <div class="form-outline">
+                    <label class="form-label" for="EventName">Event Name</label> 
+                    <input required type="text" name="EventName" placeholder="Name of event"  class="form-control form-control-lg">
+            
+                </div>
+
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    <label class="form-label" for="Middlename">Host Province</label>
+                    <select onchange="setCities(this.value)" required  type="text" name="HostProvince" id="drpListProvince"  class="form-control form-control-lg"></select>
+                    
+                
+                </div>
+                <div class="form-outline">
+                    <label class="form-label" for="HostCity">Host city/town</label>
+                    <select onchange="whenCitChange(this.value)" id="drpCities" required type="text" name="HostCity" class="form-control form-control-lg"></select>
+                    
+                    <div id="txt_HostCity_holder" hidden >
+                        <label>Please specify city/town</label>
+                        <input type="text"  class="form-control form-control-lg" id="txt_HostCity" />
+
+                    </div>
+            
+                </div>
+               
+            
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    <label class="form-label" for="Middlename">Start Date</label>
+                    <input  required  type="date" id="StartDate" name="StartDate" onchange="validateDate(this.value, 'start')" class="form-control form-control-lg">
+                    <div id="datemsg">
+                        
+                    </div>
+                
+                </div>
+                
+                <div class="form-outline">
+                    <label class="form-label" for="EndDate">End Date</label>
+                    <input required type="date" onchange="validateDate(this.value, 'end')" id="endDate" name="EndDate" class="form-control form-control-lg">
+                    <div id="datemsgend">
+                        
+                    </div>
+                </div>
+               
+               
+                
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                        
+                    <label class="form-label" for="RepresatativeType">Team Selection Approved  Date</label>
+                    <input required type="date" name="SelectionApprovedDate" class="form-control form-control-lg" />
+                        
+                    
+                
+                </div>
+         
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    <label class="form-label" for="TravelDateTime">Travel Date And Time</label>
+                    <div class="" style="display:flex;justify-content:center ">
+                        <input  required  type="datetime-local" name="TravelDateTime" style=""  class="form-control form-control-lg">
+                      
+                        
+                    </div>
+                   
+                
+                </div>
+                <br/>
+                
+=======
                 <div class="row">
                     <div class="col-md-6 mb-4">
 
@@ -184,6 +266,7 @@
                     </form>
                 </div>
                 <div class="col-md-12 mb-12">
+>>>>>>> 63f1979025f70cff35c98ec0d995a34b184f4a6e
 
                 <input class="btn btn-default btn-primary" style="width:100%" type="submit" value="Save and continue"/> 
                 </div>
@@ -193,14 +276,70 @@
         </div>
 
     </div>
+    <script>
+      
 
+        </script>
+    {% comment %} <script>
 
+        //checking date
 
+        function dateChanged(input){
+
+            let date = input.value
+            let dateComps = date.split('-')
+            console.log("Date has been changed!", dateComps)
+            let year = parseInt(dateComps[0])
+            let month = parseInt(dateComps[1])
+            let day = parseInt(dateComps[3])
+
+            verifyDate(date)
+
+        }
+        
+        function verifyDate(datestr){
+            console.log("datestr: ",datestr)
+            
+            fetch("http://127.0.0.1:8000/checkDateAp/"+datestr,{
+                method:"GET",
+                
+               // mode:'no-cors',
+                
+               
+            }).then(function(response){
+                
+               
+                return response.json()
+            }).then(function(data) {
+               
+                console.log(data.isValid); 
+                if(data.isValid){
+                    datemsg = document.getElementById("datemsg")
+                    datemsg.innerHTML = '<i class="text-success">Date valid</i>'
+                }
+                else{
+                    datemsg = document.getElementById("datemsg")
+                    datemsg.innerHTML = '<i class="text-danger">Date must be 30 days or above before the event</i>'
+                    date = document.getElementById("StartDate")
+                    date.value =null
+                    return;
+                }
+            }).catch(function(error){
+                console.log(error)
+                datemsg = document.getElementById("datemsg")
+               // document.getElementById('OfficialLetterhead_selected').innerHTML= '<small class="text-danger"><b>Something went wrong, please try again.</b></small>'
+               datemsg.innerHTML += ' (<i class="text-danger">Something went wrong while validating date please try again</i>)'
+
+            });
+        }
+
+    </script> {% endcomment %}
+    <script src="{% static 'MyApp/myjs/basiccolorsjs.js' %}"></script>
 {% endblock %}
 
 
 
-<hr/>
+
 
 
 {% comment %} 

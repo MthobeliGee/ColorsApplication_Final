@@ -11,7 +11,8 @@
         <!-- Favicons -->
         <link href=" {% static 'imanageProfile/images/kzn-sports-confederation-logo.png' %}" rel="icon">
         <link href="{% static 'manageProfile/images/kzn-sports-confederation-logo.png' %}" rel="apple-touch-icon">
-
+        <link rel="stylesheet" href="{% static 'manage_personnel/global_personel.css' %}">
+        
         <!-- Google Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,700|Raleway:100,200,300,400,500,600,700,800,900" rel="stylesheet"> 
 
@@ -31,42 +32,42 @@
         <!-- Header Section Start -->
         <header id="header">
             <a href="{% url 'home' %}" class="logo"><img src="{% static 'manageProfile/images/kzn-sports-confederation-logo.png' %}" alt="logo"></a>
-            {% comment %} <div class="phone"><i class="fa fa-phone"></i></div>
-            <div class="mobile-menu-btn">
-                {% if user.is_authenticated %}
-
-                <a class="text-danger" href="{% url 'logoutuser' %}">Logout</a>
-
-                {% endif %}
-            </div> {% endcomment %}
-            {% comment %} <nav class="main-menu top-menu">
-                <ul>
-                    <li class="active"><a href="index.html">Home</a></li>
-                    <li><a href="about.html">About Us</a></li>
-                    <li><a href="room.html">Apartments</a></li>
-                    <li><a href="amenities.html">Amenities</a></li>
-                    <li><a href="booking.html">Booking</a></li>
-                    <li><a href="login.html">Login</a></li>
-                    <li><a href="contact.html">Contact Us</a></li>
-                </ul>
-            </nav> {% endcomment %}
+           
+            <div class="mobile-menu-btn"><i class="fa fa-bars"></i></div>
             <nav class="main-menu top-menu" >
                 <ul>
                     <li class="active"><a href="{% url 'home' %}">Home</a></li>
 
                     {% if user.is_authenticated %}
-                        {% if user.is_superuser %}
-                        
 
+                        {% if user.is_staff %}    
                             <li class="nav-item text-uppercase font-weight-bold">
-                                <a href="{% url 'Applications' %}" style="color: green;" class="nav-link" href="">Applications</a>
+                                <a href="{% url 'Committee' %}" style="color: green;" class="nav-link">KZNSC Committee</a>
                             </li>
+                            {% if user.is_superuser == False %}
+                                <li class="nav-item text-uppercase font-weight-bold">
+                                    <a href="{% url 'Applications' %}" style="color: green;" class="nav-link">Applications</a>
+                                </li>
+                            {% else %}
+                                <li class="nav-item text-uppercase font-weight-bold">
+                                    <a href="#" style="color: green;" class="nav-link">Approved Applications</a>
+                                </li>
+                            {% endif %}
+                       
+                        
                         {% else %}
                         
                            
                             <li class="nav-item text-uppercase font-weight-bold">
                                 <a class="nav-link" href="{%   url 'my_applications' %}" >Applications</a>
+                            </li> 
+                            <li class="nav-item text-uppercase font-weight-bold">
+                                <a class="nav-link" href="{%   url 'ChoosApplicationType' %}" >New Application</a>
                             </li>   
+                            <li class="nav-item text-uppercase font-weight-bold">
+                                <a class="nav-link" href="{%   url 'Select_Event' %}" >Events</a>
+                            </li>
+                           
                     
                         {% endif %}
                         
@@ -102,24 +103,24 @@
         <div id="footer">
             <div class="container">
                 <div class="row">
-                    <div class="col-12">
+                    {% comment %} <div class="col-12">
                         <div class="social">
                             <a href=""><li class="fa fa-instagram"></li></a>
                             <a href=""><li class="fa fa-twitter"></li></a>
                             <a href=""><li class="fa fa-facebook-f"></li></a>
                         </div>
-                    </div>
-                    <div class="col-12">
+                    </div> {% endcomment %}
+                    {% comment %} <div class="col-12">
                         <ul>
                             <li><a href="">Home</a></li>
                             <li><a href="">About</a></li>
                             <li><a href="">Terms</a></li>
                             <li><a href="">Contact</a></li>
                         </ul>
-                    </div>
+                    </div> {% endcomment %}
                     <div class="col-12">
-                        <p>Copyright &#169; <a href="https://htmlcodex.com">HTML Codex</a> All Rights Reserved.</p>
-						<p>Template By <a href="https://htmlcodex.com">HTML Codex</a></p>
+                        <p>Copyright &#169; <a href="https://htmlcodex.com">KZNSC</a> All Rights Reserved.</p>
+                        
                     </div>
                 </div>
             </div>

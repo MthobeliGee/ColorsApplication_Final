@@ -2,6 +2,8 @@
 
 {% block content %}
     {% load static %}
+
+  
     
     <style>
         table{
@@ -17,6 +19,12 @@
         tr:hover{
             background-color:green;
             color:white
+        }
+        .here:hover{
+            padding:0.7rem;
+            border:solid 1px;;
+            border-radius:60px
+
         }
 
     </style>    
@@ -34,7 +42,13 @@
             </div>
 
         {% endfor %}
-    {% endif %}
+    {% endif %}     
+
+    <div style="padding:1rem">
+        <div>
+            <a href="{%  url 'ChoosApplicationType'  %}" class="btn btn-default btn-info">Apply for colors</a>
+        </div>
+    </div>
     {% if ActiveApplication %}
 
         <div style="padding:1rem; display:flex;justify-content:center; font-size:25px">
@@ -248,21 +262,7 @@
                         </div>
                     {% endif %}
                 {% else %}
-        
-                {% if application.ApplicationStatus == 'Pending'%}
-        
-                <div>
-                
-                
-        
-                
-                    
-                    <div class="container">
-                        
-                       
-                    </div>
-                </div>
-            {% endif %}
+      
         
                 {% endif %}
         
@@ -272,67 +272,219 @@
         
       
 
-    {% else %}
-    <br/>
-    <br/>   
-        <div class="text-center text-warning">
-
-            <h3><b>You do not have any active application</b></h3><br/>
-            <p style="font-size:20px"><b>You may add a new application <a href="{%  url 'CreateApplication'  %}"> here</a></p>
-        </div>
+   
 
 
     {% endif %}
 
+    {% if activeFederationColorsApplications  %}
+       <div class="container" style=" padding:1rem">
+            <div>
 
+                
+                <h4>
+                    All federation colors applications 
+                </h4>
+            </div>
+            <hr/>
+            <div class="row" >
+            
+                {% for application in activeFederationColorsApplications %}
+                    
+                   
+                Status: {{application.ApplicationStatus}}
+                    <div style="padding:1rem">
+                    
+                        <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card-header">
+
+                                <h5>
+                                    {{application.EventName}}
+
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="no-gutters align-items-center">
+                                    <div class="col mr-2" style="display:flex; justify-content: space-between;">
+                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
+                                            <label>
+                                                City: {{application.HostCity}}
+                                            </label><br/>
+
+                                            <label>
+                                                Start Date: {{application.StartDate}}
+                                            </label><br/>
+
+                                            <label>
+                                                End date: {{application.EndDate}}
+                                            </label><br/>
+                                            <label>
+                                                Status: {{application.ApplicationStatus}}
+                                            </label>
+                                        </div>
+                                        
+                                    </div>
+                                    
+                                </div>
+
+                            
+                        
+                            </div>
+                            <div class="card-footer">
+
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2" style="display:flex;">
+                                    
+                                            <a class="text-center btn btn-info  text-uppercase font-weight-bold text-xs" href="{% url 'Application_review' applicationId=application.ApplicationId %}" style="width:100%">
+                                                review
+                                            </a>
+                                    
+                                    </div>
+                                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                   
+                {% endfor%}
+            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+            </div>
+        </div>
+        
+
+        <br/>
+        <br/>
+
+    {% endif %}
+    {% if eventApplications %}
+        <div class="container" style="padding:1rem">
+
+            <div >
+                <h4>
+                    
+                    Event Colors applications
+                 
+                </h4>
+
+
+            </div>
+            <hr/>
+            <div class="row">
+                {% for application in eventApplications %}
+            
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card-header">
+    
+                                <h5>
+                                    {{application.Application.EventName}}
+    
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
+                                            <label>
+                                                City: {{application.Application.HostCity}}
+                                            </label><br/>
+    
+                                            <label>
+                                                Start Date: {{application.Application.StartDate}}
+                                            </label><br/>
+    
+                                            <label>
+                                                End date: {{application.Application.EndDate}}
+                                            </label><br/>
+                                            <label>
+                                                Status: {{application.status}}
+                                            </label><br/>
+                                            
+                                        </div>
+                                        
+                                    </div>
+                                    
+                                </div>
+    
+                            
+                        
+                            </div>
+                            <div class="card-footer">
+    
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2" style="display:flex;">
+                                    
+                                        <a class="text-center btn btn-info  text-uppercase font-weight-bold text-xs" href="{% url 'ApplicantInfo' applicantApplicationId=application.ApplicantApplicationId %}" style="width:100%">
+                                            review
+                                        </a>
+                                    
+                                    </div>
+                                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+    
+                
+                {% endfor%}
+    
+            </div>
+        </div>
+     
+
+
+    {% endif %}
     {% if historyApplications %}
         <hr/>
         <div class="container">
 
-            <div class="text-center" style="padding:1rem; border:solid 1px red; border-radius:12px">
-                <h2>
-                    <b>
-                        <i>
-                            <u>
-                                History applications
-                            </u>
-                        </i>
-                    </b>
-                </h2>
+            <div>
+                <h4>
+                   
+                    History applications
+                    
+                </h4>
 
 
             </div>
-            <br/>
-
-        </div>
-
-    
-        <div class="row">
-            {% for application in historyApplications %}
-        
-                <div class="col-xl-3 col-md-6 mb-4">
+            <hr/>
+            <div class="row">
+                {% for application in historyApplications %}
+            
+                   
                     <div class="card border-left-primary shadow h-100 py-2">
                         <div class="card-header">
 
-                            <h2>
+                            <h4>
                                 {{application.EventName}}
 
-                            </h2>
+                            </h4>
                         </div>
                         <div class="card-body">
                             <div class="no-gutters align-items-center">
                                 <div class="col mr-2" style="display:flex; justify-content: space-between;">
                                     <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
                                         <label>
-                                            <b>City: {{application.HostCity}}</b>
+                                            City: {{application.HostCity}}
                                         </label><br/>
 
                                         <label>
-                                            <b>Start Date: {{application.StartDate}}</b>
+                                            Start Date: {{application.StartDate}}
                                         </label><br/>
 
                                         <label>
-                                            <b>End date: {{application.EndDate}}</b>
+                                            End date: {{application.EndDate}}
                                         </label><br/>
                                     </div>
                                     
@@ -357,23 +509,16 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                
 
-
+                
+                {% endfor%}
             
-            {% endfor%}
-        
-
-
-
-
-
-
-
-
-
+            </div>
+    
         </div>
 
+    
 
     {% endif %}
 {% endblock %}

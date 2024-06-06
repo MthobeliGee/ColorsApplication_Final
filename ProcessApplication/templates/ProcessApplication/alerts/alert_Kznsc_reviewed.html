@@ -1,0 +1,18 @@
+{% autoescape off %}
+    
+Dear {{KznscUser.first_name}} {{KznscUser.last_name}},
+
+I hope this email finds you well.
+
+I'm writing to inform you that there's an upcoming {{application.EventName}} event scheduled to take place on {{application.StartDate}}. It has been reviewed and approved by the committee and is now awaiting final approval from the KZNSC leadership for awarding.
+
+Please take your time to review and provide approval for the colors application.
+
+For further details, please use the link below to log in to the colors application:
+{{protocol}}://{{ domain }}{% url 'login' %}
+
+Best Regards,
+KZNSC Colors
+
+
+{% endautoescape %}

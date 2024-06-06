@@ -1,0 +1,22 @@
+{% autoescape off %}
+    Dear {{member.FirstName}} {{member.Surname}}
+
+    Congratulations, your application for the KZNSC Colors Committee application has been approved.
+    Details of the action are as follow.
+    Application "Approved" by:  {{admin_user.first_name}} {{admin_user.last_name}}
+    Date Requested: {{member.RequestDate}}
+    Approval Date:  {{member.ResponseDate}}
+    Membership Status:  {{member.status}}
+    
+    ____________________________________________________
+
+    For the rest of the details, please use the link below to log in on the colors application.
+    {{protocol}}://{{ domain }}{% url 'login' %}
+
+
+    Best regards
+
+    KZNSC Colors
+
+
+{% endautoescape %}

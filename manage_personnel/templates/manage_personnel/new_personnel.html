@@ -1,0 +1,211 @@
+{% extends "MyApp/base.html" %}
+
+{% block content %}
+    {% load static %}
+
+    <style>
+        .header{
+            padding:1rem;
+            display:flex;
+            justify-content:center;
+            
+        }
+        .header>h2{
+            border:solid 1px;
+            border-radius:12px;
+            padding:1rem;
+        }
+        .container{
+            padding:1rem;
+        }
+        .form-label{
+            font-size:20px;
+        }
+        #Id_msg{
+            padding:1rem;
+            display:flex;
+            justify-centent:center;
+            color:red;
+           
+
+
+        }
+        #Id_msg>b{
+            border:solid 1px;
+            padding:1rem;
+            display:flex;
+            justify-content:center;
+
+        }
+    </style>
+  
+    
+    {% if messages %}
+        {% for message in messages %}
+            <br/>
+            <div>
+                <center>
+                    <div style="padding:1rem; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% elif message.tags == 'info' %}info{% endif %}">
+                        <p style="font-size:20px">
+                            <b> {{ message }}</b>
+                        </p>
+                    </div>
+                </center>
+            </div>
+
+        {% endfor %}
+    {% endif %}
+
+
+
+    <div class="container">
+        
+      
+       
+        <div class="header">
+            <h2>
+                <b>
+                    Federation Personel Information
+                </b>
+            </h2>
+        </div>
+        <br/>
+        <form method="post" class="card" enctype="multipart/form-data" style="width:inherit; padding:1rem; ">
+            {% csrf_token %}
+         
+            <div class="row">
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline">
+                    
+                        <input required type="text" name="first_name" placeholder="First name" value="{{user.first_name}}"  class="form-control form-control-lg">
+                        <label class="form-label" for="first_name">First Name</label>
+                
+                    </div>
+
+                </div>
+
+            
+            
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline" style="display:flex;flex-direction: column">
+                        
+                        <input required  type="text" name="last_name" value="{{user.last_name}}" placeholder="Last name"  class="form-control form-control-lg">
+                        <label class="form-label" for="Surname">Last Name</label>
+                    
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline" style="display:flex;flex-direction: column">
+                        
+                        <input required id="id_number"  type="text" name="id_number" placeholder="Identity Number" maxlength="13" onkeyup="changed(this.value)"   class="form-control form-control-lg">
+                        <label class="form-label" for="id_number">Identity Number </label>
+                        <div hidden class="text-center" id="Id_msg">
+
+                        </div>
+                    
+                    </div>
+
+                </div>
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline">
+
+                    
+                        <select required name="Gender" class="form-control form-control-lg">
+                            <option value="Male">
+                                Male
+                            </option>
+                            <option value="Femal">
+                                Female
+                            </option>
+                            <option value="Other">
+                                Other
+                            </option>
+                        </select>
+
+                        <label class="form-label" for="EndDate">Gender</label>
+                
+                    </div>
+
+                </div>
+
+            
+            
+                
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline" style="display:flex;flex-direction: column">
+                        <input type="hidden" name="email" />
+                        <input disabled required  type="email"  value="{{user.email}}"   class="form-control form-control-lg">
+                        <label class="form-label" for="email">Email Address</label>
+                    
+                    </div>
+                </div>
+
+            
+            
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline" style="display:flex;flex-direction: column">
+                    
+                        <input required  type="text" name="Phone"   class="form-control form-control-lg">
+                        <label class="form-label" for="Phone">Phone</label>
+                    
+                    </div>
+
+                </div>
+            </div>
+            <!--*****************************************-->
+           
+           
+            
+      
+
+                <div class="form-outline" style="padding:1rem">
+                    
+                    <input class="btn btn-default btn-primary" style="width:100%" type="submit" value="Save details"/> 
+                </div>
+        </form>
+
+
+
+    </div>
+    {% comment %} <script src="{% static 'manage_personnel/globalscripts.js' %}"></script> {% endcomment %}
+    <script>
+        id_number = document.getElementById("id_number")
+        Id_msg = document.getElementById("Id_msg")
+        console.log(id_number)
+        let num = 0
+        function changed(value){
+            console.log("hello from change!", value)
+
+
+            check = /^\d+$/.test(value);
+
+
+            console.log("The check: ", check)
+            num += 1
+            if(check){
+                id_number.style = 'border: solid green; color:green'
+            }
+            else{
+                id_number.value = null
+                Id_msg.hidden = false
+                id_number.style = 'border: solid red; color:red'
+                id_number.placeholder = 'Identity number must consist of digits only'
+                
+
+            }
+        }
+
+    </script>
+
+{% endblock %}

@@ -39,24 +39,13 @@
         <div style="padding:0.5rem;">
 
             <div style="padding:0.5rem; border:solid 1px; border-radius:12px">
-                <a href="{% url 'Application_review' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
+                <a href="{% url 'Applcants' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
                     <b>
-                        Back to application
+                        Back to applicants
                     </b>
                 </a>
-                <a href="{% url 'Officials' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
-                    <b>
-                        Officials
-                    </b>
-                </a>
-                {% if user.is_superuser != True %}
-                    <b style="font-size:25px" class="text-success"> | </b>
-                    
-                    <a href="{% url 'addTeamOfficial' applicationId=application.ApplicationId %}" >
-                        <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>
-                    </a>
-
-                {% endif %}
+                
+                
                 
 
             </div>
@@ -68,65 +57,16 @@
             <div style="padding:0.5rem; border:solid 1px; border-radius:12px">
                 <a href="{% url 'Application_review' applicationId=application.ApplicationId %}" title="See Applicants page" class="btn btn-info">
                     <b>
-                        Applicants
+                        Go to colors application
                     </b>
                 </a> 
-                {% if user.is_superuser != True %}
-                    <b style="font-size:25px" class="text-success"> | </b>
-                    <a title="Go to Applicants editing page" href="{% url 'AddRepp' applicationId=application.ApplicationId %}" >
-                        <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>
-                    </a>
-                {% endif %}
+               
                 
 
             </div>
         
         </div>
-       
-        <div style="padding:0.5rem;">
-
-            <div style="padding:0.5rem; border:solid 1px; border-radius:12px">
-                <a href="{% url 'Committee' applicationId=application.ApplicationId  %}" title="See Committee members page" class="btn btn-info">
-                    <b>
-                        Committee
-                    </b>
-                </a>
-                {% if user.is_superuser != True %}
-
-                    <b style="font-size:25px" class="text-success"> | </b>
-                    <a title="Go to Committee members editing page"  href="{% url 'Add_Committee_Member' applicationId=application.ApplicationId %}" >
-                        <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>
-                    </a>
-                {% endif  %}
-                
-
-            </div>
-        
-        </div>
-        <div style="padding:0.5rem;">
-
-            <div style="padding:0.5rem; border:solid 1px; border-radius:12px">
-                <a href="{% url 'Documents' applicationId=application.ApplicationId  %}" title="See documents page" class="btn btn-info">
-                    <b>
-                        Documents
-                    </b>
-                </a>
-                
-                {% if user.is_superuser != True %}
-
-                    <b style="font-size:25px" class="text-success"> | </b>
-                    <a title="Go to Documents editing page"  href="{% url 'Upload_Documents' applicationId=application.ApplicationId %}" >
-                        <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>
-                    </a>
-
-                {% endif %}
-                
-
-            </div>
-        
-        </div>
-       
-
+    
     </div>
 
 

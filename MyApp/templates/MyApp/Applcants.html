@@ -2,6 +2,13 @@
 
 {% block content %}
     {% load static %}
+    <style>
+        #subHeading{
+            padding:1rem;
+            display:flex;
+            justify-content:space-between
+        }
+    </style>
     {% if messages %}
         {% for message in messages %}
             <br/>
@@ -28,6 +35,17 @@
                 
 
         </div>
+        {% if user  == application.user %}
+            {% if application.ApplicationStatus == "Oncreate" or application.ApplicationStatus == "Complete"%}
+                <div style="padding:0.5rem;">
+                    <a id="btn_init_new_Applicant" title="" onclick="init_new_Applicant('on')" class="btn btn-info" style="color:white">
+                        <b>
+                            Add Applicant
+                        </b>
+                    </a>
+                </div>
+            {% endif %}
+        {% endif %}
         
        
 
@@ -42,8 +60,202 @@
 
 
   <div class="container">
+    <div style="padding:1rem">
+        <form method="post" action="{% url 'AddRepp' applicationId=application.ApplicationId %}"  enctype="multipart/form-data" style="width:inherit; padding:1rem; border:solid 1px " id="new_Applicant_form" hidden>
+            {% csrf_token %}
+            <div id="subHeading">
+               <div>
+                    <h4>
+                        Personal information
+                    </h4>
+               </div>
+               <div>
+                    <a id="btn_close_form" onclick="init_new_Applicant('off')" style="color:white" class="btn btn-default btn-info">
+                        close
+                    </a>
+               </div>
+            </div>
+    
+            <div class="form-outline">
+                <label class="form-label" for="FirstName">Id Number</label>
+                <input required type="text"  maxlength="13" onkeyup="changed(this.value)"  name="Id_number" placeholder=" Applicant Id number" id="id_number"  class="form-control form-control-lg">
+                
+                <div hidden class="text-center" id="Id_msg">
+    
+                </div>
+            </div>
+            <div class="form-outline">
+                <label class="form-label" for="FirstName">First Name</label>
+                <input required type="text" value="{% if application.user != user %}{{user.first_name}}{% endif %}" name="FirstName" placeholder="First name"  class="form-control form-control-lg">
+                
+        
+            </div>
+            <div class="form-outline" style="display:flex;flex-direction: column">
+                <label class="form-label" for="Surname">Last Name</label>
+                <input required  type="text" value="{% if application.user != user %}{{user.last_name}}{% endif %}" name="Surname" placeholder="Last name"  class="form-control form-control-lg">
+               
+            
+            </div>
+            <div class="form-outline">
+                <label class="form-label" for="EndDate">Gender</label>
+                    
+                <select required name="Gender" class="form-control form-control-lg">
+                    <option value="Male">
+                        Male
+                    </option>
+                    <option value="Female">
+                        Female
+                    </option>
+                    <option value="Other">
+                        Other
+                    </option>
+                </select>
+    
+               
+        
+            </div>
+    
+           
+            <div id="subHeading">
+                <h4>
+                    Contact details
+                </h4>
+    
+            </div>
+            <div class="form-outline" style="display:flex;flex-direction: column">
+                <label class="form-label" for="Email">Email Address</label>
+                <input required   value="{% if application.user != user %} {{user}}{% endif%}" type="email" name="Email"   class="form-control form-control-lg">
+               
+            
+            </div>
+            <div class="form-outline" style="display:flex;flex-direction: column">
+                <label class="form-label" for="PhoneNumber">Phone Number</label>
+                <input required  type="text" name="PhoneNumber"   class="form-control form-control-lg">
+               
+            
+            </div>
+            
+            <div class="form-outline" style="display:flex;flex-direction: column">
+                <label class="form-label" for="Province">Province</label>
+                <select required  type="text" onchange="setCities(this.value)" name="Province" id="drpListProvince"   class="form-control form-control-lg"></select>
+               
+                
+            </div>
+            <div class="form-outline" style="display:flex;flex-direction: column">
+                <label class="form-label" for="City">City/Town</label>
+                <select required  type="text" onchange="isOther(this.value)" name="City" id="drpCities" class="form-control form-control-lg"></select>
+               
+                <div id="txt_HostCity_holder" hidden>
+                    <label>
+                        please Specify City/Town
+                    </label>
+                    <input type="text" id="txt_HostCity" class="form-control form-control-lg"/>
+    
+                </div>
+            
+            </div>
+    
+            <div id="subHeading">
+                <h4>
+                    Applicant represantation information
+                </h4>
+    
+            </div>
+            <div class="form-outline" style="display:flex;flex-direction: column">
+                <label class="form-label" for="RepresatativeLevel">Represatative Type</label>
+                <select required   name="RepresatativeType"   class="form-control form-control-lg">
+                    <option value="Athlete">
+                        Athlete
+                    </option>
+                    <option value="Coach">
+                        Coach
+                    </option>
+                    <option value="Technical Official">
+                        Technical Official
+                    </option>
+                </select>
+            
+            </div>
+            <div class="form-outline" style="display:flex;flex-direction: column">
+                <label class="form-label" for="RepresatativeLevel">Applicant Level</label>
+                <select required   name=" RepresatativeLevel"   class="form-control form-control-lg">
+                    <option value="Junior">
+                        Junior
+                    </option>
+                    <option value="Senior">
+                        Senior
+                    </option>
+                </select>RepresatativeType
+            
+            </div>
+            
+            <!--*****************************************-->
+            {% comment %} <div class="row">
+                <div class="col-md-6 mb-4">
+    
+                    <div class="form-outline">
+                    
+                        <select required  name="IDCopySubmited" class="form-control form-control-lg">
+                            <option value="yes">
+                                Yes
+                            </option>
+                            <option value="no">
+                                No
+                            </option>
+                        </select>
+    
+                        <label class="form-label" for="IDCopySubmited">Is the official id copy submited?</label>
+    
+                
+                    </div>
+    
+                </div>
+    
+            
+            
+                <div class="col-md-6 mb-4">
+    
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    
+                    <select required   name="AcceptanceofTeamAppointment"  class="form-control form-control-lg">
+                        <option value="yes">
+                            Yes
+                        </option>
+                        <option value="no">
+                            No 
+                        </option>
+                    <select>
+                    <label class="form-label" for="AcceptanceofTeamAppointment">Is the acceptance of team appointment submited?</label>
+                
+                </div>
+    
+                </div>
+            </div>
+             {% endcomment %}
+            <div class="form-outline" style="display:flex;flex-direction: column">
+                <label class="form-label" for="is_parent">Is the application conducted by parent?</label>
+                <select required   name="is_parent"  class="form-control form-control-lg">
+                   
+                    <option value="no">
+                        No 
+                    </option>
+                    <option value="yes">
+                        Yes
+                    </option>
+                <select>
+                
+            
+            </div>
+            <button onclick="sub()" class="btn btn-default btn-primary" style="width:100%" >
+                Save details
+            </button>
+    
+            <input id="subsub" hidden   type="submit" /> 
+        </form>
+    </div>
+
     {% if Applicants %}
-        <div class="row">
+        <div class="row" style="padding:1rem">
 
             {% for represantative in Applicants %}
         
@@ -58,7 +270,7 @@
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2" style="display:flex; justify-content: space-between;">
                                     <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
-                                        {{ represantative.FirstName}} {{represantative.Surname}}
+                                        {{ represantative.SportsPerson.FirstName}} {{represantative.SportsPerson.Surname}}
                                     </div>
                                     
                                 </div>
@@ -67,21 +279,22 @@
                             <div class="row no-gutters align-items-center" style="padding:1rem">
                                 <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;justify-content:center" >
                                     
-                                        {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
-                                        {% endcomment %}
-                                        
-                                    
-                                
-                                        
-                                        {% comment %} <a style="color: #FF69B4;padding:0.5rem" href="{% url 'remove_Representative' represantativeId=represantative.RepresantativeId %}"><i class="fas  fa-trash-alt bin-icon"></i></a> {% endcomment %}
-                                    {% if user.is_superuser != True %}
-                                        <a style="color: #FF69B4;padding:0.5rem" href="{% url 'update_Representative' represantativeId=represantative.RepresantativeId %}" style="padding:5px"><i class="fas  fa-pencil-alt edit-icon"></i></a>
+                                    {% if user.is_staff != True  %}
+                                        <a style="color: #FF69B4;padding:0.2rem;border:solid 1px; border-radius:12px" href="{% url 'update_Representative' applicantApplicationId=represantative.ApplicantApplicationId %}" style="padding:5px">Update</a>
+                                    {% elif user.is_staff == True %}
+                                        {% if application.ApplicationStatus != "Approved" %}
+                                            <a style="background-color:red ;color: white;padding:0.2rem;border:solid 1px red; border-radius:12px" href="{% url 'declineApplicant_committee' applicantApplicationId=represantative.ApplicantApplicationId %}" style="padding:5px">Decline</a>
+                                        {% endif %}
                                     {% endif %}
-                                        <a href="{% url 'represantativeDetails' represantativeId=represantative.RepresantativeId %}" style="color: #FF69B4;padding:0.5rem"><i class="fas fa-eye view-icon"></i></a>
+                                        <a href="{% url 'ApplicantInfo' applicantApplicationId=represantative.ApplicantApplicationId %}" style="color: #FF69B4;padding:0.2rem;border:solid 1px; border-radius:12px">Review</a>
                                 </div>
                             </div>
                             
                     
+                        </div>
+                        <div class="card-footer text-center">
+                            <b>{{represantative.status}}</b>
+                            
                         </div>
                     </div>
                 </div>
@@ -92,5 +305,25 @@
     {%endif%}
   </div>
 
+
+  <script>
+    btn_init_new_Applicant = document.getElementById("btn_init_new_Applicant")
+    btn_close_form = document.getElementById("btn_close_form")
+    new_Applicant_form = document.getElementById("new_Applicant_form")
+
+
+    function init_new_Applicant(state){
+        if(state ==='on'){
+            new_Applicant_form.hidden = false
+            btn_init_new_Applicant.hidden = true
+        }
+        else if(state === 'off'){
+            btn_init_new_Applicant.hidden =false
+            new_Applicant_form.hidden = true
+
+        }
+    }
+  </script>
+  <script src="{% static 'MyApp/myjs/addRepjs.js' %}"></script>
 
 {% endblock %}

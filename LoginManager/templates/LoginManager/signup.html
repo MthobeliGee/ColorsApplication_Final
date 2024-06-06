@@ -2,6 +2,14 @@
 
 {% block content %}
     {% load static %}
+    <style>
+
+        .live-validation_holder{
+            padding-top:1rem;
+        }
+    </style>
+
+
     {% if messages %}
         {% for message in messages %}
             <br/>
@@ -41,7 +49,9 @@
                 {{ error }}
             </div>
         {% endif %}
-           
+        <div hidden class="alert alert-danger" id="alert" role="alert">
+            
+        </div>
         
         <form method="POST" action="">
             {% csrf_token %}
@@ -60,18 +70,29 @@
                 <input type="email" required name="email" class="form-control" id="email" aria-describedby="emailhelp">
                 <small id="emailhelp" class="form-text text-muted">Your username must be unique. We'll let you know if someone has taken it already.</small>
             </div>
-            <div class="form-group">
-                <label for="email">Phone number</label>
-                    <input type="text" required name="PersonelPhone" class="form-control" id="email" aria-describedby="emailhelp">
-                </div>
+            
            
             <div class="form-group">
                 <label for="password1">Password</label>
-                <input type="password" required name="password1" class="form-control" id="password1">
+                <input type="password" onkeyup="validate_password(this.value)" required  id="password1" name="password1" class="form-control" id="password1">
+                <div id="validation_ruls" hidden class="live-validation_holder">
+                    <b>
+                        <ul  class="live-validation">
+                            <li id="rul1" class="live-validation__rule">At least 8 characters</li>
+                            <li id="rul2" class="live-validation__rule">One lowercase letter</li>
+                            <li id="rul3" class="live-validation__rule">One uppercase letter</li>
+                            <li id="rul4" class="live-validation__rule">One digit (0-9)</li>
+                            <li id="rul5" class="live-validation__rule">One special character (e.g. !@#$%^&amp;*)</li>
+                        </ul>
+                    </b>
+                </div>
             </div>
             <div class="form-group">
                 <label for="password2">Confirm Password</label>
-                <input type="password" required name="password2" class="form-control" id="password2">
+                <input type="password" onkeyup="Passwordsec(this.value)" required name="password2" id="password2" class="form-control" id="password2">
+                <div id="passMsg">
+
+                </div>
             </div>
             {% for field in registration_form %}
                 <p>
@@ -87,7 +108,8 @@
                     </p>
                 </div>
             {% endif %}   
-            <button style="width:100%" type="submit" class="btn btn-primary">Sign Up</button>
+            <input type="submit" id="submit" hidden/>
+            <a style="width:100%" onclick="event.preventDefault(); matchPassword();" class="btn btn-primary">Sign Up</a>
         </form>
         <hr>
         <div class="text-center">
@@ -101,5 +123,120 @@
         </div>
     </div>
 </div>
+<script>
+    const password1 = document.getElementById("password1")
+    const password2 = document.getElementById("password2")
+    document.getElementById("rul1").classList.add("Newclass")
+    console.log(document.getElementById("rul1").classList)
+    function validate_password(password){
 
+
+        document.getElementById("validation_ruls").hidden = false
+     
+
+        let numValid = 0
+        let is_strong = false
+        if(password.length >= 8){
+        
+            document.getElementById("rul1").style='color:green'
+            numValid++
+            
+        }
+        else{
+            document.getElementById("rul1").style ='color:red'  
+        }
+
+        if(/[a-z]/.test(password)){
+            numValid++
+            document.getElementById("rul2").style='color:green'
+
+           
+        }
+        else{
+            document.getElementById("rul2").style ='color:red'  
+            
+        }
+
+        if(/[A-Z]/.test(password)){
+            numValid++
+            document.getElementById("rul3").style='color:green'
+
+           
+        }
+        else{
+            document.getElementById("rul3").style ='color:red'  
+            
+        }
+
+        if(/[0-9]/.test(password)){
+            document.getElementById("rul4").style ='color:green'  
+            
+            numValid++
+        }
+        else{
+            document.getElementById("rul4").style ='color:red'  
+
+        }
+        console.log("Is_Special: ", /[^\w\s]/.test(password))
+        if(/[^\w\s]/.test(password)){
+            document.getElementById("rul5").style='color:green'
+            numValid++
+          }
+          else{
+            document.getElementById("rul5").style='color:red'
+          }
+
+        if(numValid ==5){
+            is_strong = true
+        }
+        console.log("Num vale: ",numValid)
+        return is_strong
+    }
+    function Passwordsec(password2){
+        const password1 = document.getElementById("password1").value;
+        const passMsg = document.getElementById("passMsg");
+
+        if(password1 != password2){
+            passMsg.innerHTML='<b>Password do not match</b>'
+            passMsg.style = 'padding:1rem;color:red'
+        }
+        else{
+            passMsg.innerHTML='<b>Password do match</b>'
+            passMsg.style = 'padding:1rem;color:green'
+
+        }
+    }
+    function matchPassword(){
+        msg = document.getElementById("alert")
+        const password1 = document.getElementById("password1").value;
+        const password2 = document.getElementById("password2").value;
+        console.log(validate_password(password1))
+        if(validate_password(password1)){
+            
+           
+            if(password1 != password2){
+                msg.hidden = false
+                console.log("The msg: ", document.getElementById("alert").innerHTML)
+                msg.innerHTML='Password do not match'
+          
+               
+            }
+            else{
+                document.getElementById("submit").click();
+            }
+        }
+        else{
+            msg.hidden = false
+            msg.innerHTML='Password is too weak';
+            return;
+        }
+
+        
+
+
+       
+
+    }
+
+</script>
 {% endblock %}

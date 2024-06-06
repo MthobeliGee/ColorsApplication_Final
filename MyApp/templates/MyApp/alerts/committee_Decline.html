@@ -1,0 +1,23 @@
+{% autoescape off %}
+    Dear {{member.FirstName}} {{member.Surname}}
+
+    We regret to inform you that your application for the KZNSC Colors Committee application has been "declined".
+    Details of the action are as follow.
+    
+    Application response by: {{admin_user.first_name}} {{admin_user.last_name}}
+    Date requested: {{member.RequestDate}}
+    Response date:{{member.ResponseDate}}
+    Membership status: {{member.status}}
+    
+    ____________________________________________________
+
+    For the rest of the details, please use the link below to log in on the colors application.
+    {{protocol}}://{{ domain }}{% url 'login' %}
+
+
+    Best regards
+
+    KZNSC Colors
+
+
+{% endautoescape %}

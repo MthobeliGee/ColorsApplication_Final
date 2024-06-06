@@ -1,0 +1,19 @@
+{% autoescape off %}
+    
+    Dear {{applicant.FirstName}} {{applicant.Surname}}, I hope this email finds you well. 
+    {% if applicantApplication.status == "OnTeam" %}
+    This email is to inform you that you have been accepted to join the team for the upcoming {{ColorsApplication.EventName}} event, scheduled to take place on {{ColorsApplication.StartDate}}. Please stay tuned for further updates regarding your colors application.
+    {% elif applicantApplication.status == "Declined" %}
+    We regret to inform you that the applicant mentioned above has not been accepted to join the team for the {{ColorsApplication.EventName}} event scheduled to take place on {{ColorsApplication.StartDate}}.
+    {% endif %}
+    __________________________________________________
+    
+    For the rest of the details, please use the link below to log in on the colors application.
+    {{protocol}}://{{ domain }}{% url 'login' %}
+
+
+    Best regard
+    KZNSC Colors
+
+
+{% endautoescape %}

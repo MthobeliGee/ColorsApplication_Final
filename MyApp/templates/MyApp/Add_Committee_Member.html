@@ -22,199 +22,241 @@
     {% endif %}
 
     <div class="container">
-        {% if CommitteeMembers %}
-            <div style="padding:1rem; display:flex;justify-content:space-between">
+        <div style="padding:1rem; display:flex;justify-content:space-between">
 
-                <div>
-                    <h3><b>{{application.EventName}} committee Members</b>    
-                </div>
-                <div>
-                        
+            <div>
+                <h3><b>KZNSC Committee Members</b>    
+            </div>
+            <div class="row">
 
-                        {% if application.ApplicationStatus != 'Application_review' and  application.ApplicationStatus != 'Complete'%} 
-
-                            {% if application.Step != 'Pending' %}
-                                <a href="{% url 'Upload_DocumentsTest' applicationId=application.ApplicationId %}" class="btn btn-default btn-success">
-                                    Move on to the next step>>
-                                </a>
-
-
-                            {% else %}
-
-                                <div style="padding:0.5rem;">
-                                    <a href="{% url 'Application_review' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
-                                        <b>
-                                            Back to Application
-                                        </b>
-                                    </a>
-                                
                 
-                                </div>
-                            {% endif %}
+                <div style="padding:0.3rem">
+                    <a id="btn_add_Committee" onclick="formholderswitch('on')" class="btn btn-default btn-info" style="color:white">New Committee Member</a>
+                </div>
+                {% if is_history%}
+                    <div style="padding:0.3rem">
+                        <a id="btn_add_Committee" href="{% url 'Committee' %}" class="btn btn-default btn-info" style="color:white">All Committee</a>
+                    </div>
 
-                        {% else %}
-                            <a href="{% url 'Application_review' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
-                                <b>
-                                    Back to Application review
-                                </b>
-                            </a>
-
-                        {% endif %}
+                {% endif %}
+                <div style="padding:0.3rem">
+                    <a id="DemotedCommittee" href="{% url 'DemotedCommittee' %}" class="btn btn-default btn-warning" style="color:white">Former Committee</a>
                 </div>
             </div>
-        {% else %}
+            
+        </div>
 
-
-            <div class="text-center" style="padding:1rem">
-                <h3><b>{{application.EventName}} Committee members</b>    
+        <div style="border:solid 1px grey; padding:1rem; border-radius:12px" id="new_Committee_form_holder" hidden>
+            <div class="row" style="padding:1rem; display:flex; justify-content:space-between">
+                <div>
+                    <b>
+                        New Committee Member
+                    </b>
+                </div>
+                <div>
+                   <a id="btn_Close_form_holder" onclick="formholderswitch('off')" class="btn btn-default btn-warning" style="color:white">Close</a>
+                </div>
             </div>
-        {% endif %}
-
-        <div style="border:solid 1px grey; padding:1rem; border-radius:12px">
-            <form method="post"  enctype="multipart/form-data" style="width:inherit">
+            
+            <form method="post" action="{% url 'Committee'%}"  enctype="multipart/form-data" style="width:inherit" >
+                
                 {% csrf_token %}
-                <div class="row">
-                    <div class="col-md-6 mb-4">
-
-                        <div class="form-outline">
-                        
-                            <input required type="text" name="FirstName" placeholder="First name"  class="form-control form-control-lg">
-                            <label class="form-label" for="FirstName">First Name</label>
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    <label class="form-label" for="id_number">Identity Number </label>  
+                    <input required id="id_number"  type="text" name="id_number" placeholder="Identity Number" maxlength="13" onkeyup="changed(this.value)"   class="form-control form-control-lg">
                     
-                        </div>
+                    <div hidden class="text-center" id="Id_msg">
 
                     </div>
-
                 
-                
-                    <div class="col-md-6 mb-4">
-
-                    <div class="form-outline" style="display:flex;flex-direction: column">
-                        
-                        <input required  type="text" name="Surname" placeholder="Last name"  class="form-control form-control-lg">
-                        <label class="form-label" for="Surname">Last Name</label>
-                    
-                    </div>
-
-                    </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-6 mb-4">
-
-                        <div class="form-outline">
-
-                        
-                            <select required name="Gender" class="form-control form-control-lg">
-                                <option value="Male">
-                                    Male
-                                </option>
-                                <option value="Femal">
-                                    Female
-                                </option>
-                                <option value="Other">
-                                    Other
-                                </option>
-                            </select>
-
-                            <label class="form-label" for="EndDate">Gender</label>
+                <div class="form-outline">
+                    <label class="form-label" for="FirstName">First Name</label>  
+                    <input required type="text"  name="FirstName" placeholder="First name"  class="form-control form-control-lg">
                     
-                        </div>
-
-                    </div>
-
-                
-                
-                    <div class="col-md-6 mb-4">
-
-                    <div class="form-outline" style="display:flex;flex-direction: column">
-                        
-                        <input required  type="text" name="PhoneNumber"   class="form-control form-control-lg">
-                        <label class="form-label" for="PhoneNumber">Phone Number</label>
+            
+                </div>
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    <label class="form-label" for="Surname">Last Name</label>   
+                    <input required  type="text"  name="Surname" placeholder="Last name"  class="form-control form-control-lg">
                     
-                    </div>
-
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 mb-4">
-
-                        <div class="form-outline" style="display:flex;flex-direction: column">
-                        
-                            <input required  type="email" name="Email"   class="form-control form-control-lg">
-                            <label class="form-label" for="Email">Email Address</label>
-                        
-                        </div>
-                    </div>
-
                 
-                
-                    <div class="col-md-6 mb-4">
-
-                        <div class="form-outline" style="display:flex;flex-direction: column">
-                        
-                            <input required  type="text" name="City"   class="form-control form-control-lg">
-                            <label class="form-label" for="City">City</label>
-                        
-                        </div>
-
-                    </div>
                 </div>
+                <div class="form-outline">
+
+                    <label class="form-label" for="EndDate">Gender</label>
+                    <select required name="Gender" class="form-control form-control-lg">
+                        <option value="Male">
+                            Male
+                        </option>
+                        <option value="Female">
+                            Female
+                        </option>
+                        <option value="Other">
+                            Other
+                        </option>
+                    </select>
+
+                   
+            
+                </div>
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    <label class="form-label" for="Surname">Position</label>   
+                    <select name="position" id="committee_position"  class="form-control form-control-lg">
+                        <option value="Secretary">Secretary</option>
+                        <option value="Chairperson">Chairperson</option>
+                        <option value="Vice Chairperson">Vice Chairperson</option>
+                        <option value="Secretary">Secretary</option>
+                        <option value="Treasurer">Treasurer</option>
+                        <option value="Member-at-Large">Member-at-Large</option>
+                        <option value="Subcommittee Chair">Subcommittee Chair</option>
+                        <option value="Event Coordinator">Event Coordinator</option>
+                        <option value="Public Relations Officer">Public Relations Officer</option>
+                        <option value="Membership Coordinator">Membership Coordinator</option>
+                        <option value="Policy Advisor">Policy Advisor</option>
+                        <option value="Technology Officer">Technology Officer</option>
+                        <option value="Legal Advisor">Legal Advisor</option>
+                    </select>
+                    <div class="text-warning">
+                        <ul>
+                            <li>
+                                <p>Kindly note that once a position is filled, any incumbent in that role will be removed from the committee.</p>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    
+                
+                </div>
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    <label class="form-label" for="PhoneNumber">Phone Number</label>  
+                    <input required  type="text" name="PhoneNumber"   class="form-control form-control-lg">
+                   
+                
+                </div>
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    <label class="form-label" for="Email">Email Address</label>
+                    <input required value=""  type="email" name="Email"   class="form-control form-control-lg">
+                    
+                
+                </div>
+                
                 <!--*****************************************-->
-                <div >
-
-                        
-                    <input required  type="text" name="Province"   class="form-control form-control-lg">
+                <div>
                     <label class="form-label" for="Province">Province</label>
+                    <select onchange="setCities(this.value)" id="drpListProvince" name="Province"   class="form-control form-control-lg">
+
+                    </select>
     
                 </div>
+                <div>
+                    <label class="form-label" for="Province">City/Town</label>
+                    <select onchange="whenCitChange(this.value)" id="drpCities" name="City"   class="form-control form-control-lg">
+
+                    </select>
+                    <div id="txt_HostCity_holder" style="display:flex;flex-direction: column; padding:1rem" hidden>
+                        <label class="form-label" for=""> please Specify City/Town</label>
+                        <input style="border:dotted 1px red" required id="txt_HostCity" type="text" placeholder="Enter City/Town here"  class="form-control form-control-lg">
+                       
+                    
+                    </div>
+    
+                </div>
+                <br/>
+                
                 <input class="btn btn-default btn-primary" style="width:100%" type="submit" value="Save details"/> 
             </form>
         </div>
+        <div style="border:solid 1px grey; padding:1rem; border-radius:12px" id="Committee_details_holder" hidden>
+            <div class="row" style="padding:1rem; display:flex; justify-content:space-between">
+                <div>
+                    <b id="signitureHolder">
+                        Hopewell Sitshaka
+                    </b>
+                </div>
+                
+                <div class="row">
+                    <div style="padding:1rem">
+                        <a id="btnEditCommittee"  class="btn btn-default btn-warning" style="color:white">Edit</a>
+                     </div>
+                     <div  style="padding:1rem">
+                        
+                        <a id="btn_Close_committeeDetails_holder" onclick="committeeDetailsswitch(false)" class="btn btn-default btn-warning" style="color:white">Close</a>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <form method="post"  enctype="multipart/form-data" style="width:inherit" >
+                
+                {% csrf_token %}
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    <label class="form-label" for="id_number">Identity Number </label>  
+                    <input required id="txtIdNumber" disabled  type="text" name="id_number" placeholder="Identity Number" maxlength="13"   class="form-control form-control-lg">
+                    
+                    <div hidden class="text-center" id="Id_msg">
 
+                    </div>
+                
+                </div>
+                <div class="form-outline">
+                    <label class="form-label" for="FirstName">First Name</label>  
+                    <input required type="text" disabled id="txtFirstName"  class="form-control form-control-lg">
+                    
+            
+                </div>
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    <label class="form-label" for="Surname">Last Name</label>   
+                    <input required  type="text" disabled name="txtSurname" id="txtSurname"  class="form-control form-control-lg">
+                    
+                
+                </div>
+                <div class="form-outline">
+                    <label class="form-label" for="EndDate">Gender</label>
+                    <input required id="txtGender" disabled  class="form-control form-control-lg">  
+                </div>
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    <label class="form-label" for="Surname">Position</label>   
+                    <input name="txtPosition" disabled type="text" id="txtPosition"  class="form-control form-control-lg">
+                       
+                </div>
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    <label class="form-label" for="PhoneNumber">Phone Number</label>  
+                    <input disabled type="text" id="txtPhoneNumber" name="PhoneNumber"   class="form-control form-control-lg">
+                   
+                
+                </div>
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    <label class="form-label" for="Email">Email Address</label>
+                    <input disabled id="txtEmail"  type="email" name="Email"   class="form-control form-control-lg">
+                    
+                
+                </div>
+                
+                <!--*****************************************-->
+                <div>
+                    <label class="form-label" for="Province">Province</label>
+                    <input disabled type="text" id="txtProvince"    class="form-control form-control-lg">
+                </div>
+                <div>
+                    <label class="form-label" for="Province">City/Town</label>
+                    <input disabled id="txtCity" type="text"  class="form-control form-control-lg">
+
+                  
+                   
+    
+                </div>
+                <br/>
+                
+                
+            </form>
+        </div>
 
     </div>
     {% if CommitteeMembers %}
         <hr/>
         <div class="container">
-            {% if CommitteeMembers %}
-                <div style="padding:1rem; display:flex;justify-content:space-between">
-
-                    <div>
-                        <h2><b>Committee members</b></h2>
-                    </div>
-                    <div>
-                        {% if application.Step != 'Application_review' %} 
-
-                            {% if application.Step != 'Pending' %}
-                                <a href="{% url 'Upload_DocumentsTest' applicationId=application.ApplicationId %}" class="btn btn-default btn-success">
-                                    Move on to the next step>>
-                                </a>
-
-
-                            {% else %}
-
-                                <div style="padding:0.5rem;">
-                                    <a href="{% url 'Application_review' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
-                                        <b>
-                                            Back to Application
-                                        </b>
-                                    </a>
-                                
-                
-                                </div>
-                            {% endif %}
-
-                        {% else %}
-                            <a href="{% url 'Application_review' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
-                                <b>
-                                    Back to Application review
-                                </b>
-                            </a>
-
-                        {% endif %}
-                    </div>
-                </div>
-            {% endif %}
+            
             <div>
 
                 <div class="row">
@@ -234,29 +276,67 @@
                                                 <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
                                                     {{ CommitteeMember.FirstName}} {{CommitteeMember.Surname}}
                                                 </div>
+                                               
                                                 
                                             </div>
+                                            
                                            
+                                        </div>
+                                        <div  >
+                                            {{ CommitteeMember.position}} {% if user == CommitteeMember.user %} (you){% endif%}
                                         </div>
                                         <div class="row no-gutters align-items-center" style="padding:1rem">
                                             <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;justify-content:center" >
                                                 
                                                     {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
                                                      {% endcomment %}
-                                                    
+                                                  
                                                 
-                                               
+                                               {% if isSuperOrChair %}
                                                     
-                                                    <a title="Remove Committee Member?" style="color: #FF69B4;padding:0.5rem" href="{% url 'Remove_CommitteeMember' memberId=CommitteeMember.CommitteeMemberId %}"><i class="fas  fa-trash-alt bin-icon"></i></a>
+                                                    <a title="Remove Committee Member?" style="color: #FF69B4;padding:0.5rem" href="{% url 'Remove_CommitteeMember' memberId=CommitteeMember.CommitteeMemberId %}">Remove</a>
                                                  
-                                                    <a style="color: #FF69B4;padding:0.5rem" href="{% url 'update_CommiteeMember' CommitteeMemberId=CommitteeMember.CommitteeMemberId %}" style="padding:5px"><i class="fas  fa-pencil-alt edit-icon"></i></a>
+                                                    <a style="color: #FF69B4;padding:0.5rem" href="{% url 'update_CommiteeMember' CommitteeMemberId=CommitteeMember.CommitteeMemberId %}" style="padding:5px">Edit</a>
+                                                {% endif %}
+
+                                                   
+                                                   
+                                                   
                                             
                                             </div>
                                         </div>
                                         
                                 
                                     </div>
+                                    <div style="padding:0.5rem; display:flex; justify-centent:end">
+                                        <a style="color: #FF69B4;padding:0.5rem;" class="btn"
+                                        onclick="viewdetails(
+                                            {
+                                                'hrefEditMember':'{% url 'update_CommiteeMember' CommitteeMemberId=CommitteeMember.CommitteeMemberId %}',
+                                                'Id_number':'{{CommitteeMember.Id_number}}',
+                                                'FirstName':'{{ CommitteeMember.FirstName }}',
+                                                'Surname': '{{CommitteeMember.Surname}}',
+                                                'Gender':'{{CommitteeMember.Gender}}',
+                                                'Email':'{{CommitteeMember.Email}}',
+                                                'PhoneNumber':'{{CommitteeMember.PhoneNumber}}',
+                                                'City':'{{CommitteeMember.City}}',
+                                                'Province':'{{CommitteeMember.Province}}',
+                                                'position':'{{CommitteeMember.position}}',
+                                                'status':'{{CommitteeMember.status}}',
+                                                'is_Chairperson':'{{CommitteeMember.is_Chairperson}}',
+                                                'is_history':'{{CommitteeMember.is_history}}',
+                                                'DateAdded':'{{CommitteeMember.DateAdded}}',
+    
+                                                
+                                            }
+                                        )" 
+    
+    
+                                        
+                                    > More details</a>
+                                    </div>
                                 </div>
+                                
                             </div>
                         {% endfor%}
                     {%endif%}
@@ -276,8 +356,90 @@
         </div>
     {% endif %}
 
+    <script>
+        id_number = document.getElementById("id_number")
+        Id_msg = document.getElementById("Id_msg")
+   
+        let num = 0
+        function changed(value){
+            console.log("hello from change!", value)
 
 
+            check = /^\d+$/.test(value);
+
+
+            console.log("The check: ", check)
+            num += 1
+            if(check){
+                id_number.style = 'border: solid green; color:green'
+            }
+            else{
+                
+                id_number.value = null
+                Id_msg.hidden = false
+                id_number.style = 'border: solid red; color:red'
+                id_number.placeholder = 'Identity number must consist of digits only'
+                Id_msg.innerHTML =  '<b style="color:red">Identity number must consist of digits only</b>'
+               
+
+            }
+        }
+
+    </script>
+    <script src="{% static 'MyApp/myjs/committeeJs.js ' %}"></script>
+
+    <script>
+        const new_Committee_form_holder =document.getElementById("new_Committee_form_holder")
+        const btn_add_Committee = document.getElementById("btn_add_Committee")
+        const btn_Close_form_holder = document.getElementById("btn_Close_form_holder")
+        
+        function formholderswitch(action){
+            if(action == 'on'){
+                new_Committee_form_holder.hidden = false
+                btn_add_Committee.hidden = true
+            }
+            if(action == 'off'){
+                new_Committee_form_holder.hidden = true
+                btn_add_Committee.hidden = false
+            }
+
+        }
+
+    </script>
+
+            {% comment %}'{% url 'update_CommiteeMember' CommitteeMemberId=CommitteeMember.CommitteeMemberId %}' {% endcomment %}
+    <script>
+
+        function viewdetails(committee){
+            const btnEditCommittee = document.getElementById("btnEditCommittee")
+            const Committee_details_holder = document.getElementById("Committee_details_holder")
+            const signitureHolder = document.getElementById("signitureHolder");
+            btnEditCommittee.href =committee.hrefEditMember 
+            signitureHolder.innerHTML = committee.FirstName+' '+committee.Surname+' ('+committee.position+')'
+            document.getElementById("txtIdNumber").value = committee.Id_number
+            document.getElementById("txtFirstName").value = committee.FirstName
+            document.getElementById("txtSurname").value = committee.Surname
+            document.getElementById("txtGender").value = committee.Gender
+            document.getElementById("txtEmail").value = committee.Email
+            document.getElementById("txtPhoneNumber").value = committee.PhoneNumber
+            document.getElementById("txtCity").value = committee.City
+            document.getElementById("txtProvince").value = committee.Province
+            document.getElementById("txtPosition").value = committee.position
+            committeeDetailsswitch(true)
+            Committee_details_holder.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+        }
+        function committeeDetailsswitch(action){
+            const Committee_details_holder = document.getElementById("Committee_details_holder")
+            if(action){
+                Committee_details_holder.hidden = false
+                
+            }else{
+                Committee_details_holder.hidden = true
+            }
+        }
+    </script>
+    
 {% endblock %}
 
 

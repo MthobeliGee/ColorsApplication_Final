@@ -1,7 +1,12 @@
 {% autoescape off %}
 
-    Hi {{user}}, please click the link below to activate your email.
-    http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
+Hi {{user}},
+
+Thank you for joining the KZNSC Colors community. Please click the link below to activate your email:
+http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
+
+Best regards,
+The KZNSC Colors Team
 
 
 {% endautoescape %}
