@@ -10,7 +10,6 @@ class Federation(models.Model):
     FederationId = models.AutoField(primary_key=True, null= False, blank=False)
     FederationPersonel = models.ForeignKey(FederationPersonel,blank=True,null=True,on_delete=models.CASCADE)
     FederationName = models.TextField(blank=True, null = True)
-    HighPerformancePlan = models.CharField(max_length=300, default='NotProvided')
     dateSelected = models.DateField(default=datetime.now())
     year = models.IntegerField()
     FederationEmail = models.TextField(null = True, blank= True)
@@ -46,7 +45,7 @@ class FedDocuments(models.Model):
     TeamOfficialDuties = models.FileField(blank=False,null=False,upload_to='MyApp/Docs')
     AcceptanceOfTeamAppointment = models.FileField(blank=False,null=False,upload_to='MyApp/Docs')
     HighPerformancePlan = models.FileField(blank=False,null=False,upload_to='MyApp/Docs')
-    EventInvitation  = models.FileField(blank=False,null=False,upload_to='MyApp/Docs')
+    
     
     DateAdded = models.DateTimeField(default = datetime.now())
     Year = models.CharField(max_length = 12, default = str(datetime.now().year))
@@ -55,7 +54,6 @@ class CommitteeMember(models.Model):
     
     CommitteeMemberId = models.AutoField(primary_key=True)
     user = models.ForeignKey(User,blank=True,null=True,on_delete=models.CASCADE)
-    
     Id_number = models.CharField(max_length = 13, null =True, blank=True)
     FirstName = models.CharField(max_length=255)
     Surname = models.CharField(max_length=255)
@@ -63,14 +61,13 @@ class CommitteeMember(models.Model):
     Email = models.CharField(max_length=255, default="email")
     PhoneNumber = models.CharField(max_length=255, default="number")
     City = models.CharField(max_length=255, default="city")
-    Province = models.CharField(max_length=255, default="province")
-    is_terms_accepted = models.BooleanField(default  = False)
-    RequestDate = models.DateTimeField(default =datetime.now())
-    status = models.CharField(max_length= 30, default="OnCreate")
-    ResponseDate = models.DateTimeField(default =datetime.now())
+    Province = models.CharField(max_length=255, default="KwaZulu-Natal")
+    position = models.CharField(max_length=100, )
+    status = models.CharField(max_length= 30, default="Active")
+    is_Chairperson = models.BooleanField(default =False)
     is_deleted = models.BooleanField(default =False)
     is_history = models.BooleanField(default =False)
-    year = models.IntegerField(default = datetime.now().year)
+    DateAdded  = models.DateTimeField(default=datetime.now())
     
     
 # Create your models here.
@@ -92,14 +89,8 @@ class Application(models.Model):
     MethodOfSelection = models.CharField(max_length=255)
     SelectionApprovedDate = models.DateField(max_length=255)
     TravelDateTime = models.DateTimeField(max_length=255)
-    ModeOfTravel = models.CharField(max_length=255)
+   
     CodeOfConductAcceped = models.BooleanField(default=False)
-    RegulationsInterestDeclaration  = models.CharField(max_length=300, default='NotProvided')
-    RegulationsInterestDeclaration  = models.CharField(max_length=300, default='NotProvided')
-    SelectionCriteriaProtocols = models.CharField(max_length=300, default='NotProvided')
-    GeneralRegulationSelectionProcedure  =models.CharField(max_length=300, default='NotProvided')
-    DocumentationOfSelectionSubmitted = models.CharField(max_length=300, default='NotProvided')
-    TeamOfficialDuties = models.CharField(max_length=300, default='NotProvided') 
     AcceptanceOfTeamAppointment = models.CharField(max_length=300, default='NotProvided')
     EventInvitation  = models.CharField(max_length=300, default='NotProvided')
     ApplicationDate  = models.DateTimeField(default=datetime.now())
@@ -110,7 +101,9 @@ class Application(models.Model):
     DeclineReason = models.TextField(blank=True, null=True)
     CancelReason = models.TextField(blank=True, null=True)
     is_App_taking = models.BooleanField(default = False)
+    ApplicantsClosingDate = models.DateTimeField(default=datetime.now())
     ApparelLetters = models.CharField(max_length=300, blank=True, null=True)
+    is_lateApplication = models.BooleanField(default=False)
 
 
 class Apparel(models.Model):
@@ -126,9 +119,8 @@ class Apparel(models.Model):
     
     
     
-class Represantative(models.Model):
-    RepresantativeId = models.AutoField(primary_key=True)
-    application = models.ForeignKey(Application,blank=True,null=True,on_delete=models.CASCADE)
+class SportsPerson(models.Model):
+    SportsPersonId = models.AutoField(primary_key=True)
     user = models.ForeignKey(User,blank=True,null=True,on_delete=models.CASCADE)
     
     Id_number = models.CharField(max_length = 13, null =True, blank=True)
@@ -140,16 +132,28 @@ class Represantative(models.Model):
     Email = models.CharField(max_length=255)
     City = models.CharField(max_length=255)
     Province = models.CharField(max_length=255)
-    Date = models.DateTimeField(auto_now=False, auto_now_add=True)
+    Date = models.DateTimeField(auto_now=False, auto_now_add=True) 
     RepresanativeLeve = models.CharField(max_length=255, default ='1')
  
     IDCopySubmited = models.BooleanField(default=False,blank=False,null=False)
     AcceptanceofTeamAppointment = models.BooleanField(default=False,blank=False,null=False)
-    RepresatativeType = models.CharField(max_length=255, default='Junior')
+
+    is_IdNumberValidated = models.BooleanField(default=False)
     is_parent =models.BooleanField(default = False)
-    is_terms_accepted = models.BooleanField(default  = False)
-    status = models.CharField(max_length= 30, default="OnCreate")
+   
     
+    
+    
+class ApplicantApplication(models.Model):
+    ApplicantApplicationId = models.AutoField(primary_key=True, blank=False, null=False)
+    Application = models.ForeignKey(Application,blank=True,null=True,on_delete=models.CASCADE)
+    SportsPerson = models.ForeignKey(SportsPerson,blank=True,null=True,on_delete=models.CASCADE)
+    is_terms_accepted = models.BooleanField(default  = False)
+    is_deleted = models.BooleanField(default=False)
+    RepresatativeType = models.CharField(max_length=50, default='Athlete')
+    RepresatativeLevel = models.CharField(max_length=50, default='Junior')
+    status = models.CharField(max_length= 30, default="OnCreate")
+    declineReason = models.TextField(blank=True, null=True)
     
     
 

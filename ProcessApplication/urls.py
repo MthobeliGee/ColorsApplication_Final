@@ -25,7 +25,11 @@ urlpatterns = [
     path('DeclineApplication/<int:applicationId>', views.DeclineApplication, name="DeclineApplication"),
     path('CancelApplication/<int:applicationId>', views.CancelApplication, name="CancelApplication"),
     path('addApparel/<int:applicationId>', views.addApparel, name="addApparel"),
-    path('noLetterActivate/<int:applicationId>', views.noLetterActivate, name="noLetterActivate")
+    path('noLetterActivate/<int:applicationId>', views.noLetterActivate, name="noLetterActivate"),
+    
+    path('approveApplicant', views.approveApplicant, name="approveApplicant"),
+    path('declineApplicant', views.declineApplicant, name="declineApplicant"),
+    path('declineApplicant_committee/<int:applicantApplicationId>', views.declineApplicant_committee, name="declineApplicant_committee")
     
     
 ]

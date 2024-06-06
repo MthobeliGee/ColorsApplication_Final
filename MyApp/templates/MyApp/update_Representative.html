@@ -22,261 +22,426 @@
     {% endif %}
 
     <div class="container">
-        <div style="padding:1rem; display:flex;justify-content:space-between">
+        <div style="padding:1rem">
 
-            <div>
-                <h3><b>{{application.EventName}} represantatives</b> 
-            </div>
-            <div>
-                <a style="color:white" href="{% url 'ApplicantInfo' applicantId=represantative.RepresantativeId applicant_type='Athlete'%}" class="btn btn-default btn-warning">
-                    << Back To Application
-                </a>
-            </div>
-            
-            {% if application.Step != 'Application_review' %}
-                    
-            {% if application.Step != 'Pending' %}
-                
-            {% endif %}
-       
+            <center>
 
-            
+                <h3>
 
-    
-        {% else  %}
-            <div>
-                <a style="color:white" href="{% url 'Applcants' applicationId=application.ApplicationId %}" class="btn btn-default btn-warning">
-                    Abort action
-                </a>
-            </div>
-            
+                    {{application.FederationPersonel.FederationName}}
+                </h3>
+            </center>
 
-
-        {% endif %}
-            
         </div>
-
-        <form method="post"  enctype="multipart/form-data" style="width:inherit">
-            {% csrf_token %}
-            <div class="form-outline">
-                    
-                <input required type="text" value="{{represantative.Id_number}}"  maxlength="13" onkeyup="changed(this.value)"  name="Id_number" placeholder=" Applicant Id number" id="id_number"  class="form-control form-control-lg">
-                <label class="form-label" for="FirstName">Id Number</label>
-                <div hidden class="text-center" id="Id_msg">
-
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline">
-                    
-                        <input  type="text" name="FirstName" value="{{represantative.FirstName}}"  class="form-control form-control-lg">
-                        <label class="form-label" for="FirstName">First Name</label>
-                
-                    </div>
-
-                </div>
-
-            
-            
-                <div class="col-md-6 mb-4">
-
-                <div class="form-outline" style="display:flex;flex-direction: column">
-                    
-                    <input   type="text" name="Surname" value="{{represantative.Surname}}"  class="form-control form-control-lg">
-                    <label class="form-label" for="Surname">Last Name {{represantative.PhoneNumber}}</label>
-                
-                </div>
-
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline" style="display:flex;flex-direction: column">
-                        
-                        <input   type="text" name="PhoneNumber" value="{{represantative.PhoneNumber}}"  class="form-control form-control-lg">
-                        <label class="form-label" for="PhoneNumber">Phone Number</label>
-                    
-                    </div>
-
-                </div>
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline">
-
-                    
-                        <select  name="Gender" class="form-control form-control-lg">
-                            <option value="none">
-                                Select
-                            </option>
-                            <option value="Male">
-                                Male
-                            </option>
-                            <option value="Female">
-                                Female
-                            </option>
-                            <option value="Other">
-                                Other
-                            </option>
-                        </select>
-
-                        <label class="form-label" for="EndDate">Gender: <b>{{represantative.Gender}}</label>
-                
-                    </div>
-
-                </div>
-
-            
-            
-                
-            </div>
-            <div class="row">
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline" style="display:flex;flex-direction: column">
-                    
-                        <input   type="email" name="Email" value="{{represantative.Email}}"   class="form-control form-control-lg">
-                        <label class="form-label" for="Email">Email Address</label>
-                    
-                    </div>
-                </div>
-
-            
-            
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline" style="display:flex;flex-direction: column">
-                    
-                        <input   type="text" name="City" value="{{represantative.City}}"  class="form-control form-control-lg">
-                        <label class="form-label" for="City">City</label>
-                    
-                    </div>
-
-                </div>
-            </div>
-            <!--*****************************************-->
-            <div class="row">
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline" style="display:flex;flex-direction: column">
-                    
-                        <input   type="text" name="Province" value="{{represantative.Province}}"  class="form-control form-control-lg">
-                        <label class="form-label" for="Province">Province</label>
-                    
-                    </div>
-                </div>
-
-            
-            
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline" style="display:flex;flex-direction: column">
-                    
-                        <select  name="RepresatativeType"   class="form-control form-control-lg">
-                            <option value="none">
-                                Select
-                            </option>
-                            <option value="Junior">
-                                Junior
-                            </option>
-                            <option value="Senior">
-                                Senior
-                            </option>
-                        </select>
-                        <label class="form-label" for="City">Represatative Type: <b>{{represantative.RepresatativeType}}</label>
-                    
-                    </div>
-
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline">
-                    
-                        <select  name="IDCopySubmited" class="form-control form-control-lg">
-                            <option value="none">
-                                Select
-                            </option>
-                            <option value="yes">
-                                Yes
-                            </option>
-                            <option value="no">
-                                No
-                            </option>
-                        </select>
-
-                        <label class="form-label" for="IDCopySubmited">Is the official id copy submited: 
-                            <b>{% if represantative.IDCopySubmited == True %}
-                                    Yes
-                                {% else %}
-                                    No
-                                {% endif %}
-                            </b>
-
-
-                        </label>
-
-                
-                    </div>
-
-                </div>
-
-            
-            
-                <div class="col-md-6 mb-4">
-
-                <div class="form-outline" style="display:flex;flex-direction: column">
-                    
-                    <select    name="AcceptanceofTeamAppointment"  class="form-control form-control-lg">
-                        <option value="none">
-                            Select
-                        </option>
-                        <option value="yes">
-                            Yes
-                        </option>
-                        <option value="no">
-                            No 
-                        </option>
-                    <select>
-                    <label class="form-label" for="AcceptanceofTeamAppointment">Is the acceptance of team appointment submited:
-                        <b>
-                            {% if represantative.AcceptanceofTeamAppointment == True%}
-                                Yes
-                            {% else %}
-                                No
-                            {% endif %}
-                        </b>
-
-                    </label>
-                
-                </div>
-
-                </div>
-            </div>
-            
       
+        {% if represantatives %}
+            <div class="row" style="padding:1rem; display:flex;justify-content:space-between">
 
-
-            <input class="btn btn-default btn-primary" style="width:100%" type="submit" value="Save details"/> 
-            <div style="display:flex; justify-content:center;padding:1rem">
                 <div>
-                    <a style="color:white" href="{% url 'ApplicantInfo' applicantId=represantative.RepresantativeId applicant_type='Athlete'%}" class="btn btn-default btn-warning">
-                        <b>
-                            << Back To Application
-                        </b>
-                    </a>
+                    <h3><b>{{application.EventName}} team Applcants</b>   </h3>
+                    <hr/>
+                    <h5>{{application.Federation.FederationName}}</h5>
+                    
                 </div>
+                {% if user == application.user %}
+                <div>
+                    
+                    {% if application.ApplicationStatus != 'Application_review' and  application.ApplicationStatus != 'Complete' %} 
+
+                        {% if application.Step != 'Pending' %}
+                            <a href="{% url 'Add_Committee_Member' applicationId=application.ApplicationId %}" class="btn btn-default btn-success">
+                                Move on to the next step>>
+                            </a>
+
+
+                        {% else %}
+                            {% if user == application.user %}
+                                <div style="padding:0.5rem;">
+                                    <a href="{% url 'Application_review' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
+                                        <b>
+                                            Back to Application
+                                        </b>
+                                    </a>
+                                
                 
+                                </div>
+
+                            {% endif %}
+
+                            
+                        {% endif %}
+
+                    {% else %}
+                        <a href="{% url 'Application_review' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
+                            <b>
+                                Back to Application review
+                            </b>
+                        </a>
+
+                    {% endif %}
+                
+                </div>
+                {% endif %}
+            </div>
+        {% else %}
+
+            <center>
+                <div style="padding:1rem">
+                    <h3><b>{{application.EventName}}  team Applicants</b> 
+                    <hr/>
+                    <h5>{{application.Federation.FederationName}}</h5>
+                </div>
+            </center>
+        {% endif %}
+        {% comment %} {% if user != application.user and user.is_superuser == False %} {% endcomment %}
+        <form method="post"  enctype="multipart/form-data" style="width:inherit; padding:1rem; border:solid 1px ">
+            {% csrf_token %}
+            <div id="subHeading">
+                <h4>
+                    Personal information
+                </h4>
+            </div>
+            <input type="hidden" name="SportsPersonId" value="0"/>
+
+            <div class="form-outline">
+                <label class="form-label" >Id Number</label>
+                <input
+                    required type="text"
+                    maxlength="13" 
+                    onkeyup="changed(this.value)"
+                    name="Id_number" 
+                    value="{{sportsPerson.Id_number}}" 
+                    placeholder=" Applicant Id number" 
+                    id="id_number"  
+                    class="form-control form-control-lg"
+                    {% if sportsPerson.is_IdNumberValidated %}
+                        disabled
+                    {% endif %}
+                />
+                
+                <div hidden class="text-center" id="Id_msg">
+    
+                </div>
+            </div>
+            <div class="form-outline">
+                <label class="form-label" for="FirstName">First Name</label>
+                <input
+                    required
+                    type="text" 
+                    value="{{sportsPerson.FirstName}}" 
+                    name="FirstName" 
+                    placeholder="First name"  
+                    class="form-control form-control-lg"
+                    {% if sportsPerson.is_IdNumberValidated %}
+                        disabled
+                    {% endif %}
+                />
+                
+        
+            </div>
+            <div class="form-outline" style="display:flex;flex-direction: column">
+                <label class="form-label" for="Surname">Last Name</label>
+                <input 
+                    required  
+                    type="text" 
+                    value="{{sportsPerson.Surname}}" 
+                    name="Surname" 
+                    placeholder="Last name"  
+                    class="form-control form-control-lg"
+                    {% if sportsPerson.is_IdNumberValidated %}
+                        disabled
+                    {% endif %}
+                />
+            
+            
+            </div>
+            <div class="form-outline">
+                <label class="form-label">Gender</label>
+                    
+                <select required name="Gender" class="form-control form-control-lg">
+
+                    {% if sportsPerson.Gender == "Male"%}
+                        <option value="Male">
+                            Male
+                        </option>
+                        <option value="Female">
+                            Female
+                        </option>
+                        <option value="Other">
+                            Other
+                        </option>
+                    {% elif sportsPerson.Gender == "Female" %}
+                        <option value="Female">
+                            Female
+                        </option>
+                        <option value="Male">
+                            Male
+                        </option>
+                    
+                        <option value="Other">
+                            Other
+                        </option>
+
+
+                    {% else %}
+                        <option value="Other">
+                            Other
+                        </option>
+                        <option value="Male">
+                            Male
+                        </option>
+                        <option value="Female">
+                            Female
+                        </option>
+                    
+
+                    {% endif %}
+
+
+                </select>
+
+               
+        
+            </div>
+
+           
+            <div id="subHeading">
+                <h4>
+                    Contact details
+                </h4>
 
             </div>
-        </form>
+            <div class="form-outline" style="display:flex;flex-direction: column">
+                <label class="form-label" for="Email">Email Address</label>
+                <input required   value="{{sportsPerson.Email}}" type="email" name="Email"   class="form-control form-control-lg">
+               
+            
+            </div>
+            <div class="form-outline" style="display:flex;flex-direction: column">
+                <label class="form-label" for="PhoneNumber">Phone Number</label>
+                <input required value="{{sportsPerson.PhoneNumber}}"  type="text" name="PhoneNumber"   class="form-control form-control-lg">
+               
+            
+            </div>
+            
+            <div class="form-outline" style="display:flex;flex-direction: column">
+                <label class="form-label" for="Province">Province</label>
+                <select required  type="text" value="" onchange="setCities(this.value)" name="Province" id="drpListProvince"   class="form-control form-control-lg">
+                    <option value="{{sportsPerson.Province}}">
+                        {{sportsPerson.Province}}
+                    </option>
+                </select>
+               
+                
+            </div>
+            <div class="form-outline" style="display:flex;flex-direction: column">
+                <label class="form-label" for="City">City/Town</label>
+                <select required  type="text" onchange="isOther(this.value)" name="City" id="drpCities" class="form-control form-control-lg">
+                    <option value="{{sportsPerson.City}}">
+                        {{sportsPerson.City}}
+                    </option>
+                </select>
+               
+                <div id="txt_HostCity_holder" hidden>
+                    <label>
+                        please Specify City/Town
+                    </label>
+                    <input type="text" id="txt_HostCity" value="{{sportsPerson.City}}" class="form-control form-control-lg"/>
 
+                </div>
+            
+            </div>
+
+            <div id="subHeading">
+                <h4>
+                    Applicant represantation information
+                </h4>
+
+            </div>
+            <div class="form-outline" style="display:flex;flex-direction: column">
+                <label class="form-label" for="RepresatativeLevel">Represatative Type</label>
+                <select required   name="RepresatativeType"   class="form-control form-control-lg">
+                    <option value="{{applicantApplication.RepresatativeType}}">
+                        {{applicantApplication.RepresatativeType}}
+                    </option>
+                    <option value="Athlete">
+                        Athlete
+                    </option>
+                    <option value="Coach">
+                        Coach
+                    </option>
+                    <option value="Technical Official">
+                        Technical Official
+                    </option>
+                </select>
+            
+            </div>
+            <div class="form-outline" style="display:flex;flex-direction: column">
+                <label class="form-label" for="RepresatativeLevel">Applicant Level</label>
+                <select required   name="RepresatativeLevel"   class="form-control form-control-lg">
+                    <option value="{{applicantApplication.RepresatativeLevel}}">
+                        {{applicantApplication.RepresatativeLevel}}
+                    </option>
+                    <option value="Junior">
+                        Junior
+                    </option>
+                    <option value="Senior">
+                        Senior
+                    </option>
+                </select>RepresatativeType
+            
+            </div>
+ 
+            <div class="form-outline" style="display:flex;flex-direction: column">
+                    
+                <select required   name="is_parent"  class="form-control form-control-lg">
+                   {% if sportsPerson.is_parent %}
+                   <option value="yes">
+                        Yes
+                    </option>
+                    <option value="no">
+                        No 
+                    </option>
+
+                {% else %}
+                    <option value="no">
+                        No 
+                    </option>
+                    <option value="yes">
+                        Yes
+                    </option>
+
+                {% endif %}
+                  
+                  
+                <select>
+                <label class="form-label" for="is_parent">Is the application conducted by parent?</label>
+            
+            </div>
+            <button onclick="sub()" class="btn btn-default btn-primary" style="width:100%" >
+                Save changes
+            </button>
+
+            <input id="subsub" hidden   type="submit" /> 
+        </form>
+        {% comment %} {% endif %} {% endcomment %}
 
 
     </div>
+    <br/>
+
+    {% if user == application.user or user.is_superuser %}
+        {% if represantatives %}
+            <hr/>
+            <div class="container">
+                {% if represantatives %}
+                    <div style="padding:1rem; display:flex;justify-content:space-between">
+
+                        <div>
+                            <h2><b>Selected team represantatives</b></h2>
+                        </div>
+                        <div>
+                            {% if application.Step != 'Application_review' %} 
+
+                                {% if application.Step != 'Pending' %}
+                                    <a href="#" class="btn btn-default btn-success">
+                                        Skip Step>>
+                                    </a>
+
+
+                                {% else %}
+                                    {% if user == application.user %}
+
+                                        <div style="padding:0.5rem;">
+                                            <a href="{% url 'Application_review' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
+                                                <b>
+                                                    Back to Application
+                                                </b>
+                                            </a>
+                                        
+                        
+                                        </div>
+
+                                    {% endif %}
+                                {% endif %}
+
+                            {% else %}
+                                <a href="{% url 'Application_review' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
+                                    <b>
+                                        Back to Application review
+                                    </b>
+                                </a>
+
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+                <div>
+                    
+                        <div class="row">
+                            {% if represantatives %}
+                                {% for represantative in represantatives %}
+                                
+                                    <div class="col-xl-3 col-md-6 mb-4">
+                                        <div class="card border-left-primary shadow h-100 py-2">
+                                            <div class="card-body">
+                                                <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
+                                                    {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
+                                                    <img style="width:inherit; width:100%;border:solid;max-height:320px" src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/>
+                                                    
+                                                </div>
+                                                <div class="row no-gutters align-items-center">
+                                                    <div class="col mr-2" style="display:flex; justify-content: space-between;">
+                                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
+                                                            {{ represantative.FirstName}} {{represantative.Surname}}
+                                                        </div>
+                                                        
+                                                    </div>
+                                                
+                                                </div>
+                                                <div class="row no-gutters align-items-center" style="padding:1rem">
+                                                    <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;justify-content:center" >
+                                                        
+                                                            {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
+                                                            {% endcomment %}
+                                                            
+                                                        
+                                                    
+                                                            
+                                                            <a style="color: #FF69B4;padding:0.5rem" href="{% url 'remove_Representative' represantativeId=represantative.SportsPersonId %}"><i class="fas  fa-trash-alt bin-icon"></i></a>
+                                                        
+                                                            <a style="color: #FF69B4;padding:0.5rem" href="{% url 'update_Representative' represantativeId=represantative.SportsPersonId %}" style="padding:5px"><i class="fas  fa-pencil-alt edit-icon"></i></a>
+                                            
+
+                                                        
+                                                    </div>
+                                                </div>
+                                                
+                                        
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor%}
+                            {%endif%}
+            
+                
+            
+            
+            
+            
+                        
+            
+            
+                        </div>
+
+                    
+        
+                <div>
+
+            </div>
+        {% endif %}
+
+    {% endif %}
 
 
     <script>
@@ -297,7 +462,7 @@
                 id_number.value = null
                 Id_msg.hidden = false
                 id_number.style = 'border: solid red; color:red'
-                id_number.placeholder = 'Identity number must consist of digits only "REFRESH PAGE"'
+                id_number.placeholder = 'Identity number must consist of digits only'
                 
 
             }
@@ -310,7 +475,22 @@
             }
         }
     </script>
+    <script src="{% static 'MyApp/myjs/addRepjs.js' %}"></script>
 
+    <style>
+        #subHeading{
+            padding:1rem
+        }
+        #txt_HostCity_holder{
+            padding:1rem;
+            color:red
+        }
+        #txt_HostCity_holder>input{
+            border:dotted 1px red
+        }
+
+    </style>
+            
 {% endblock %}
 
 

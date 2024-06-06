@@ -1,0 +1,18 @@
+{% autoescape off %}
+    
+    Dear {{sportsPerson.FirstName}} {{sportsPerson.Surname}}, I hope this email finds you well. 
+    {% if application.ApplicationStatus == "Approved" %}
+    This email is to inform you that the upcoming {{application.EventName}} event, scheduled to take place on {{application.StartDate}}, has been approved by the committee and is awaiting final approval from the KZNSC leadership for awarding. Please stay tuned for further updates regarding your colors application.
+    {% elif application.ApplicationStatus == "Declined" %}
+    This email is to inform you that the {{application.EventName}} event scheduled to take place on {{application.StartDate}} has been declined by the committee. Therefore, we regret to inform you that your colors application has been automatically declined.
+    {% endif %}
+    __________________________________________________
+    
+    For the rest of the details, please use the link below to log in on the colors application.
+    {{protocol}}://{{ domain }}{% url 'login' %}
+
+    Best Regards
+    KZNSC Colors
+
+
+{% endautoescape %}

@@ -19,76 +19,131 @@
         {% endfor %}
     {% endif %}
 
+    <div class="container row" style="padding:1rem;display:flex; justify-content:center ">
+        {% if  user == application.user or user.is_superuser or user.is_staff %}
+          
+            <div style="padding:0.5rem">
+                <a class="btn btn-default btn-info" href="{% url 'Applcants' applicationId=application.ApplicationId %}">
+                    Back to Applcants
+                </a>
+            </div>
+
+        {% endif %}
+        
+    </div>
 
 
     <div class="container">
-        {% if athlete %}
-            <div >
-               <div class="applicant_holder_header"> 
+       
+        <div >
+            <div class="applicant_holder_header"> 
 
-                    <h3>
-                        {{athlete.FirstName}} {{athlete.Surname}} Athlete colors Review
-                    </h3>
-                    <hr/>
-                    <h5>
-                        {{application.Federation.FederationName}}
-                    </h5>
+                <h3>
+                    {{sportsPerson.FirstName}} {{sportsPerson.Surname}}
+                </h3>
+                <hr/>
+                <h5>
+                    {{application.Federation.FederationName}}
+                </h5>
 
-               </div>
-          
+            </div>
+        
 
-                <div  class="card border-left-primary shadow h-100 py-2">
-                    <div class="card-body applicant_info" >
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2" style="display:flex; justify-content: space-between;">
-
-                                <div  class="text-center">
-
-                                    <p >
-                                        <label>Athlete Id Number: {{athlete.Id_number}}</label><br/>
-                                        <label>First Name: {{athlete.FirstName}} </label><br/>
-                                        <label>Last Name: {{athlete.Surname}}</label><br/>
-                                        <label>Gender: {{athlete.Gender}}</label><br/>
-                                        <label>Phone Number: {{athlete.PhoneNumber}}</label><br/>
-                                        <label>Email: {{athlete.Email}}</label><br/>
-                                        
-                                        <label>Represatative Type: {{athlete.RepresatativeType}}</label><br/>
-                                        {% if athlete.is_parent %}
-                                            <label>Application is perfomed by parent</label><br/>
-                                        {% endif %}
-                                        {% if athlete.is_terms_accepted%}
-                                            <label>terms and condition accepted</label><br/>
-                                        {% endif %}
-                                        <label>Application Status: {{athlete.status}}</label><br/>
-                                        
-                                    </p>
-                                </div>
-
-                               
-                                
-                            </div>
-                        
+            <div  class="card border-left-primary shadow h-100 py-2" style="border-radius:12px">
+                <div>
+                    {% comment %} href="{% url 'update_Representative' represantativeId=athlete.RepresantativeId %}" {% endcomment %}
+                   
+                </div>
+                <div class="card-body applicant_info row"  style="display:flex; justify-centent:center" >
+                    <div id="event_info">
+                        <div style="padding:0.8rem">
+                            <h4>
+                                Event and application details
+                            </h4>
+                        </div>
+                        <hr/>
+                        <div>
+                            <label>Event Name: {{application.EventName}}</label><br/>
+                            <label>Start Date: {{application.StartDate}}</label><br/>
+                            <label>End Date: {{application.EndDate}}</label><br/>
+                            <label>Host City: {{application.HostCity}}</label><br/>                          
+                            <label>Host Province: {{application.HostProvince}}</label><br/>
+                            <label>Colors Status: {{application.ApplicationStatus}}</label><br/>
+                            <label>Travel Date Time: {{application.TravelDateTime}}<label><br/>
+                            
                         </div>
                     </div>
-                    <div class="card-footer">
-                        {% if athlete.status == 'OnCreate'%}
-
+                    
+                    <div id="applicant_info">
+                 
+                        <div >
+                            <div class="row" style="display:flex; justify-content:space-between">
+                                <div style="padding:0.4rem">
+                                    <h4>
+                                        Applicant information
+                                    </h4>
+                                </div>
+                                {% if user != application.user and  user.is_staff == False  %}
+                                    <div style="padding:0.4rem">
+                                        <a href="{% url 'update_Representative' applicantApplicationId=applicantApplication.ApplicantApplicationId %}" style="color:white; border-radius:12px" class="btn btn-default btn-info">
+                                            <b>Update details</b>
+                                        </a>
+                                    </div>
+                                {% endif %}
+                                
+                            </div>
+                            <hr/>
                             
-                            <form method="post">
-                                {% csrf_token %}
-                                <input type="submit" name="" value="Subit Colors Application" class="btn btn-default btn-success"/>
-                            </form>
-                            
-                        {% endif %}
+                            <div >
+                                <label>Athlete Id Number: {{sportsPerson.Id_number}}</label><br/>
+                                <label>First Name: {{sportsPerson.FirstName}} </label><br/>
+                                <label>Last Name: {{sportsPerson.Surname}}</label><br/>
+                                <label>Gender: {{sportsPerson.Gender}}</label><br/>
+                                <label>Phone Number: {{sportsPerson.PhoneNumber}}</label><br/>
+                                <label>Email: {{sportsPerson.Email}}</label><br/>
+                                
+                                <label>Applicant Type: {{applicantApplication.RepresatativeType}}</label><br/>
+                                <label>Applicant Level: {{applicantApplication.RepresatativeLevel}}</label><br/>
+                                {% if athlete.is_parent %}
+                                    <label>Application is perfomed by parent</label><br/>
+                                {% endif %}
+                                {% if applicantApplication.is_terms_accepted%}
+                                    <label>terms and condition accepted</label><br/>
+                                {% endif %}
+                                <label>Application Status: {{applicantApplication.status}}</label><br/>
+                               
+                            </div>
+                        </div>
 
-                        <div class="actions row">
-
-                            <div>
-                                <a href="{% url 'update_Representative' represantativeId=athlete.RepresantativeId %}" style="color:white; border-radius:12px" class="btn btn-default btn-info">
-                                    <b>Update details</b>
+                        
+                        
+                    </div>
+                </div>
+                <div class="card-footer">
+                    {% if user.is_staff == True %}
+                        {% if application.ApplicationStatus == "Pending" %}
+                            <div style="padding:1rem; display:flex; justify-content:center">
+                                <a class="text-center" style="background-color:red ;color: white;padding:0.2rem;border:solid 1px red; border-radius:12px; width:100%" href="{% url 'declineApplicant_committee' applicantApplicationId=applicantApplication.ApplicantApplicationId %}" style="padding:5px">
+                                    Remove from team
                                 </a>
                             </div>
-                            {% if athlete.status == "Pending" %}
+                        {% endif %}
+                    {% endif %}
+                    {% if applicantApplication.status == 'OnCreate'%}
+
+                        {% if user == applicantApplication.SportsPerson.user %}
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="submit" name="" value="Submit Colors Application" class="btn btn-default btn-success"/>
+                            </form>
+                        {% endif %}
+                        
+                    {% endif %}
+
+                    <div class="actions row">
+                        {% if user != application.user %}
+                        
+                            {% if applicantApplication.status == "Pending" %}
                                 <div id="btn_cancel_holder">
                                     <button id="btn_cancel" onclick="initCancel('on')"  style="color:white; border-radius:12px" class="btn btn-default btn-danger">
                                         <b>Cancel Application</b>
@@ -97,40 +152,153 @@
                                 </div>
                             {% endif %}
 
-                            
-                            
-                        </div>
-                        <div id="div_cancel"    >
-                            <form method="post" action="{% url 'cancel_applicant_app' applicantId=athlete.RepresantativeId  applicant_type="Athlete" %}">
-                                {% csrf_token %}
+                        {% elif  user == application.user %}
+                        {% if applicantApplication.status == "Pending" %}
+                        <div id="btn_approve_holder">
+                           <div class="row" style="padding:1rem; display:flex; justify-content:center">
 
-                                <div class="text-center">
-                                    <h4 class="text-danger"><b>Are you sure you want to cancel the application?</b></h4>
+                              <div style="padding:0.5rem">
+                                    <button id="btn_approve" onclick="initApprove('on')"  style="color:white; border-radius:12px" class="btn btn-default btn-info">
+                                        <b>Approve Applicant</b>
+                                    </button>
+                              </div>
+                                <div style="padding:0.5rem">
+                                    <button id="btn_decline" onclick="initDecline('on')"  style="color:white; border-radius:12px" class="btn btn-default btn-danger">
+                                        <b>Decline Applicant</b>
+                                    </button>
                                 </div>
-                                <hr/>
-                                <div class="actions row">
-                                    <div>   
-                                        <button type="submit" class="btn btn-default btn-success">
-                                           <b> Confirm Cancelling</b>
+                           </div>
+
+                            <form id="approve_applicant_form" method='post' action="{% url 'approveApplicant'  %}" hidden style="padding:1rem">
+                                {% csrf_token %}
+                                <input type="hidden" name="applicantApplicationId" value="{{applicantApplication.ApplicantApplicationId}}"/>
+                                <div style="padding:1rem; ">
+                                    <p>
+                                        Are you sure you want to approve this applicant to join the team?
+                                    </p>
+                                </div>
+                               <div class="row" style="display:flex; justify-content:center">
+                                    <div style="padding:0.5rem">
+                                        <button tyle="color:white; border-radius:12px" class="btn btn-default btn-success">
+                                            <b>Confirm Approval</b>
                                         </button>
                                     </div>
-                                    <div>   
-                                        <a style="color:white" class="btn btn-default btn-danger" preventdefault onclick="initCancel('off')"  >
-                                            <b>Abort Action</b>
+                                    <div style="padding:0.5rem">   
+                                        <a onclick="cancelAction()" style="color:white; border-radius:12px" class="btn btn-default btn-danger">
+                                            <b>Cancel</b>
                                         </a>
                                     </div>
                                 </div>
+                            </form>
+                            <form id="decline_applicant_form" method='post' action="{% url 'declineApplicant'  %}" hidden  style="padding:1rem; display-flex; justify-content:center;">
+                                {% csrf_token %}
+                                <input type="hidden" name="applicantApplicationId" value="{{applicantApplication.ApplicantApplicationId}}"/>
+                                <div style="padding:1rem; color:red">
+                                    <p class="text-danger">
+                                        Are you sure you want to decline this applicant from joining the team?
+                                    </p>
+                                </div>
 
+                                <div class="row" style="padding:0.4rem; display:flex; justify-content:center;">
+                                   <div style="padding:0.5rem">
+                                        <button tyle="color:white; border-radius:12px" class="btn btn-default btn-success">
+                                            <b>Confirm Decline</b>
+                                        </button>
+                                    </div>
+                                    <div style="padding:0.5rem">   
+                                        <a onclick="cancelAction()" style="color:white; border-radius:12px" class="btn btn-default btn-danger">
+                                            <b>Cancel</b>
+                                        </a>
+                                    </div>
+                                </div>
                             </form>
 
                         </div>
+
+                        <script>
+                            console.log("initApprove is here!")
+                            const btn_approve = document.getElementById("btn_approve")
+                            const approve_applicant_form= document.getElementById("approve_applicant_form")
+                            function initApprove(action){
+                                if(action == 'on'){
+                                    alert("Click 'Confirm Approval' to approve the applicant on event")
+                                    btn_approve.hidden = true
+                                    approve_applicant_form.hidden = false
+                                    btn_decline.hidden = true
+
+                                }
+                                if(action == 'off'){
+                                    btn_approve.hidden = false
+                                    btn_decline.hidden = false
+
+                                    approve_applicant_form.hidden = true
+                                }
+
+
+                            }
+                            const btn_decline = document.getElementById("btn_decline")
+                            const decline_applicant_form= document.getElementById("decline_applicant_form")
+                            function initDecline(action){
+                                if(action == 'on'){
+                                    alert("Click 'Confirm Decline' to decline the applicant on event")
+                                    btn_decline.hidden = true
+                                    decline_applicant_form.hidden = false
+                                    btn_approve.hidden = true
+                                }
+                                if(action == 'off'){
+                                    btn_approve.hidden = false
+                                    btn_decline.hidden = false
+                                    decline_applicant_form.hidden = true
+                                }
+
+
+                            }
+
+                            function cancelAction(){
+                                decline_applicant_form.hidden = true
+                                approve_applicant_form.hidden = true
+                                btn_approve.hidden = false
+                                btn_decline.hidden = false
+                            }
+
+                        </script>
+                    {% endif %}
+
+
+                        {% endif %}
+                        
                     </div>
+                    <div id="div_cancel"    >
+                        {% comment %} {% url 'cancel_applicant_app' applicantId=athlete.RepresantativeId  applicant_type="Athlete" %} {% endcomment %}
+                        <form method="post" action="{% url 'cancel_applicant_app' applicantApplicationId=applicantApplication.ApplicantApplicationId %}">
+                            {% csrf_token %}
 
+                            <div class="text-center">
+                                <h4 class="text-danger"><b>Are you sure you want to cancel the application?</b></h4>
+                            </div>
+                            <hr/>
+                            <div class="actions row">
+                                <div>   
+                                    <button type="submit" class="btn btn-default btn-success">
+                                        <b> Confirm Cancelling</b>
+                                    </button>
+                                </div>
+                                <div>   
+                                    <a style="color:white" class="btn btn-default btn-danger" preventdefault onclick="initCancel('off')"  >
+                                        <b>Abort Action</b>
+                                    </a>
+                                </div>
+                            </div>
 
+                        </form>
+
+                    </div>
                 </div>
-            </div>
 
-        {% endif %}
+
+            </div>
+        </div>
+
 
     </div>
 
@@ -157,4 +325,20 @@
 
     </script>
 
+
+    <style>
+        .applicant_info>div{
+            padding:1rem;
+            border-radius:12px
+        }
+        #event_info{
+            border-bottom: solid 2px gray;
+            border-right:solid 2px gray;
+
+        }
+        #applicant_info{
+            border-left:solid 2px gray;
+            border-top:solid 2px gray;
+        }
+    </style>
 {% endblock %}

@@ -39,53 +39,53 @@
 
     <div class="row"  style="display:flex;justify-content:center; padding:1rem">
         
-        {% if user.is_superuser != True %}
+       
+            {% if user.is_staff %}
 
-            <div style="padding:0.5rem;">
+                {% if user.is_superuser %}
+
+                {% else %}
 
                 
+                    <div style="padding:0.5rem;">
 
-                <div class="text-success" style="padding:0.5rem; border:solid 2px; border-radius:12px">
-                    <a href="{% url 'my_applications'  %}" title="See officials page" class="btn btn-success">
-                        <b>
-                            << All Applications
-                        </b>
-                    </a>
-                   
+                        
+
+                        <div class="text-success" style="padding:0.5rem; border:solid 2px; border-radius:12px">
+                            <a href="{% url 'Applications'  %}" class="btn btn-success">
+                                <b>
+                                    << All Applications
+                                </b>
+                            </a>
+                        
+                            
+
+                        </div>
+                    
+                    </div>
+                {% endif %}
+            {% else %}
+                <div style="padding:0.5rem;">
+
                     
 
-                </div>
-            
-            </div>
-       
-
-
-        {% endif %}
-        <div style="padding:0.5rem;">
-
-            
-
-            <div style="padding:0.5rem; border:solid 1px; border-radius:12px">
-                <a href="{% url 'Officials' applicationId=application.ApplicationId  %}" title="See officials page" class="btn btn-info">
-                    <b>
-                        Officials
-                    </b>
-                </a>
-                {% if user.is_superuser != True %}
-                    {% if application.isHistory == False%}
-                        <b style="font-size:25px" class="text-success"> | </b>
-                        
-                        <a href="{% url 'addTeamOfficial' applicationId=application.ApplicationId %}" >
-                            <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>Edit
+                    <div class="text-success" style="padding:0.5rem; border:solid 2px; border-radius:12px">
+                        <a href="{% url 'my_applications'  %}"  class="btn btn-success">
+                            <b>
+                                << All Applications
+                            </b>
                         </a>
-                    {% endif %}
+                    
+                        
 
-                {% endif %}
+                    </div>
                 
+                </div>
+            {% endif %}
 
-            </div>
+
+       
         
-        </div>
        
         <div style="padding:0.5rem;">
 
@@ -94,69 +94,29 @@
                     <b>
                         Applicants
                     </b>
-                </a> 
-                {% if user.is_superuser != True %}
-                    {% if application.isHistory == False%}
                     
-                        <b style="font-size:25px" class="text-success"> | </b>
-                        <a title="Go to Applicants editing page" href="{% url 'AddRepp' applicationId=application.ApplicationId %}" >
-                            <i class="fas fa-1x  fa-pencil-alt edit-icon"></i> Edit
-                        </a>
-                    {% endif %}
-                {% endif %}
+                </a> 
+               
                 
 
             </div>
         
         </div>
        
-        <div style="padding:0.5rem;">
-
-            <div style="padding:0.5rem; border:solid 1px; border-radius:12px">
-                <a href="{% url 'Committee' applicationId=application.ApplicationId  %}" title="See Committee members page" class="btn btn-info">
-                    <b>
-                        Committee
-                    </b>
-                </a>
-                {% if user.is_superuser != True %}
-                    {% if application.isHistory == False%}
-                        <b style="font-size:25px" class="text-success"> | </b>
-                        <a title="Go to Committee members editing page"  href="{% url 'Add_Committee_Member' applicationId=application.ApplicationId %}" >
-                            <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>Edit
-                        </a>
-                    {% endif %}
-                {% endif  %}
-                
-
-            </div>
-        
-        </div>
-        <div style="padding:0.5rem;">
-
-            <div style="padding:0.5rem; border:solid 1px; border-radius:12px">
-                <a href="{% url 'Documents' applicationId=application.ApplicationId  %}" title="See documents page" class="btn btn-info">
-                    <b>
-                        Documents
-                    </b>
-                </a>
-                
-                {% if user.is_superuser != True %}
-                    {% if application.isHistory == False%}
-                        <b style="font-size:25px" class="text-success"> | </b>
-                        <a title="Go to Documents editing page"  href="{% url 'Upload_Documents' applicationId=application.ApplicationId %}" >
-                            <i class="fas fa-1x  fa-pencil-alt edit-icon"></i>Edit
-                        </a>
-                    {% endif %}
-                {% endif %}
-                
-
-            </div>
-        
-        </div>
+       
+       
        
 
     </div>
-    
+    {% if pendingApplicants > 0 %}
+
+        <div style="padding:1rem; display:flex; justify-content:center;">
+            <p style="border:solid 1px;border-radius:12px;padding:1rem; background-color:azure">
+                <b class="text-danger">Attention!!:</b> There are/is {{pendingApplicants}} applicant(s) requesting to onbord the team to attend this event. 
+                <br/><b class="text-info">Instruction:</b> Navigate to Applcants above.
+            </p>
+        </div>
+    {% endif %}
 
 <div class="container">
 
@@ -177,13 +137,13 @@
         </div>
     </div>
     <div>
-        {% if user.is_superuser != True %}
+        {% if user == application.user or application.Federation.FederationPersonel.user == user %}
             {% if application.isHistory == False%}
                 <div style="display:flex; justify-content:center;padding:1rem">
                     
                     <div>
-                        <a title="Edit application details" href="{% url 'UpdateDetails' ApplicationId=application.ApplicationId %}" >
-                            <i class="fas fa-2x  fa-pencil-alt edit-icon"></i>
+                        <a style="border: solid 1px; padding:0.5rem; border-radius:12px"  title="Edit application details" href="{% url 'UpdateDetails' ApplicationId=application.ApplicationId %}" >
+                            Update Application Details
                         </a>
                     </div>
                 </div>
@@ -200,47 +160,65 @@
 
                         </h2> <b>application review</b>
                    </div>
-                   {% if user.is_superuser != True %}
-                    <div>
-
-                        <button
-                            id="app_take"
-
+                
+                    {% if user  == application.user %}
+                        {% if application.ApplicationStatus == "Oncreate" or application.ApplicationStatus == "Complete"%}
                             
-                            {% if application.is_App_taking%}
-                                class="btn btn-default "
-                                onclick="app_take(true)"
-                            {% else %}
-                                class="btn btn-default "
-                                onclick="app_take(false)"
-                            {% endif %}
-                            
-                            >
-                            {% if application.is_App_taking%}
-                                Close Athlets, officials, commitee Applications
-                            {% else %}
-                                Allow Athlets, officials, commitee Applications
-                            {% endif %}
-                        
-                        </button>
-                        <form hidden action="{% url 'allowAppTake' %}" method="POST" >
-                            {% csrf_token %}
+                        <div>
 
-                            <input type="number" value="{{application.ApplicationId}}" name="applicationId"/>
-                            <input type="text" id="action" name="action"/>
+                                <button
+                                    id="app_take"
 
-                            <input type="submit" id="sub_App_take" />
+                                    
+                                    {% if application.is_App_taking%}
+                                        class="btn btn-default "
+                                        onclick="app_take(true)"
+                                    {% else %}
+                                        class="btn btn-default "
+                                        onclick="app_take(false)"
+                                    {% endif %}
+                                    
+                                    >
+                                
+                                        {% if application.is_App_taking%}
+                                            Close event for applications
+                                        {% else %}
+                                            Open event for applications
+                                        {% endif %}
+                                    
+                                
+                                </button>
+                                <form hidden action="{% url 'allowAppTake' %}" method="POST" >
+                                    {% csrf_token %}
 
-                        </form>
-                        
-                    </div>
-                   {% endif %}
+                                    <input type="number" value="{{application.ApplicationId}}" name="applicationId"/>
+                                    <input type="datetime-local" value="" name="ApplicantsClosingDate"/>
+
+                                    <input type="text" id="action" name="action"/>
+
+                                    <input type="submit" id="sub_App_take" />
+
+                                </form>
+                                
+                            </div>
+                        {% endif %}
+                    {% endif %}
+            
                 </div>
                 <div class="card-body">
                     <div class="no-gutters align-items-center">
                         <div class="col mr-2" style="">
                             <div class=" font-weight-bold" >
                                 <table class="" >
+                                    <tr> 
+                                        <td>
+                                            <b>Federation</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.Federation.FederationName}}
+                                        </td>
+                                    </tr>
                                     <tr> 
                                         <td>
                                             <b>Host province</b>
@@ -280,15 +258,7 @@
                                         </td>
                                     </tr>
 
-                                    <tr > 
-                                        <td>
-                                            <b>Number of team members</b>
-                                        </td>
-                                        
-                                        <td>
-                                            {{application.NumberOfTeam}}
-                                        </td>
-                                    </tr>
+                                    
                                     <tr > 
                                         <td>
                                             <b>Selection approved date</b>
@@ -308,17 +278,6 @@
                                         </td>
                                     </tr>
 
-
-                                    <tr > 
-                                        <td>
-                                            <b>Mode Of Travel</b>
-                                        </td>
-                                        
-                                        <td>
-                                            {{application.ModeOfTravel}}
-                                        </td>
-                                    </tr>
-
                                     <tr > 
                                         <td>
                                             <b>Number of applicants</b>
@@ -329,25 +288,9 @@
                                         </td>
                                     </tr>
 
-                                    <tr > 
-                                        <td>
-                                            <b>Number of Officials</b>
-                                        </td>
-                                        
-                                        <td>
-                                            {{numOfficials}}
-                                        </td>
-                                    </tr>
+                                   
 
-                                    <tr > 
-                                        <td>
-                                            <b>Number of commitee members</b>
-                                        </td>
-                                        
-                                        <td>
-                                            {{numCommitee}}
-                                        </td>
-                                    </tr>
+                                   
                                     <tr > 
                                         <td>
                                             <b>Application Status</b>
@@ -375,12 +318,12 @@
                     
             
                 </div>
-                {% if user.is_superuser == True%}
+                {% if user.is_staff == True %}
                     <div class="card-footer">
                         <div >
                             <p style="color:black" class="font-weight-bold ">
                                 This application was created by {{application.user.first_name}} {{application.user.last_name}} on {{application.DateCreated}}, contact details are as follow.<br/>
-                                <label>Phone number: {{FederationPersonel.PersonelPhone}}</label><br/>
+                                <label>Phone number: {{application.Federation.FederationPersonel.Phone}}</label><br/>
 
                                 <label>Email: {{application.user.email}}
                             </p>
@@ -446,49 +389,50 @@
                         {% endif %}
 
 
-                       
+                        
                         {% if application.ApplicationStatus == "Pending" %}
                             
+                            {% if user.is_superuser == False %}
 
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2" style="display:flex; justify-content:center">
-                                    
-                                    
-                                    <div style="padding:1rem; display:flex; justify-content:center"  class="row">
-                                        {% csrf_token %}
-                                        <div style="padding:0.5rem; "    >
-                                        <a href="{% url 'ApproveApplication' applicationId=application.ApplicationId %}" class="btn btn-success text-uppercase font-weight-bold text-xs" style="width:100%">
-                                                Approve Application
-                    
-                                            </a>
-                    
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2" style="display:flex; justify-content:center">
+                                        
+                                        
+                                        <div style="padding:1rem; display:flex; justify-content:center"  class="row">
+                                            {% csrf_token %}
+                                            <div style="padding:0.5rem; "    >
+                                            <a href="{% url 'ApproveApplication' applicationId=application.ApplicationId %}" class="btn btn-success text-uppercase font-weight-bold text-xs" style="width:100%">
+                                                    Approve Application
+                        
+                                                </a>
+                        
+                                            </div>
+                                            <div style="padding:0.5rem">
+                        
+                                                <a href="{% url 'DeclineApplication' applicationId=application.ApplicationId %}" class="btn btn-danger text-uppercase font-weight-bold text-xs    " style="color:white;width:100%">
+                                                    Decline Application
+                        
+                                                </a> 
+                                            </div>
                                         </div>
-                                        <div style="padding:0.5rem">
-                    
-                                            <a href="{% url 'DeclineApplication' applicationId=application.ApplicationId %}" class="btn btn-danger text-uppercase font-weight-bold text-xs    " style="color:white;width:100%">
-                                                Decline Application
-                    
-                                            </a> 
-                                        </div>
+                                    
+                                        
                                     </div>
-                                
                                     
                                 </div>
-                                
-                            </div>
-                        
+                            {% endif %}
 
                         {% else %}
                             {% if application.ApplicationStatus == "Canceled" %}
-                            <br/>
-                            <hr/>
-                            <div class="text-danger">
-
-                                <h4><b>The application has been Canceled due to reason stated bellow</b></h4>
                                 <br/>
-                                <p>{{application.CancelReason}}</p>
+                                <hr/>
+                                <div class="text-danger">
 
-                            </div>
+                                    <h4><b>The application has been Canceled due to reason stated bellow</b></h4>
+                                    <br/>
+                                    <p>{{application.CancelReason}}</p>
+
+                                </div>
                             {% endif %}
                         {% endif %}
                     </div>
@@ -564,8 +508,8 @@
 
         {% if user.is_superuser != True %}
 
-            {% if application.ApplicationStatus != "Approved"%}
-                {% if application.ApplicationStatus != "Pending"%}
+           
+                
                     {% if application.ApplicationStatus == 'Complete'%}
 
                         <div style="padding:1rem">
@@ -586,8 +530,19 @@
                                 </center>
                             </div>
                         </div>
+
+
+                    {% elif application.ApplicationStatus == "Oncreate" %}
+
+                        <div class="text-center">
+
+                            <p>
+                                <b class="text-danger">Note:</b> In order to submit the application, there must be at least one applicant.
+
+                            </p>
+                        </div>
                     {% endif %}
-                {% else %}
+                {% if application.ApplicationStatus == "Pending"%}
                     <div class="container">
                         <a href="{% url 'CancelApplication' applicationId=application.ApplicationId %}" class="btn btn-danger">
                            <b>
@@ -600,7 +555,7 @@
                     
 
                 {% endif %}
-            {% endif %}
+          
         {% else %}
 
             {% if application.ApplicationStatus == 'Pending'%}
@@ -622,19 +577,167 @@
 
 
 
-<input type="hidden" id="csrf_token" value=" {% csrf_token %}"/>
+<input type="hidden" id="csrf_token" value="{% csrf_token %}"/>
+<script>
+
+    csrf_token = document.getElementById("csrf_token").value
+</script>
+   
 
 
 <script>
+    const app_pop = document.getElementById("app_pop")
+    const pop_header = document.getElementById("pop_header")
+    const pop_body = document.getElementById("pop_body")
+    function app_take(is_App_taking){
+        app_pop.hidden = false
+        pop_header.innerHTML = `
+                <div>
+                    <b>Allow Applicants</b>
+                </div>
 
-    iframe = document.getElementById("iframe");
-    console.log(iframe);
+                <div class="close2">
+                    <label onclick="togglePop()">Close</label>
+                </div>
+
+            `
+        if(is_App_taking){
+            pop_body.innerHTML=`
+            
+                <div>
+                    <p><b>Are you sure you want to "Close" this colors application to take 'Applicants'</b></p>
+                </div>
+                <hr/>
+                <div class="action_btn">
+                    <div>
+                        <button id="btn_yes" onclick="isAllowClose(true)" class="btn btn-default btn-success">Yes</button>
+                    </div>
+                    <div>
+
+                        <button id="btn_yes" onclick="isAllowClose(false)" class="btn btn-default btn-danger">No</button>
+                    </div>
+
+                </div>
+
+            
+            `
+        }
+        else{
+            
+            pop_body.innerHTML=`
+            
+                <div>
+                    <p><b>Are you sure you want to allow this colors application to take 'Applicants'</b></p>
+                </div>
+                <hr/>
+                <div class="action_btn">
+                    <div>
+                        <button id="btn_yes" onclick="isAllow(true)" class="btn btn-default btn-success">Yes</button>
+                    </div>
+                    <div>
+
+                        <button id="btn_yes" onclick="isAllow(false)" class="btn btn-default btn-danger">No</button>
+                    </div>
+
+                </div>
+
+            
+            `
+
+
+        }
+    }
+
+    function isAllow(is_app_allow){
+       
+        domain = document.getElementById("domain").value
+        if(is_app_allow){
+
+            document.getElementById("action").value = "Allowed";
+
+            document.getElementById("sub_App_take").click();
+            
+
+        }
+        else{
+            togglePop()
+        }
+    }
+
+    function isAllowClose(is_app_allow){
+      
     
+        if(is_app_allow){
+
+            document.getElementById("action").value = "DisAllowed";
+
+            document.getElementById("sub_App_take").click();
+            
+
+        }
+        else{
+            togglePop()
+        }
+    }
 
 
-    csrf_token = document.getElementById("csrf_token").value
-   </script>
-<script src="{% static "MyApp/reviewJs.js" %}"></script>
+    function togglePop(){
+        app_pop.hidden = true
+    }
+</script>
+
+<script>
+    const event_StartDate = document.getElementById("event_StartDate")
+    console.log("event_StartDate: ", event_StartDate)
+    function dateChanged(input){
+
+        let date = input.value
+        let dateComps = date.split('-')
+        console.log("Date has been changed!", dateComps)
+        let year = parseInt(dateComps[0])
+        let month = parseInt(dateComps[1])
+        let day = parseInt(dateComps[3])
+
+        verifyDate(date)
+
+    }
+    function verifyDate(datestr){
+        console.log("datestr: ",datestr)
+        
+        fetch("http://127.0.0.1:8000/checkDateAp/"+datestr,{
+            method:"GET",
+            
+            //mode:'no-cors',
+            
+           
+        }).then(function(response){
+            
+           
+            return response.json()
+        }).then(function(data) {
+           
+            console.log("data.isValid: ",data.isValid); 
+            if(data.isValid){
+                //date is valid
+                console.log("Date is valid at: ", datestr)
+            }
+            else{
+                console.log("Date is not valid at: ", datestr)
+                //date is not valid
+            }
+        }).catch(function(error){
+            console.log(error)
+            datemsg = document.getElementById("datemsg")
+           // document.getElementById('OfficialLetterhead_selected').innerHTML= '<small class="text-danger"><b>Something went wrong, please try again.</b></small>'
+           datemsg.innerHTML += ' (<i class="text-danger">Something went wrong while validating date please try again</i>)'
+
+        });
+    }
+    //verifyDate(event_StartDate.value)
+    dateChanged(event_StartDate)
+    
+</script>
 
 
+ {% comment %} <script src="{% static "MyApp/reviewJs.js" %}"></script> {% endcomment %}
 {% endblock %}

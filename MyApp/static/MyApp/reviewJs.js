@@ -1,5 +1,5 @@
 
-console.log("The List from away: ",list)
+console.log("The List from away: ")
 
 const app_pop = document.getElementById("app_pop")
 const pop_header = document.getElementById("pop_header")

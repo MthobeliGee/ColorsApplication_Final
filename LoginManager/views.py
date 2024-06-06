@@ -18,7 +18,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django import forms
 from .tokens import account_activation_token, Password_Reset_token
-from django.core.mail import send_mail, BadHeaderError
+from django.core.mail import send_mail
 from django.db.models.query_utils import Q
 from django.contrib.auth.tokens import default_token_generator
 from MyApp.models import *

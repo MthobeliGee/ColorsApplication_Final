@@ -20,10 +20,6 @@
 
         {% endfor %}
     {% endif %}
-    <!--
-        <input required type="text" name="FirstName" placeholder="First name"  class="form-control form-control-lg">
-                        <label class="form-label" for="FirstName">First Name</label>
-    -->
     <div class="container">
      
             <div style="padding:1rem; display:flex;justify-content:space-between">
@@ -64,154 +60,25 @@
         
 
 
-        <form method="post"  enctype="multipart/form-data" style="width:inherit">
+        <form method="post"  enctype="multipart/form-data" style="width:inherit; padding:1rem">
             {% csrf_token %}
-            <div class="row">
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline">
-                    
-                        <input id="RegulationsInterestDeclarationID"
-                        {% if application.Step != 'Application_review' and  application.Step == 'Pending' %}
-                            required
-                        {% endif %}
-                        
-                        type="file" class="form-control form-control-lg">
-                        <label class="form-label" for="FirstName" id="lblRegulationsInterestDeclaration">Regulations Interest Declaration <b id="msgRegulationsInterestDeclaration"> </b></label>
-                        <input type="hidden" id="RegulationsInterestDeclaration" name="RegulationsInterestDeclaration"/>
-                
-                    </div>
-
-                </div>
-
-            
-            
-                <div class="col-md-6 mb-4">
-
-                <div class="form-outline" style="display:flex;flex-direction: column">
-                    
-                    <input 
-                    {% if application.Step != 'Application_review' and  application.Step == 'Pending' %}
-                        required
-                    {% endif %}
-                    type="file" id="SelectionCriteriaProtocolsId" placeholder="Last name"  class="form-control form-control-lg">
-                    <label class="form-label" for="Surname" id="lblSelectionCriteriaProtocols">Selection Criteria Protocols<b id="msgSelectionCriteriaProtocols"></b></label>
-                    <input type="hidden" id="SelectionCriteriaProtocols" name="SelectionCriteriaProtocols"/>
-
-                
-                </div>
-
-                </div>
-            </div>
-
-
-            <!--******************************************************************************-->
-            <div class="row">
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline">
-                    
-                        <input id="GeneralRegulationSelectionProcedureID" 
-                        
-                        {% if application.Step != 'Application_review' and  application.Step == 'Pending' %}
-                            required
-                        {% endif %} 
-                        
-                        type="file" class="form-control form-control-lg">
-                        <label class="form-label" for="GeneralRegulationSelectionProcedure" id="lblGeneralRegulationSelectionProcedure">General Regulation Selection Procedure<b id="msgGeneralRegulationSelectionProcedure"></b></label>
-                        <input type="hidden" id="GeneralRegulationSelectionProcedure" name="GeneralRegulationSelectionProcedure"/>
-                
-                    </div>
-
-                </div>
-
-            
-            
-                <div class="col-md-6 mb-4">
-
-                <div class="form-outline" style="display:flex;flex-direction: column">
-                    
-                    <input 
-                    
-                    {% if application.Step != 'Application_review' and  application.Step == 'Pending' %}
-                            required
-                    {% endif %}
-                    
-                    type="file" id="TeamOfficialDutiesId" placeholder="Last name"  class="form-control form-control-lg">
-                    <label class="form-label" for="Surname" id="lblTeamOfficialDuties">Team Official Duties<b id="msgTeamOfficialDuties"></b></label>
-                    <input type="hidden" id="TeamOfficialDuties" name="TeamOfficialDuties"/>
-
-                
-                </div>
-
-                </div>
-            </div>
-            <!--*************************************************************************-->
-            <div class="row">
-                <div class="col-md-6 mb-4">
-
-                    <div class="form-outline">
-                    
-                        <input id="HighPerformancePlanId" 
-                        
-                        {% if application.Step != 'Application_review' and  application.Step == 'Pending' %}
-                            required
-                        {% endif %}
-                        
-                        type="file" class="form-control form-control-lg">
-                        <label class="form-label" for="HighPerformancePlan" id="lblHighPerformancePlan">High Performance Plan<b id="msgHighPerformancePlan"></b></label>
-                        <input type="hidden" id="HighPerformancePlan" name="HighPerformancePlan"/>
-                
-                    </div>
-
-                </div>
-
-            
-            
-                <div class="col-md-6 mb-4">
-
-                <div class="form-outline" style="display:flex;flex-direction: column">
-                    
-                    <input 
-                    
-                    {% if application.Step != 'Application_review' and  application.Step == 'Pending' %}
-                        required
-                    {% endif %}  
-                    
-                    type="file" id="EventInvitationId" placeholder="Last name"  class="form-control form-control-lg">
-                    <label class="form-label" for="EventInvitation" id="lblEventInvitation">Event Invitation <b id="msgEventInvitation"></b></label>
-                    <input type="hidden" id="EventInvitation" name="EventInvitation"/>
-
-                
-                </div>
-
-                </div>
-            </div>
-
-            <div class="">
            
-
-                    <div class="form-outline">
+            <div class="form-outline" style="display:flex;flex-direction: column; padding:1rem">
                     
-                        <input id="DocumentationOfSelectionSubmittedId" 
-                        
-                        {% if application.Step != 'Application_review' and  application.Step == 'Pending' %}
-                            required
-                        {% endif %}
-                        
-                        type="file" class="form-control form-control-lg">
-                        <label class="form-label" for="DocumentationOfSelectionSubmitted" id="lblDocumentationOfSelectionSubmitted">Documentation Of Selection<b id="msgDocumentationOfSelectionSubmitted"></b></label>
-                        <input type="hidden" id="DocumentationOfSelectionSubmitted" name="DocumentationOfSelectionSubmitted"/>
+                <label class="form-label" for="EventInvitation" id="lblEventInvitation">Event Invitation <b id="msgEventInvitation"></b></label>
+
+                <input 
                 
-                    </div>
-
-          
+                {% if application.Step != 'Application_review' and  application.Step == 'Pending' %}
+                    required
+                {% endif %}  
+            
+                type="file" id="EventInvitationId" onchange="EventInvitationchange()" placeholder="Last name"  class="form-control form-control-lg">
+                <input type="hidden" id="EventInvitation" name="EventInvitation"/>
 
             
-            
-               
             </div>
-            <input class="btn btn-default btn-primary" style="width:100%" type="submit" value="Save details"/> 
+            <input class="btn btn-default btn-primary" style="width:100%" type="submit" value="Save document details"/> 
         </form>
 
 
@@ -224,187 +91,6 @@
 
             </div>
             <div class="row" >
-            
-                <div class="col-xl-3 col-md-6 mb-4">
-                    <div class="card border-left-primary shadow h-100 py-2">
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
-                                {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
-                                {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
-                            
-                                <iframe id="iframe" src="{{application.RegulationsInterestDeclaration}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
-
-                                </iframe>
-                            </div>
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2" style="display:flex; justify-content: space-between;">
-                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
-                                        Regulations Interest Declaration
-                                    </div>
-                                    
-                                </div>
-                            
-                            </div>
-                            <div class="row no-gutters align-items-center" style="padding:1rem">
-                                <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;" >
-                                    
-                                        {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
-                                        {% endcomment %}
-
-                                        
-                                </div>
-                            </div>
-                            
-                            
-                        </div>
-                        
-                    </div>
-                </div>
-        
-                <div class="col-xl-3 col-md-6 mb-4">
-                    <div class="card border-left-primary shadow h-100 py-2">
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
-                                {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
-                                {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
-                            
-                                <iframe id="iframe" src="{{application.SelectionCriteriaProtocols}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
-
-                                </iframe>
-                            </div>
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2" style="display:flex; justify-content: space-between;">
-                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
-                                        Selection Criteria Protocols
-                                    </div>
-                                    
-                                </div>
-                            
-                            </div>
-                            <div class="row no-gutters align-items-center" style="padding:1rem">
-                                <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;" >
-                                    
-                                        {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
-                                        {% endcomment %}
-
-                                        
-                                </div>
-                            </div>
-                            
-                            
-                        </div>
-                        
-                    </div>
-                </div>
-
-                <div class="col-xl-3 col-md-6 mb-4">
-                    <div class="card border-left-primary shadow h-100 py-2">
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
-                                {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
-                                {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
-                            
-                                <iframe id="iframe" src="{{application.GeneralRegulationSelectionProcedure}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
-
-                                </iframe>
-                            </div>
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2" style="display:flex; justify-content: space-between;">
-                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
-                                        General Regulation Selection Procedure
-                                    </div>
-                                    
-                                </div>
-                            
-                            </div>
-                            <div class="row no-gutters align-items-center" style="padding:1rem">
-                                <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;" >
-                                    
-                                        {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
-                                        {% endcomment %}
-
-                                        
-                                </div>
-                            </div>
-                            
-                            
-                        </div>
-                        
-                    </div>
-                </div>
-
-                <div class="col-xl-3 col-md-6 mb-4">
-                    <div class="card border-left-primary shadow h-100 py-2">
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
-                                {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
-                                {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
-                            
-                                <iframe id="iframe" src="{{application.TeamOfficialDuties}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
-
-                                </iframe>
-                            </div>
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2" style="display:flex; justify-content: space-between;">
-                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
-                                        Team Official Duties
-                                    </div>
-                                    
-                                </div>
-                            
-                            </div>
-                            <div class="row no-gutters align-items-center" style="padding:1rem">
-                                <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;" >
-                                    
-                                        {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
-                                        {% endcomment %}
-
-                                        
-                                </div>
-                            </div>
-                            
-                            
-                        </div>
-                        
-                    </div>
-                </div>
-
-                <div class="col-xl-3 col-md-6 mb-4">
-                    <div class="card border-left-primary shadow h-100 py-2">
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
-                                {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
-                                {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
-                            
-                                <iframe id="iframe" src="{{application.HighPerformancePlan}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
-
-                                </iframe>
-                            </div>
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2" style="display:flex; justify-content: space-between;">
-                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
-                                        High Performance Plan
-                                    </div>
-                                    
-                                </div>
-                            
-                            </div>
-                            <div class="row no-gutters align-items-center" style="padding:1rem">
-                                <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;" >
-                                    
-                                        {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
-                                        {% endcomment %}
-
-                                        
-                                </div>
-                            </div>
-                            
-                            
-                        </div>
-                        
-                    </div>
-                </div>
-
                 <div class="col-xl-3 col-md-6 mb-4">
                     <div class="card border-left-primary shadow h-100 py-2">
                         <div class="card-body">
@@ -427,11 +113,7 @@
                             </div>
                             <div class="row no-gutters align-items-center" style="padding:1rem">
                                 <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;" >
-                                    
-                                        {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
-                                        {% endcomment %}
-
-                                        
+                                    <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="{{application.EventInvitation}}"> <i class="fas fa-eye view-icon"></i></a>     
                                 </div>
                             </div>
                             
@@ -460,235 +142,6 @@
             </div>
 
             <div class="row">
-            
-                <div class="col-xl-3 col-md-6 mb-4">
-                    <div class="card border-left-primary shadow h-100 py-2">
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
-                                {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
-                                {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
-                            
-                                <iframe id="iframe" src="{{application.RegulationsInterestDeclaration}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
-
-                                </iframe>
-                            </div>
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2" style="display:flex; justify-content: space-between;">
-                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
-                                        Regulations Interest Declaration
-                                    </div>
-
-                                    <div>
-
-                                        <a href="{{application.RegulationsInterestDeclaration}}">
-                                           <h4>
-                                                <b>
-                                                    view
-                                                </b>
-                                            </h4>
-                                        </a>
-                                    </div>
-                                    
-                                </div>
-                            
-                            </div>
-                            <div class="row no-gutters align-items-center" style="padding:1rem">
-                                <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;" >
-                                    
-                                        {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
-                                        {% endcomment %}
-
-                                        
-                                </div>
-                            </div>
-                            
-                            
-                        </div>
-                        
-                    </div>
-                </div>
-        
-                <div class="col-xl-3 col-md-6 mb-4">
-                    <div class="card border-left-primary shadow h-100 py-2">
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
-                                {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
-                                {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
-                            
-                                <iframe id="iframe" src="{{application.SelectionCriteriaProtocols}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
-
-                                </iframe>
-                            </div>
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2" style="display:flex; justify-content: space-between;">
-                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
-                                        Selection Criteria Protocols
-                                    </div>
-                                    <div>
-
-                                        <a href="{{application.SelectionCriteriaProtocols}}">
-                                           <h4>
-                                                <b>
-                                                    view
-                                                </b>
-                                            </h4>
-                                        </a>
-                                    </div>
-                                </div>
-                            
-                            </div>
-                            <div class="row no-gutters align-items-center" style="padding:1rem">
-                                <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;" >
-                                    
-                                        {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
-                                        {% endcomment %}
-
-                                        
-                                </div>
-                            </div>
-                            
-                            
-                        </div>
-                        
-                    </div>
-                </div>
-
-                <div class="col-xl-3 col-md-6 mb-4">
-                    <div class="card border-left-primary shadow h-100 py-2">
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
-                                {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
-                                {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
-                            
-                                <iframe id="iframe" src="{{application.GeneralRegulationSelectionProcedure}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
-
-                                </iframe>
-                            </div>
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2" style="display:flex; justify-content: space-between;">
-                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
-                                        General Regulation Selection Procedure
-                                    </div>
-                                    <div>
-
-                                        <a href="{{application.GeneralRegulationSelectionProcedure}}">
-                                           <h4>
-                                                <b>
-                                                    view
-                                                </b>
-                                            </h4>
-                                        </a>
-                                    </div>
-                                </div>
-                            
-                            </div>
-                            <div class="row no-gutters align-items-center" style="padding:1rem">
-                                <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;" >
-                                    
-                                        {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
-                                        {% endcomment %}
-
-                                        
-                                </div>
-                            </div>
-                            
-                            
-                        </div>
-                        
-                    </div>
-                </div>
-
-                <div class="col-xl-3 col-md-6 mb-4">
-                    <div class="card border-left-primary shadow h-100 py-2">
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
-                                {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
-                                {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
-                            
-                                <iframe id="iframe" src="{{application.TeamOfficialDuties}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
-
-                                </iframe>
-                            </div>
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2" style="display:flex; justify-content: space-between;">
-                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
-                                        Team Official Duties
-                                    </div>
-                                    <div>
-
-                                        <a href="{{application.TeamOfficialDuties}}">
-                                           <h4>
-                                                <b>
-                                                    view
-                                                </b>
-                                            </h4>
-                                        </a>
-                                    </div>
-                                    
-                                </div>
-                            
-                            </div>
-                            <div class="row no-gutters align-items-center" style="padding:1rem">
-                                <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;" >
-                                    
-                                        {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
-                                        {% endcomment %}
-
-                                        
-                                </div>
-                            </div>
-                            
-                            
-                        </div>
-                        
-                    </div>
-                </div>
-
-                <div class="col-xl-3 col-md-6 mb-4">
-                    <div class="card border-left-primary shadow h-100 py-2">
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center" style="display:flex;justify-content:center">
-                                {% comment %}  src="http://127.0.0.1:8000/media/TheFiles/files/Screenshot_2023-03-06_215627.png"{% endcomment %}
-                                {% comment %} <img src="{% static 'manageProfile/images/DefaultProfile.jpg'%}"/> {% endcomment %}
-                            
-                                <iframe id="iframe" src="{{application.HighPerformancePlan}}" style="width:inherit; width:100%;border:solid;max-height:320px"  >
-
-                                </iframe>
-                            </div>
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2" style="display:flex; justify-content: space-between;">
-                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
-                                        High Performance Plan
-                                    </div>
-                                    <div>
-
-                                        <a href="{{application.HighPerformancePlan}}">
-                                           <h4>
-                                                <b>
-                                                    view
-                                                </b>
-                                            </h4>
-                                        </a>
-                                    </div>
-                                    
-                                </div>
-                            
-                            </div>
-                            <div class="row no-gutters align-items-center" style="padding:1rem">
-                                <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;" >
-                                    
-                                        {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
-                                        {% endcomment %}
-
-                                        
-                                </div>
-                            </div>
-                            
-                            
-                        </div>
-                        
-                    </div>
-                </div>
 
                 <div class="col-xl-3 col-md-6 mb-4">
                     <div class="card border-left-primary shadow h-100 py-2">
@@ -723,8 +176,8 @@
                             <div class="row no-gutters align-items-center" style="padding:1rem">
                                 <div class="col-auto"  styl="display:flex; justify-content:space-between;align-content:center;color: #FF69B4;" >
                                     
-                                        {% comment %} <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="#"> <i class="fas fa-eye view-icon"></i></a>
-                                        {% endcomment %}
+                                    <a title="See item details" style="color: #FF69B4;padding:0.5rem" href="{{application.EventInvitation}}"> <i class="fas fa-eye view-icon"></i></a>
+                             
 
                                         
                                 </div>
@@ -750,138 +203,17 @@
     
 
     <script>
-        RegulationsInterestDeclaration = document.getElementById('RegulationsInterestDeclarationID');
-        SelectionCriteriaProtocols = document.getElementById("SelectionCriteriaProtocolsId")
 
-        GeneralRegulationSelectionProcedure = document.getElementById("GeneralRegulationSelectionProcedureID")
-        AcceptanceOfTeamAppointment = document.getElementById("AcceptanceOfTeamAppointmentId")
-        DocumentationOfSelectionSubmitted = document.getElementById("DocumentationOfSelectionSubmittedId")
-        TeamOfficialDuties = document.getElementById("TeamOfficialDutiesId")
 
-        HighPerformancePlan = document.getElementById("HighPerformancePlanId")
+      
         EventInvitation = document.getElementById("EventInvitationId")
         //federation = "Net ball fed"
        
         federation = "{{application.FederationPersonel.FederationName}}"
-        DocumentationOfSelectionSubmitted.addEventListener("change",function() {
-            // document.getElementById('OfficialLetterhead_selected').innerHTML= '<h6 class="text-info"><b>uploading file.. please wait.</b></h6>';
-            whichFileType = 'DocumentationOfSelectionSubmitted'
-            file = DocumentationOfSelectionSubmitted.files[0]
-            msgId = document.getElementById('msg'+whichFileType)
-            if (msgId){
-                 msgId.innerHTML=null
-             }
-            if (validatefile(file, whichFileType) ==false){
-                DocumentationOfSelectionSubmitted.value = null
-                 return;
-             }
-             else{
- 
-                 uploadFile(file,federation,whichFileType)
-             }
-             return null;
-        });
 
- 
 
-        RegulationsInterestDeclaration.addEventListener("change",function() {
-           // document.getElementById('OfficialLetterhead_selected').innerHTML= '<h6 class="text-info"><b>uploading file.. please wait.</b></h6>';
-           whichFileType = 'RegulationsInterestDeclaration'
-           file = RegulationsInterestDeclaration.files[0]
-           msgId = document.getElementById('msg'+whichFileType)
-           if (msgId){
-                msgId.innerHTML=null
-            }
-           if (validatefile(file, whichFileType) ==false){
-                RegulationsInterestDeclaration.value = null
-                console.log(RegulationsInterestDeclaration.files )
-                return;
-            }
-            else{
 
-                uploadFile(file,federation,whichFileType)
-            }
-            return null;
-        }); 
-
-        SelectionCriteriaProtocols.addEventListener("change",function() {
-            // document.getElementById('OfficialLetterhead_selected').innerHTML= '<h6 class="text-info"><b>uploading file.. please wait.</b></h6>';
-            whichFileType = 'SelectionCriteriaProtocols'
-            file = SelectionCriteriaProtocols.files[0]
-            msgId = document.getElementById('msg'+whichFileType)
-            if (msgId){
-                msgId.innerHTML=null
-            }
-            if (validatefile(file, whichFileType) ==false){
-                SelectionCriteriaProtocols.value = null
-                return;
-            }
-            else{
-               
-                uploadFile(file,federation,whichFileType)
-            }
-             return null;
-        });
-
-        GeneralRegulationSelectionProcedure.addEventListener("change",function() {
-            // document.getElementById('OfficialLetterhead_selected').innerHTML= '<h6 class="text-info"><b>uploading file.. please wait.</b></h6>';
-            whichFileType = 'GeneralRegulationSelectionProcedure'
-            file = GeneralRegulationSelectionProcedure.files[0]
-            msgId = document.getElementById('msg'+whichFileType)
-            if (msgId){
-                msgId.innerHTML=null
-            }
-            if (validatefile(file, whichFileType) ==false){
-                GeneralRegulationSelectionProcedure.value = null
-                return;
-            }
-            else{
-                
-                uploadFile(file,federation,whichFileType)
-            }
-            return null;
-        });
-
-        TeamOfficialDuties.addEventListener("change",function() {
-            // document.getElementById('OfficialLetterhead_selected').innerHTML= '<h6 class="text-info"><b>uploading file.. please wait.</b></h6>';
-            whichFileType = 'TeamOfficialDuties'
-            file = TeamOfficialDuties.files[0]
-            msgId = document.getElementById('msg'+whichFileType)
-            if (msgId){
-                msgId.innerHTML=''
-            }
-            
-            if (validatefile(file, whichFileType) ==false){
-                TeamOfficialDuties.value =null;
-                return;
-            }
-            else{
-                
-                uploadFile(file,federation,whichFileType)
-            }
-             return null;
-        });
-
-        HighPerformancePlan.addEventListener("change",function() {
-            // document.getElementById('OfficialLetterhead_selected').innerHTML= '<h6 class="text-info"><b>uploading file.. please wait.</b></h6>';
-            whichFileType = 'HighPerformancePlan'
-            file = HighPerformancePlan.files[0]
-            msgId = document.getElementById('msg'+whichFileType)
-            if (msgId){
-                msgId.innerHTML=null
-            }
-            if (validatefile(file, whichFileType) ==false){
-                HighPerformancePlan.value = null;
-                return;
-            }
-            else{
-                
-                uploadFile(file,federation,whichFileType)
-            }
-            return null;
-        });
-
-        EventInvitation.addEventListener("change",function() {
+        function EventInvitationchange() {
             // document.getElementById('OfficialLetterhead_selected').innerHTML= '<h6 class="text-info"><b>uploading file.. please wait.</b></h6>';
             whichFileType = 'EventInvitation'
             file = EventInvitation.files[0]
@@ -898,7 +230,7 @@
                 uploadFile(file,federation,whichFileType)
             }
             return null;
-        });
+        }
     
 
 

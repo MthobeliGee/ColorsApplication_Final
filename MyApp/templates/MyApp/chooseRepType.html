@@ -69,7 +69,7 @@
                     </div>
                 </div>
                 <!--official***********************************************-->
-                <div onclick="go_Official1()" class="col-xl-3 col-md-6 mb-4 rep_type">
+                {% comment %} <div onclick="go_Official1()" class="col-xl-3 col-md-6 mb-4 rep_type">
                     <div class="card border-left-primary shadow h-100 py-2">
                         
                         <div class="card-body">
@@ -92,33 +92,10 @@
 
                         </div>
                     </div>
-                </div>
+                </div> {% endcomment %}
 
                 <!-- committee member********************************************-->
-                <div onclick="go_Commitee1()" id="rep_type" class="col-xl-3 col-md-6 mb-4 rep_type">
-                    <div class="card border-left-primary shadow h-100 py-2">
-                        
-                        <div class="card-body">
-                           
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2" style="display:flex; justify-content: space-between;">
-                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1" >
-                                       <img src="{% static "MyApp/images/people-2625804_1280.jpg" %}" style="width:100%"/>
-                                    </div>
-                                </div>
-                               
-                            </div>
-                           
-                            
-                    
-                        </div>
-                        <div class="card-footer">
-                            <h2>Commitee</h2>
-                            <a id="go_Commitee" hidden href="{% url 'Add_Committee_Member' applicationId=application.ApplicationId %}"></a>
-
-                        </div>
-                    </div>
-                </div>
+               
             </div>
 
         </div>

@@ -14,6 +14,8 @@ from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 import requests
+import os
+from django.conf import settings
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -50,66 +52,21 @@ def new_personnel(request):
 
 
 def getFederation(request):
-    
-    # try:
-   
-    #    # url = 'https://yonelahopewell1.pythonanywhere.com/GovApisComplayingFederations'
-    #     url = 'https://kznsannualreport.pythonanywhere.com/GovApisComplayingFederations'
-    #     r = requests.get(url)
-    
-     
-    #     data = r.json()
-        
-    #     print()
-    #     federations = data["federations"]
-    #     #print("The request data fed list: ", data["federations"][0]["federationName"])
-    # except :
-    #     pass
+    #https://kznsannualreport.pythonanywhere.com/complientFederaions
+    try:
+        link = settings.COMPLAYING_FEDERATIONS_LINK
+        print("link: .. ", link)
+        url =  'https://kznsannualreport.pythonanywhere.com/complientFederaions'
+        r = requests.get(url)
+        data = r.json()
+
+        federations = data
+        #print("The request data fed list: ", data["federations"][0]["federationName"])
+    except :
+        federations = None
+        pass
     if request.method == 'GET':
-        federations =[
-            {
-                "federationName":"KZN AQUATICS",
-                "userName":"Yonela",
-                "userSurname":"Sitshaka",
-                "userEmail":"livesoundsmusic@gmail.com"
 
-            },
-            {
-                "federationName":"SAFA",
-                "userName":"Hopewell",
-                "userSurname":"Sitshaka",
-                "userEmail":"yonela@kznsc.com"
-
-            },
-            {
-                "federationName":"SAFA2",
-                "userName":"Hopewell",
-                "userSurname":"Sitshaka",
-                "userEmail":"yonela@kznsc.com"
-
-            },
-            {
-                "federationName":"SAFA3",
-                "userName":"Hopewell",
-                "userSurname":"Sitshaka",
-                "userEmail":"yonela@kznsc.com"
-
-            },
-            {
-                "federationName":"SAFA4",
-                "userName":"Hopewell",
-                "userSurname":"Sitshaka",
-                "userEmail":"yonela@kznsc.com"
-
-            },
-            {
-                "federationName":"SAFA5",
-                "userName":"Hopewell",
-                "userSurname":"Sitshaka",
-                "userEmail":"yonela@kznsc.com"
-
-            }
-        ]
         for fed in federations:
             try:
                 ff = get_object_or_404(Federation, FederationName =fed.federationName )

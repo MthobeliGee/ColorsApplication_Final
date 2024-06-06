@@ -1,0 +1,15 @@
+{% autoescape off %}
+Dear {{sportsPerson.user.first_name}} {{sportsPerson.user.last_name}},
+
+I hope this email finds you well.
+
+We regret to inform you that your colors application for the {{application.EventName}} event, scheduled to take place on {{application.StartDate}}, has been declined due to the following reason:
+
+{{applicantApplication.declineReason}}
+
+For further details, please log in to the colors application using the link below:
+{{protocol}}://{{ domain }}{% url 'login' %}
+
+Best Regards,
+KZNSC Colors
+{% endautoescape %}

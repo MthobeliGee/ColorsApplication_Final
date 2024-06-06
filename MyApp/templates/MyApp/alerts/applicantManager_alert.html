@@ -1,16 +1,15 @@
 {% autoescape off %}
 
-    Hello {{colors_user.first_name}} {{colors_user.last_name}}, I hope this email finds you well. This email is to inform you that there is a new application for colors on the event "{{application.EventName}}"
-    The application is for {{type}} represantation and basic information about the applicant is as follow:  
+    Hello {{colors_user.first_name}} {{colors_user.last_name}}, I hope this email finds you well. This email is to inform you that there is a new application for colors on your event "{{application.EventName}}"
+    The application is for {{applicantApplication.RepresatativeType}} represantation and basic information about the applicant is as follow:  
     that your federation will be prepresnted by the user of which details are listed below.
-    First name: {{applicant.first_name}}
-    Last name: {{applicant.last_name}}
-    Email: {{applicant.email}}
-    Phone: {{applicant.Phone}}
-    
+    First name: {{applicant.FirstName}}
+    Last name: {{applicant.Surname}}
+    Email: {{applicant.Email}}
+    Phone: {{applicant.PhoneNumber}}
     This application is pending your approval please login to the colors application at {{protocol}}//{{domain}} to approve the application.
     ______________________________________________________________
-
+    
     Best Regards 
     The KZNSC Colors
 {% endautoescape %}

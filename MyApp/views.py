@@ -16,6 +16,7 @@ from .functions import *
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.http import JsonResponse
+from ProcessApplication.views import alert_applicant_onTeam
 
 
 
@@ -84,21 +85,22 @@ def CreateApplication(request):
         
         try:
             application = get_object_or_404(Application, user = user, ApplicationStatus = "Complete")
-            if application:
-                messages.warning(request, "You have one application that is not yet submitted, please review details below")
-                return redirect("Application_review", applicationId = application.ApplicationId)
-            
+           
         except:
             try:
                 application = get_object_or_404(Application, user = user, ApplicationStatus = "Oncreate")
-                if application:
-                    messages.warning(request, "You have one application that is not yet submitted, please scroll to move to complete the next step.")
-                    return redirect("home")
+              
                 
             except:
+                application = None
+                
+            
                 pass
             
-   
+        if application:
+            messages.warning(request, "You have one application that is not yet submitted, please review details below")
+            return redirect("Application_review", applicationId = application.ApplicationId)
+        
         
         return render(request, 'MyApp/CreateApp.html', {"federationPersonel":federationPersonel, "federation":federation})
     
@@ -112,21 +114,24 @@ def CreateApplication(request):
                 EndDate = request.POST['EndDate'],
                 HostCity = request.POST['HostCity'],
                 HostProvince = request.POST['HostProvince'],
-                NumberOfTeam = request.POST['NumberOfTeam'],
-                MethodOfSelection = request.POST['MethodOfSelection'],
+                NumberOfTeam =0 ,
+                # MethodOfSelection = request.POST['MethodOfSelection'],
                 SelectionApprovedDate = request.POST['SelectionApprovedDate'],
-                TravelDateTime = request.POST["TravelDate"]+" "+ request.POST["TravelTime"],
-                ModeOfTravel = request.POST['ModeOfTravel'],
+                TravelDateTime = request.POST["TravelDateTime"],
+                
         
        )
         application = get_object_or_404(Application, user = user, ApplicationStatus = "Oncreate")
         print("application.StartDate: ", type(application.StartDate))
        
-        messages.success(request, 'The information has been saved successfully, proceed to upload documents.') 
-                
-                
-                
-        return redirect("Upload_Documents", applicationId= application.ApplicationId)
+        messages.success(request, "The information has been saved successfully. You may now add applicants or skip.")        
+        return redirect("AddRepp", applicationId= application.ApplicationId)
+ 
+@login_required
+def ChoosApplicationType(request):
+    
+    return render(request, 'MyApp/ChoosApplicationType.html')    
+ 
 @login_required
 def addTeamOfficial(request, applicationId):
     application = get_object_or_404(Application, pk = applicationId)
@@ -321,31 +326,22 @@ def UpdateDetails(request, ApplicationId):
             application.HostProvince =request.POST["HostProvince"]
             numUpdate += 1
             
-        if request.POST["RepresatativeType"] != application.RepresatativeType:
+        if request.POST["HostCity"] != application.HostCity:
             
-            application.RepresatativeType =request.POST["RepresatativeType"]
+            application.HostCity =request.POST["HostCity"]
             numUpdate += 1
             
-        if request.POST["NumberOfTeam"] != application.NumberOfTeam:
-            
-            application.NumberOfTeam =request.POST["NumberOfTeam"]
+        
+        if request.POST["SelectionApprovedDate"] != application.SelectionApprovedDate:
+        
+            application.SelectionApprovedDate =request.POST["SelectionApprovedDate"]
             numUpdate += 1
-            
-        if request.POST["MethodOfSelection"] != application.MethodOfSelection:
-            
-            application.MethodOfSelection =request.POST["MethodOfSelection"]
-            numUpdate += 1
-            
         if request.POST["TravelDateTime"] != application.TravelDateTime:
             
             application.TravelDateTime =request.POST["TravelDateTime"]
             numUpdate += 1
             
-        if request.POST["ModeOfTravel"] != application.ModeOfTravel:
-            
-            application.ModeOfTravel =request.POST["ModeOfTravel"]
-            numUpdate += 1
-            
+       
             
         if numUpdate > 0 :
             application.save()
@@ -358,224 +354,219 @@ def UpdateDetails(request, ApplicationId):
 @login_required           
 def AddRepp(request, applicationId):
     application = get_object_or_404(Application, pk = applicationId)
-    represantatives = Represantative.objects.filter(application = application)
+    user = request.user
+   
+  
+    try:
+        sportsPerson = get_object_or_404(SportsPerson, user = user)    
+        try:
+            applicantApplication = get_object_or_404(ApplicantApplication, Application = application, SportsPerson = sportsPerson)
+            if applicantApplication:
+                messages.warning(request, "You have already applied for this, see details below")
+                return redirect("ApplicantInfo", applicantApplicationId = applicantApplication.ApplicantApplicationId)
+        except:
+            pass
+    except:
+        sportsPerson = None
         
     if request.method == 'GET':
-        return render(request, 'MyApp/AddRepp.html', {"application":application, "represantatives":represantatives})
+        return render(request, 'MyApp/AddRepp.html', {"application":application, "sportsPerson":sportsPerson})
         
     if request.method == 'POST':
         isIdSubmit = False
         isAceptencSubmited = False
         is_parent = False 
-      
-        Repps = Represantative.objects.filter(application = application)
-        
-        if Thefunctions.getObjectCount(Repps) == 0:
-            application.Step = 'AddRepp'
+        if application.ApplicationStatus == "Oncreate":
+            application.ApplicationStatus="Complete"
             application.save()
-        if request.POST["AcceptanceofTeamAppointment"] == 'yes':
-            isAceptencSubmited = True
-            
-        if request.POST["IDCopySubmited"] == 'yes':
-            isIdSubmit = True
-            
+        # Repps = ApplicantApplication.objects.filter(Application = application)
+        
+        # if Thefunctions.getObjectCount(Repps) == 0:
+        #     application.Step = 'AddRepp'
+        #     application.save()  
         if request.POST["is_parent"] == 'yes':
             is_parent = True
-            
-        Rep = Represantative.objects.create(     
-          
-           application = application,
-           Id_number = request.POST["Id_number"],
-            FirstName = request.POST['FirstName'],
-            Surname = request.POST['Surname'],
-            Gender = request.POST['Gender'],
-            PhoneNumber = request.POST['PhoneNumber'],
-            Email = request.POST['Email'],
-            City = request.POST['City'],
-            Province = request.POST["Province"],
-            RepresatativeType = request.POST["RepresatativeType"],
-            IDCopySubmited = isIdSubmit,
-            AcceptanceofTeamAppointment = isAceptencSubmited,
-            is_parent = is_parent,
-            
-        )
        
+        if sportsPerson == None:    
+            Rep = SportsPerson.objects.create(     
+            Id_number = request.POST["Id_number"],
+                FirstName = request.POST['FirstName'],
+                Surname = request.POST['Surname'],
+                Gender = request.POST['Gender'],
+                PhoneNumber = request.POST['PhoneNumber'],
+                Email = request.POST['Email'],
+                City = request.POST['City'],
+                Province = request.POST["Province"],
+            
+                IDCopySubmited = isIdSubmit,
+                AcceptanceofTeamAppointment = isAceptencSubmited,
+                is_parent = is_parent,     
+            )
+            applicantApplication = ApplicantApplication.objects.create(
+                Application = application,
+                SportsPerson = Rep,
+                    RepresatativeType = request.POST["RepresatativeType"],
+                    RepresatativeLevel = request.POST["RepresatativeLevel"],
+            )
+            if request.user == application.user:
+                applicantApplication.status = "OnTeam"
+                applicantApplication.save()
+                alert_applicant_onTeam(request,applicantApplication.ApplicantApplicationId )
+                messages.success(request, "Applicant information added successfully.")
+                return redirect("Applcants",applicationId = application.ApplicationId )
+            else:
+                Rep.user = request.user
+                Rep.save()
+                messages.success(request, "Your information has been saved successfully, please accept team and conditions provided by ", application.Federation.FederationName)
+                #alert federation secretory
+                
+                return redirect("applicatntTerms",applicantId = Rep.SportsPersonId,applicant_type ="Athlete",applicationId=application.ApplicationId)
+        else:
+            applicantApplication = ApplicantApplication.objects.create(
+                Application = application,
+                RepresatativeType = request.POST["RepresatativeType"],
+                RepresatativeLevel = request.POST["RepresatativeLevel"],
+               
+            ) 
+            return  update_Representative(request,applicantApplication.ApplicantApplicationId)
+             
         
-    
-        messages.success(request, "Your information has been saved successfully, please accept team and conditions provided by ", application.Federation.FederationName)
         
-        return redirect("applicatntTerms",applicantId = Rep.RepresantativeId,applicant_type ="Athlete",applicationId=application.ApplicationId)
-
+        
             
 
 @login_required
 def applicatntTerms(request, applicantId, applicant_type, applicationId):
     application = get_object_or_404(Application, pk = applicationId)
-    athlete = None
+    sportsPerson = get_object_or_404(SportsPerson, pk = applicantId)
+    applicantApplication = get_object_or_404(ApplicantApplication, Application = application, SportsPerson = sportsPerson)    
+    
     official = None
     comittee = None
-    if applicant_type == 'Athlete':
-        try:
-            athlete = get_object_or_404(Represantative, pk = applicantId)
-        except:
-            messages.error(request, "The record you tried to access was not found")
-            return redirect("home")
-    elif applicant_type == 'Official':
-        try:
-            official = get_object_or_404(TeamOfficial, pk = applicantId )
-            
-        except:
-            messages.error(request, "The record you tried to access was not found")
-            return redirect("home")
-    elif applicant_type == 'Comittee':
-        try:
-            comittee = get_object_or_404(CommitteeMember, pk = applicantId)
-        except:
-            messages.error(request, "The record you tried to access was not found")
-            return redirect("home")
-        
+    
     applicantTeams = ApplicantTeams.objects.filter( Federation =application.Federation )
     if request.method == 'GET':
         obj = {
             "application":application,
-            "athlete":athlete,
-            "official":official,
-            "comittee":comittee,
+            "athlete":sportsPerson,
             "applicantTeams":applicantTeams
-            
-            
         }
             
         return render(request, 'MyApp/applicatntTerms.html',obj)      
     elif request.method == 'POST':
-        is_saved = False
-        if applicant_type == 'Athlete':
-            try:
-                athlete.is_terms_accepted = True
-                athlete.save()
-                is_saved = True
-            except:
-               pass
-        elif applicant_type == 'Official':
-            try:
-                official.is_terms_accepted = True
-                athlete.save()
-                is_saved = True
-            except:
-               pass
-        elif applicant_type == 'Comittee':
-            try:
-                comittee.is_terms_accepted = True
-                athlete.save()
-                is_saved = True
-            except:
-                messages.error(request, "The record you tried to access was not found")
-                return redirect("home")          
-        if is_saved:
-            
+        if request.POST["IsAccepted"] == 'Yes':
+            applicantApplication.is_terms_accepted  = True
             messages.success(request, "Terms and conditions accepted, please review application and submit.")
-        return redirect("ApplicantInfo",  applicantId, applicant_type)
+        else:
+            applicantApplication.is_deleted = True
+            messages.error(request, "The application for colors has been automatically canceled as the applicant does not agree with the teams and conditions.")
+            
+        applicantApplication.save()    
+        return redirect("ApplicantInfo",  applicantApplicationId = applicantApplication.ApplicantApplicationId)
    
 @login_required
-def ApplicantInfo(request, applicantId, applicant_type):
-    application = None
-    athlete = None
-    official = None
-    comittee = None
-    instance = None
-    if applicant_type == 'Athlete':
-        try:
-            athlete = get_object_or_404(Represantative, pk = applicantId)
-            application = athlete.application
-            instance = athlete
-        except:
-            messages.error(request, "The record you tried to access was not found")
-            return redirect("home")
-    elif applicant_type == 'Official':
-        try:
-            official = get_object_or_404(TeamOfficial, pk = applicantId )
-            application = official.application
-            instance = official
-        except:
-            messages.error(request, "The record you tried to access was not found")
-            return redirect("home")
-    elif applicant_type == 'Comittee':
-        try:
-            comittee = get_object_or_404(CommitteeMember, pk = applicantId)
-            application = comittee.application
-            instance = comittee
-            
-        except:
-            messages.error(request, "The record you tried to access was not found")
-            return redirect("home")
+def ApplicantInfo(request, applicantApplicationId):
+    applicantApplication = get_object_or_404(ApplicantApplication, pk = applicantApplicationId )
+    
+    application = applicantApplication.Application
+    sportsPerson = applicantApplication.SportsPerson
+
+    
         
     if request.method == 'GET':
         obj = {
             "application":application,
-            "athlete":athlete,
-            "official":official,
-            "comittee":comittee,  
+            "sportsPerson":sportsPerson,
+            "applicantApplication":applicantApplication
+         
         }
         return render(request, 'MyApp/RepDetails.html', obj)
     elif request.method == 'POST':
         
-        instance.status = "Pending"
-        instance.user = request.user
-        instance.save()
+        applicantApplication.status = "Pending"
+       
+        applicantApplication.save()
+        #application.save()
+   
         messages.success(request, "Application for colors has been submitted successfully and is pending approval by manager.")
         #Alert colors federation manageer
-        is_alert = alertFedColorsManager(request,applicant_type, instance)
-        
+        is_alert = alertFedColorsManager(request,applicantApplication.ApplicantApplicationId)
         if is_alert == False:
             msg = "Something went wrong while alerting the federation colors manager\n"
             msg += "Please contact the manager at: "+application.Federation.FederationPersonel.user.email+" | "+application.Federation.FederationPersonel.Phone
             messages.warning(request, msg)
         else:
-            msg = "The federation manager has been notified of the application."
+            msg = "The federation colors manager has been notified."
             messages.success(request, msg)
             
-        return redirect("ApplicantInfo", applicantId = applicantId, applicant_type = applicant_type)
+        return redirect("ApplicantInfo", applicantApplicationId = applicantApplication.ApplicantApplicationId)
             
         
         
         
 @login_required
-def cancel_applicant_app(request, applicantId, applicant_type ):
+def cancel_applicant_app(request, applicantApplicationId ):
    
-    if applicant_type == "Athlete":
-       instance = get_object_or_404(Represantative, pk = applicantId)
-    if applicant_type == "Official" :  
-       instance = get_object_or_404(TeamOfficial, pk = applicantId)
-    if applicant_type == "Comittee" :  
-       instance = get_object_or_404(CommitteeMember, pk = applicantId)
-       
-    
-
-    is_alert = False
-    if   instance.status  == "Pending":
-        is_alert = True
-    instance.status = "Canceled"
-    instance.save()
-    
-    messages.success(request, 'Your  application has been cancelled successfully')
+    applicantApplication = get_object_or_404(ApplicantApplication, pk = applicantApplicationId)
+    applicantApplication.status = "Cancelled"
+    applicantApplication.is_deleted = True
+    applicantApplication.save()
+    is_alert = cancel_alertFedColorsManager(request,applicantApplication.ApplicantApplicationId)
     if is_alert:
-        pass#alert colors fed admin
+        messages.info(request, 'The federation colors manager has been notified.')
+    messages.success(request, 'Your  application has been cancelled successfully')
     
-    return redirect("ApplicantInfo", applicantId =applicantId, applicant_type =applicant_type)
     
-        
-def alertFedColorsManager(request, appType, instance):
+    return redirect("ApplicantInfo", applicantApplicationId = applicantApplication.ApplicantApplicationId)
+    
+def cancel_alertFedColorsManager(request, applicantApplicationId):
     is_sent = False
-    application = instance.application
+    
+    applicantApplication = get_object_or_404(ApplicantApplication, pk = applicantApplicationId)
+    sportsPerson = applicantApplication.SportsPerson
+    application = applicantApplication.Application
+   
     to_email = application.user.email
     first_name = None 
     
-    colors_user =get_colors_user(application)
-    mail_subject = "Pending Colors application."
+    colors_user =application.user
+    mail_subject = "Applicant Cancel Colors Application."
+    message = render_to_string("MyApp/alerts/cancel_alertFedColorsManager_alert.html",{
+        "colors_user":colors_user,
+        'applicant':sportsPerson,
+        'application':application,
+        'applicantApplication':applicantApplication,
+        'domain': get_current_site(request).domain,
+        "protocol": 'https' if request.is_secure() else 'http'
+    })
+    print(to_email)
+    if to_email:
+        try:
+            send_mail(mail_subject,f"{message}"  ,'',[to_email], fail_silently=False)
+            is_sent = True
+        except:
+            pass
+    
+    return is_sent
+
+        
+def alertFedColorsManager(request, applicantApplicationId):
+    is_sent = False
+    
+    applicantApplication = get_object_or_404(ApplicantApplication, pk = applicantApplicationId)
+    sportsPerson = applicantApplication.SportsPerson
+    application = applicantApplication.Application
+   
+    to_email = application.user.email
+    first_name = None 
+    
+    colors_user =application.user
+    mail_subject = "Applicant Colors Application."
     message = render_to_string("MyApp/alerts/applicantManager_alert.html",{
         "colors_user":colors_user,
-        'applicant':get_applicant_user(appType,instance),
+        'applicant':sportsPerson,
         'application':application,
+        'applicantApplication':applicantApplication,
         'domain': get_current_site(request).domain,
         "protocol": 'https' if request.is_secure() else 'http'
     })
@@ -590,13 +581,7 @@ def alertFedColorsManager(request, appType, instance):
     return is_sent
 
 
-def get_colors_user(application):
-    
-    return {
-        "first_name":application.user.first_name,
-        "last_name":application.user.last_name,
-        
-    }
+
     
     
 
@@ -635,90 +620,104 @@ def get_applicant_user(type, instance):
     
       
 @login_required
-def update_Representative(request, represantativeId):
+def update_Representative(request, applicantApplicationId):
+    applicantApplication = get_object_or_404(ApplicantApplication, pk = applicantApplicationId)
+    sportsPerson = applicantApplication.SportsPerson
+    application = applicantApplication.Application
+    if sportsPerson  == None:
+        try:
+            sportsPerson = get_object_or_404(SportsPerson, pk = request.POST["SportsPersonId"])
+        except:
+            pass
     
-    represantative = get_object_or_404(Represantative, pk = represantativeId)
-    application = represantative.application
     
     if request.method == 'GET':
-        
-        return render(request, 'MyApp/update_Representative.html', {"represantative":represantative, "application":application})
+        payload = {
+            "applicantApplication": applicantApplication,
+            "sportsPerson": sportsPerson,
+            "application":application
+        }
+        return render(request, 'MyApp/update_Representative.html',payload)
     
     if request.method == 'POST':
-        
+       
         numUpdates = 0
         isIdSubmit = False
         isAceptencSubmited = False
         print(request.POST["Gender"])
-        if request.POST["AcceptanceofTeamAppointment"] != 'none':
-            if request.POST["AcceptanceofTeamAppointment"] == 'yes':
-                isAceptencSubmited = True
-        if request.POST["IDCopySubmited"] != 'none':
-            
-            if request.POST["IDCopySubmited"] == 'yes':
-                isIdSubmit = True
+     
                 
-        if request.POST["Id_number"] != represantative.Id_number:
-            represantative.Id_number = request.POST["Id_number"]
+        if request.POST["Id_number"] != sportsPerson.Id_number:
+            sportsPerson.Id_number = request.POST["Id_number"]
             numUpdates += 1    
-        if request.POST["FirstName"] != represantative.FirstName:
-            represantative.FirstName = request.POST["FirstName"]
+        if request.POST["FirstName"] != sportsPerson.FirstName:
+            sportsPerson.FirstName = request.POST["FirstName"]
             numUpdates += 1
             
-        if request.POST["Surname"] != represantative.Surname:
+        if request.POST["Surname"] != sportsPerson.Surname:
             
-            represantative.Surname = request.POST["Surname"]
+            sportsPerson.Surname = request.POST["Surname"]
             numUpdates += 1
             
         if request.POST["Gender"] != 'none':
-            if request.POST["Gender"] != represantative.Gender:
+            if request.POST["Gender"] != sportsPerson.Gender:
                 
-                represantative.Gender = request.POST["Gender"]
+                sportsPerson.Gender = request.POST["Gender"]
                 numUpdates += 1
                 
-        if request.POST["PhoneNumber"] != represantative.PhoneNumber:
-            represantative.PhoneNumber = request.POST["PhoneNumber"]
+        if request.POST["PhoneNumber"] != sportsPerson.PhoneNumber:
+            sportsPerson.PhoneNumber = request.POST["PhoneNumber"]
             numUpdates += 1
             
-        if request.POST["Email"] != represantative.Email:
-            represantative.Email = request.POST["Email"]
+        if request.POST["Email"] != sportsPerson.Email:
+            sportsPerson.Email = request.POST["Email"]
             numUpdates += 1
             
-        if request.POST["City"] != represantative.City:
-            represantative.City = request.POST["City"]
+        if request.POST["City"] != sportsPerson.City:
+            sportsPerson.City = request.POST["City"]
             numUpdates += 1
          
-        if request.POST["Province"] != represantative.Province:
-            represantative.Province = request.POST["Province"]
+        if request.POST["Province"] != sportsPerson.Province:
+            sportsPerson.Province = request.POST["Province"]
             numUpdates += 1
             
         if request.POST["RepresatativeType"] != 'none':
-            if request.POST["RepresatativeType"] != represantative.RepresatativeType:
-                represantative.RepresatativeType = request.POST["RepresatativeType"]
+            if request.POST["RepresatativeType"] != applicantApplication.RepresatativeType:
+                applicantApplication.RepresatativeType = request.POST["RepresatativeType"]
                 numUpdates += 1
                 
-        if represantative.IDCopySubmited != isIdSubmit:
-            represantative.IDCopySubmited = isIdSubmit
-            numUpdates +=1 
-            
-        if represantative.AcceptanceofTeamAppointment != isAceptencSubmited:
-            
-            represantative.AcceptanceofTeamAppointment = isAceptencSubmited
-            numUpdates +=1 
-            
-        if numUpdates > 0:
-            
-            represantative.save()
-            messages.success(request, "Changes saved successfully")
+        if request.POST["RepresatativeLevel"] != 'none':
+            if request.POST["RepresatativeLevel"] != applicantApplication.RepresatativeLevel:
+                applicantApplication.RepresatativeLevel = request.POST["RepresatativeLevel"]
+                numUpdates += 1
+                
+        if request.POST["is_parent"] == 'yes':
+            sportsPerson.is_parent = True
+            numUpdates += 1
         else:
-            messages.info(request, "There were no changes made on the record.")
-        return redirect("ApplicantInfo",applicantId=represantative.RepresantativeId, applicant_type = "Athlete")
+            sportsPerson.is_parent = False
+            numUpdates += 1
+            
+        sportsPerson.save()
+        applicantApplication.save()
+        if request.POST["SportsPersonId"] != 0: 
+            applicantApplication.SportsPerson = sportsPerson
+            applicantApplication.save()
+            messages.success(request, "Your information has been saved successfully, please accept team and conditions provided by ", application.Federation.FederationName)
+            return redirect("applicatntTerms",applicantId = sportsPerson.SportsPersonId,applicant_type ="Athlete",applicationId=application.ApplicationId)
+           
+        else:
+            if numUpdates > 0:
+                messages.success(request, "Changes saved successfully")
+            else:
+                messages.info(request, "There were no changes made on the record.")
+        return redirect("ApplicantInfo",applicantApplicationId=applicantApplication.ApplicantApplicationId )
             
 
 @login_required
 def remove_Representative(request, represantativeId):
     
-    represantative = get_object_or_404(Represantative, pk = represantativeId)
+    represantative = get_object_or_404(SportsPerson, pk = represantativeId)
     application = represantative.application
     if request.method =='GET':
         messages.warning(request, "Are you sure you want to remove the record?")
@@ -734,43 +733,90 @@ def remove_Representative(request, represantativeId):
 @login_required
 def RepDetails(request, RepresantativeId):
     
-    Rep =get_object_or_404(Represantative, pk= RepresantativeId)
+    Rep =get_object_or_404(SportsPerson, pk= RepresantativeId)
     print(Rep)
     
     return render (request, 'MyApp/RepDetails.html',{"Rep":Rep}) 
 @login_required
-def Add_Committee_Member(request):
-
+def Committee(request):
+    user = request.user
+    if user.is_staff == False:
+        messages.error(request, "You are not allowed to make this action")
+        return redirect("home")        
     #CommitteeMemberDetails(request, ):'
-    try:
-        member = get_object_or_404(CommitteeMember, is_history = False)
-        if member:
-            messages.info(request, "You already have an active committee profile, see details below")
-            return redirect("CommitteeMemberDetails", MemberId = member.CommitteeMemberId)
-    except:
-        pass
-        
+    committee = CommitteeMember.objects.filter(is_deleted = False,is_history = False, ) 
+    for member in committee:
+        if member.Gender == "Femal":
+            member.Gender = "Female"
+            member.save()
+    
     if request.method == 'GET':
-        
-        return render(request, 'MyApp/Add_Committee_Member.html')
+        domain = get_current_site(request).domain
+        isSuperOrChair = is_super_or_Chair(request)
+        payload = {
+            "CommitteeMembers":committee, 
+            "domain":domain,
+            "isSuperOrChair":isSuperOrChair,
+            
+        }
+        return render(request, 'MyApp/Add_Committee_Member.html', payload)
     
     if request.method == 'POST':
+        demoteCommittee(request,request.POST["position"])
+        password = None 
+        try:
+            user = get_object_or_404(User, email = request.POST["Email"].lower())
+            user.is_staff = True
+            user.save()
+        except:
+            comm = {
+                "FirstName":request.POST['FirstName'],
+                "Surname":request.POST['Surname'],
+                "Email":request.POST["Email"]
+            }
+            user, password = newCommiteeUser(comm)
+        try:
+            committeeMember = get_object_or_404(CommitteeMember, user = user) 
+        #NewPassword
+        except:
+            committeeMember = CommitteeMember.objects.create( 
+                user = user,  
+                Id_number = request.POST["id_number"],
+                FirstName = request.POST['FirstName'],
+                Surname = request.POST['Surname'],
+                Gender = request.POST['Gender'],
+                Email = request.POST["Email"].lower(),
+                PhoneNumber = request.POST["PhoneNumber"],
+                City = request.POST["City"],
+                Province = request.POST["Province"],
+                position = request.POST["position"],
+            )
         
-        
-        committeeMember = CommitteeMember.objects.create(
+       
+        if committeeMember.position =="Chairperson":
+            committeeMember.is_Chairperson = True
+            committeeMember.save()
+        try:
+            alertNewCommittee(request, user, password)
             
-            user = request.user,
-            Id_number = request.POST["id_number"],
-            FirstName = request.POST['FirstName'],
-            Surname = request.POST['Surname'],
-            Gender = request.POST['Gender'],
-            Email = request.POST["Email"],
-            PhoneNumber = request.POST["PhoneNumber"],
-            City = request.POST["City"],
-            Province = request.POST["Province"]
-        )
-        messages.success(request, "Your details have been saved successfully please reciew and submit application")
-        return redirect("CommitteeMemberDetails",MemberId=committeeMember.CommitteeMemberId)
+            messages.success(request, "Commitee memmber added successfully")
+        except:
+            messages.error(request, "Somthing went wrong while adding committee please try again.")
+        return redirect("Committee")
+  
+@login_required
+def DemotedCommittee(request):
+    user = request.user
+    if user.is_staff == False:
+        messages.error(request, "You are not allowed to make this action")
+        return redirect("home")        
+    #CommitteeMemberDetails(request, ):'
+    committee = CommitteeMember.objects.filter(is_history = True, ) 
+        
+    if request.method == 'GET':
+        domain = get_current_site(request).domain
+        return render(request, 'MyApp/Add_Committee_Member.html', {"CommitteeMembers":committee, "domain":domain, "is_history":True})
+    
     
 @login_required
 def CommitteeMemberDetails(request, MemberId):
@@ -892,7 +938,6 @@ def cancel_committee_alert(request,committeeMember):
        
      
 def new_committee_alert(request,committeeMember):
-    
     is_sent = False
     num_alert = 0
     mail_subject = "Pending Colors Committe Application."
@@ -928,40 +973,58 @@ def update_CommiteeMember(request, CommitteeMemberId):
         return render(request, 'MyApp/update_CommiteeMember.html', {"committeeMember":committeeMember})
     
     if request.method =='POST':
-        user = request.user
+  
         numUpdates = 0
         numUserChange = 0
+
+        if committeeMember.Id_number != request.POST["Id_number"]:
+            committeeMember.Id_number = request.POST["Id_number"]
+            numUpdates +=1
         
         if committeeMember.FirstName != request.POST["FirstName"]:
             committeeMember.FirstName = request.POST["FirstName"]
             numUpdates += 1
-            user.first_name = request.POST["FirstName"]
+            committeeMember.user.first_name = request.POST["FirstName"]
             numUserChange +=1
-            
             
         if committeeMember.Surname  != request.POST["Surname"]:
             
             committeeMember.Surname = request.POST["Surname"]
             numUpdates += 1
-            user.last_name = request.POST["Surname"]
+            committeeMember.user.last_name = request.POST["Surname"]
             numUserChange +=1
-        
+       
         if request.POST["Gender"] != 'none':
             if committeeMember.Gender != request.POST["Gender"]:
                 committeeMember.Gender = request.POST["Gender"]
                 numUpdates += 1
                 
-        if committeeMember.Email != request.POST["Email"]:
+        if committeeMember.Email != request.POST["Email"].lower():
             
-            committeeMember.Email = request.POST["Email"]
+            committeeMember.Email = request.POST["Email"].lower()
             numUpdates += 1
-            user.email = request.POST["Email"]
-            user.username = request.POST["Email"]
+            committeeMember.user.email = request.POST["Email"].lower()
+            committeeMember.user.username = request.POST["Email"].lower()
             numUserChange +=1
             
         if committeeMember.PhoneNumber != request.POST["PhoneNumber"]:
             
             committeeMember.PhoneNumber = request.POST["PhoneNumber"]
+            numUpdates += 1
+    
+        if committeeMember.position != request.POST["position"]:
+            demoteCommittee(request,request.POST["position"])
+            committeeMember.position = request.POST["position"]
+           
+            if committeeMember.is_history :
+                committeeMember.is_history = False
+            if committeeMember.is_deleted :
+                committeeMember.is_deleted = False
+                
+            if committeeMember.user.is_staff == False:
+                committeeMember.user.is_staff = True
+                committeeMember.user.save()
+            alertNewCommittee(request, committeeMember.user, None)
             numUpdates += 1
             
         if committeeMember.City != request.POST["City"]:
@@ -976,19 +1039,18 @@ def update_CommiteeMember(request, CommitteeMemberId):
             
         if numUpdates > 0:
             if numUserChange > 0:
-                user.save()
+                committeeMember.user.save()
             committeeMember.save()
             messages.success(request, "The changes were saved successfully.")
         else:
             messages.info(request, "No changes made on the record.")
             
         
-        return redirect("update_CommiteeMember", CommitteeMemberId=CommitteeMemberId)            
+        return redirect("Committee")            
 
 
     
 @login_required
-    
 def Upload_Documents(request, applicationId):
     
     application = get_object_or_404(Application, pk = applicationId)
@@ -996,71 +1058,21 @@ def Upload_Documents(request, applicationId):
         
         application.Step = 'Upload_Documents'
         application.save()
+        
     if request.method == 'GET':
         
         return render(request, 'MyApp/Upload_Documents.html',{"application":application}) 
     
     if request.method == 'POST':
         if application.Step !='Application_review' and  application.Step =='Pending':
-            application.RegulationsInterestDeclaration = request.POST["RegulationsInterestDeclaration"]
-            application.SelectionCriteriaProtocols = request.POST["SelectionCriteriaProtocols"]
-            
-            application.GeneralRegulationSelectionProcedure = request.POST["GeneralRegulationSelectionProcedure"]
-            application.TeamOfficialDuties = request.POST["TeamOfficialDuties"]
-            application.HighPerformancePlan = request.POST["HighPerformancePlan"]
             application.EventInvitation = request.POST["EventInvitation"]
-            application.DocumentationOfSelectionSubmitted = request.POST["DocumentationOfSelectionSubmitted"]
-            
             application.save()
             
         else:
             numUpdates = 0
             try:
-                if request.POST["RegulationsInterestDeclaration"] != '':
-                    application.RegulationsInterestDeclaration = request.POST["RegulationsInterestDeclaration"]
-                
-                    numUpdates += 1
-            except:
-                pass
-            
-            try:
-                if request.POST["SelectionCriteriaProtocols"] !='':
-                    application.SelectionCriteriaProtocols = request.POST["SelectionCriteriaProtocols"]
-                    numUpdates += 1
-            except:
-                pass
-            
-            try:
-                if request.POST["GeneralRegulationSelectionProcedure"] != '':
-                    application.GeneralRegulationSelectionProcedure = request.POST["GeneralRegulationSelectionProcedure"]
-                    numUpdates += 1
-            except:
-                pass
-            
-            try:
-                if request.POST["TeamOfficialDuties"] != '':
-                    application.TeamOfficialDuties = request.POST["TeamOfficialDuties"]
-                    numUpdates += 1
-            except:
-                pass
-            
-            try:
-                if request.POST["HighPerformancePlan"] != '':
-                    application.HighPerformancePlan = request.POST["HighPerformancePlan"]
-                    numUpdates += 1
-            except:
-                pass
-                
-            try:
                 if request.POST["EventInvitation"] != '':
                     application.EventInvitation = request.POST["EventInvitation"]
-                    numUpdates += 1
-            except:
-                pass
-            
-            try:
-                if request.POST["DocumentationOfSelectionSubmitted"] != '':
-                    application.DocumentationOfSelectionSubmitted = request.POST["DocumentationOfSelectionSubmitted"]
                     numUpdates += 1
             except:
                 pass
@@ -1086,21 +1098,16 @@ def Upload_Documents(request, applicationId):
 def Remove_CommitteeMember(request, memberId):
     
     committeeMember = get_object_or_404(CommitteeMember, pk = memberId)
-    application = committeeMember.application
-    
     if request.method == 'GET':
-        
-        messages.warning(request, "Are you sure you want to emove this record?")
-        return render(request, 'MyApp/Remove_CommitteeMember.html', {"committeeMember": committeeMember,"application":application})  
-    
+        messages.warning(request, "Are you sure you want to remove this member from committee?")
+        return render(request, 'MyApp/Remove_CommitteeMember.html', {"committeeMember": committeeMember})  
     
     if request.method == 'POST':
-        
-        committeeMember.delete()
+        demoteCommittee(request, committeeMember.position) 
         messages.success(request, "The member record was removed successfully")
-        
-        return redirect("Add_Committee_Member", applicationId=application.ApplicationId) 
-            
+        return redirect("Committee") 
+      
+      
 @login_required          
 def termsAndConditions(request, applicationId):
     
@@ -1140,14 +1147,9 @@ def Application_review(request, applicationId):
     except:
         messages.error(request, "The colors application you tried to access is not found")
         return redirect("home")
-    represantatives = Represantative.objects.filter(application = application)
-    CommitteeMembers = CommitteeMember.objects.filter(application = application)
-    teamOfficials = TeamOfficial.objects.filter(application= application)
-    numApplicants = ObjectsLength(represantatives)
-    numOfficials = ObjectsLength(teamOfficials)
-    numCommitee = ObjectsLength(CommitteeMembers)
+    represantatives = ApplicantApplication.objects.filter(Application = application,status = "OnTeam", is_deleted = False )
     user = application.user
-
+    print("is_DateValid: ", )
     fedPerson = get_object_or_404(FederationPersonel, user = user)
 
     
@@ -1165,16 +1167,13 @@ def Application_review(request, applicationId):
                 pass
         domain = get_current_site(request)
         informationOBJ = {
-            "numCommitee":numCommitee,
-            "numOfficials":numOfficials,
             "application":application,
             "represantatives":represantatives,
-            "CommitteeMembers":CommitteeMembers,
-            "teamOfficials":teamOfficials,
-            "numApplicants":numApplicants,
+            "pendingApplicants":represantatives.filter(status = "Pending").count(),
             "FederationPersonel":fedPerson, 
             "apparel":apparel,
-            "domain":domain
+            "domain":domain,
+            "numApplicants":represantatives.count()
             }
         return render(request, 'MyApp/Application_review.html', informationOBJ)
     
@@ -1184,6 +1183,7 @@ def Application_review(request, applicationId):
         if valid:
             application.ApplicationStatus = 'Pending'
             application.Step = 'Pending'
+            application.is_App_taking = False
         
             application.save()
         else:
@@ -1218,13 +1218,20 @@ def Officials(request, applicationId):
     
 def Applcants(request,applicationId):
     application = get_object_or_404(Application,pk = applicationId)
-    Applicants = Represantative.objects.filter(application = application)
-    
+    Applicants =[]
+    AllApplicants = ApplicantApplication.objects.filter(Application = application )
+    for Applicant in AllApplicants:
+        if Applicant.status == "Pending":
+            Applicants.append(Applicant)
+        if Applicant.status == "OnTeam":
+            print("Pending")
+            Applicants.append(Applicant)
+        
     if request.method == 'GET':
         
         return render(request,'MyApp/Applcants.html', {"application":application,"Applicants": Applicants})
     
-def Committee(request, type):
+def Committee2(request, type):
     
     
     commitee = CommitteeMember.objects.all()
@@ -1345,9 +1352,15 @@ def teamOfficialDetails(request, teamOfficialId):
             
 def represantativeDetails(request, represantativeId):
     
-    represantative = get_object_or_404(Represantative, pk=represantativeId)
-    application = represantative.application
-    return render(request, 'MyApp/represantativeDetails.html',{"represantative":represantative,"application":application})
+    represantative = get_object_or_404(ApplicantApplication, pk=represantativeId)
+    application = represantative.Application
+    sportsPerson = represantative.SportsPerson
+    payload = {
+            "represantative":represantative,
+            "application":application,
+            "sportsPerson":sportsPerson
+        }
+    return render(request, 'MyApp/represantativeDetails.html',payload)
             
 
 def ContinueApplication(request, applicationId):
@@ -1432,52 +1445,36 @@ def alert_admin_Application(request, to_email, application, admin_user):
 def my_applications(request):
     user = request.user
    
+           
     try:
-        
-        ActiveApplication = get_object_or_404(Application, user = user, ApplicationStatus = "Pending")
+        onProcess = get_object_or_404(Application, user = user, ApplicationStatus = "Oncreate")
     except:
-        try:
-            ActiveApplication = get_object_or_404(Application, user = user, ApplicationStatus =    "Approved")
-        except:
-           
-            try:
-                ActiveApplication = get_object_or_404(Application, user = user, ApplicationStatus = "Active")
-            except:
-                
-                try:
-                    ActiveApplication = get_object_or_404(Application, user = user, ApplicationStatus = "Complete")
-                except:    
-                    ActiveApplication = None 
-                  
-    
-    historyApplications  = []
-    if ActiveApplication:
-   
-        t = sattleApplication(ActiveApplication.ApplicationId)
-       
-        if t:
-            
-           
-            messages.info(request, "Your application for colors has been sattled due to the end date being reached.")
-    myApplications =  Application.objects.filter(user = user)
-    
-    for application in myApplications:
         
-        if application.ApplicationStatus != "Pending"  or application.ApplicationStatus != "Approved":
-            
-            if application.isHistory:
-                historyApplications.append(application)
-            
-         
-    numApplicants = Represantative.objects.filter(application = ActiveApplication).count()
-    numOfficials = TeamOfficial.objects.filter(application = ActiveApplication).count()
-    numCommitee = CommitteeMember.objects.filter(application = ActiveApplication).count()
+        try:
+            onProcess = get_object_or_404(Application, user = user, ApplicationStatus = "Complete")
+        except:    
+            onProcess = None 
+                  
+    historyApplications  = []
+    activeFederationColorsApplications = []
+    for application in Application.objects.filter(user = user, isHistory = False):
+        sattleApplication(application.ApplicationId)
+        if application.ApplicationStatus != "Pending" and application.ApplicationStatus != "OnCreate" and application.isHistory == False:
+            activeFederationColorsApplications.append(application)
+        if application.isHistory:
+            historyApplications.append(application)    
+    try:
+        sportsPerson = get_object_or_404(SportsPerson, user = request.user)
+        eventApplications = ApplicantApplication.objects.filter(SportsPerson = sportsPerson)  
+    except:
+        eventApplications = None
+
     infrmationOBJ = {
-        "ActiveApplication":ActiveApplication,
-        "numOfficials":numOfficials,
-        "numApplicants":numApplicants,
-        "numCommitee": numCommitee,
+       
         "historyApplications":historyApplications,
+        'activeFederationColorsApplications':activeFederationColorsApplications,
+        'eventApplications':eventApplications,
+        'ActiveApplication': onProcess
         
     }   
     return render(request, "MyApp/my_applications.html", infrmationOBJ)
@@ -1788,112 +1785,6 @@ def DeclineFedPersonel(request, FedName):
 
 
 
-def Upload_DocumentsTest(request, applicationId):
-    
-    application = get_object_or_404(Application, pk = applicationId)
-    docs  = None
-    
-    try:
-        docs = get_object_or_404(FedDocuments, FederationPersonel = application.FederationPersonel, Year = str(datetime.now().year))
-        
-    except:
-        pass
-    if application.Step != 'Application_review' and application.Step != 'Pending':
-        
-        application.Step = 'Upload_Documents'
-        application.save()
-    if request.method == 'GET':
-        Domain = get_current_site(request)
-        return render(request, 'MyApp/Upload_DocumentsTest.html',{"application":application, "docs":docs, "Domain":Domain}) 
-    
-    if request.method == 'POST':
-       
-            
-            
-        if docs == None:
-            
-            docs = FedDocuments.objects.create(
-                FederationPersonel = application.FederationPersonel,
-                RegulationsInterestDeclaration = request.FILES["RegulationsInterestDeclaration"],
-                SelectionCriteriaProtocols = request.FILES["SelectionCriteriaProtocols"],
-                GeneralRegulationSelectionProcedure = request.FILES["GeneralRegulationSelectionProcedure"],
-                TeamOfficialDuties = request.FILES["TeamOfficialDuties"],
-                HighPerformancePlan = request.FILES["HighPerformancePlan"],
-                EventInvitation = request.FILES["EventInvitation"],
-                DocumentationOfSelectionSubmitted = request.FILES["DocumentationOfSelectionSubmitted"],
-                
-                Year = str(datetime.now().year)
-            )
-
-        else:
-            numUpdates = 0
-            try:
-                if request.POST["RegulationsInterestDeclaration"] != '':
-                    docs.RegulationsInterestDeclaration = request.FILES["RegulationsInterestDeclaration"]
-                
-                    numUpdates += 1
-            except:
-                pass
-            
-            try:
-                if request.POST["SelectionCriteriaProtocols"] !='':
-                    docs.SelectionCriteriaProtocols = request.FILES["SelectionCriteriaProtocols"]
-                    numUpdates += 1
-            except:
-                pass
-            
-            try:
-                if request.POST["GeneralRegulationSelectionProcedure"] != '':
-                    docs.GeneralRegulationSelectionProcedure = request.FILES["GeneralRegulationSelectionProcedure"]
-                    numUpdates += 1
-            except:
-                pass
-            
-            try:
-                if request.POST["TeamOfficialDuties"] != '':
-                    docs.TeamOfficialDuties = request.FILES["TeamOfficialDuties"]
-                    numUpdates += 1
-            except:
-                pass
-            
-            try:
-                if request.POST["HighPerformancePlan"] != '':
-                    docs.HighPerformancePlan = request.FILES["HighPerformancePlan"]
-                    numUpdates += 1
-            except:
-                pass
-                
-            try:
-                if request.POST["EventInvitation"] != '':
-                    docs.EventInvitation = request.FILES["EventInvitation"]
-                    numUpdates += 1
-            except:
-                pass
-            
-            try:
-                if request.POST["DocumentationOfSelectionSubmitted"] != '':
-                    docs.DocumentationOfSelectionSubmitted = request.FILES["DocumentationOfSelectionSubmitted"]
-                    numUpdates += 1
-            except:
-                pass
-            
-            if numUpdates > 0:
-                messages.success(request, "Changes saved successfully ")
-                docs.save()
-            else:
-                messages.error(request, 'No changes made')   
-                
-            return redirect("Upload_Documents", applicationId = application.ApplicationId)
-            
-            
-                    
-                        
-        
-        messages.success(request, "Documents uploaded successfully, please proceed to accept code of conduct terms.")
-        
-        return redirect("termsAndConditions", applicationId = application.ApplicationId)
-    
-
 
 
 # def chooseFederation():
@@ -2031,21 +1922,7 @@ def newFed(request):
     
     
     
-@api_view(['GET'])
-def checkDateAp(request, date):
-    try:
-        provided_date = datetime.strptime(date, '%Y-%m-%d').date()
-    except ValueError:
-        return Response({'error': 'Invalid date format'}, status=400)
 
-    current_date = datetime.now().date()
-    difference = (provided_date - current_date).days
-
-    if difference >= 30:
-        return Response({'isValid': True})
-    else:
-        return Response({'isValid': False})
-    
 def checkDate(date):
     try:
         provided_date = datetime.strptime(date, '%Y-%m-%d').date()

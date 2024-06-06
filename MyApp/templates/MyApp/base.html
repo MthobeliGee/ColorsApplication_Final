@@ -39,17 +39,22 @@
                     <li class="active"><a href="{% url 'home' %}">Home</a></li>
 
                     {% if user.is_authenticated %}
-                        {% if user.is_superuser %}
+
+                        {% if user.is_staff %}    
                             <li class="nav-item text-uppercase font-weight-bold">
-                                <a href="{% url 'Committee' type="Approved" %}" style="color: green;" class="nav-link" href="">Committee</a>
+                                <a href="{% url 'Committee' %}" style="color: green;" class="nav-link">KZNSC Committee</a>
                             </li>
-                            
-                            <li class="nav-item text-uppercase font-weight-bold">
-                                <a href="{% url 'Applications' %}" style="color: green;" class="nav-link" href="">Applications</a>
-                            </li>
-                            {% if user.is_staff %}
-                            <b>I am staff</b>
+                            {% if user.is_superuser == False %}
+                                <li class="nav-item text-uppercase font-weight-bold">
+                                    <a href="{% url 'Applications' %}" style="color: green;" class="nav-link">Applications</a>
+                                </li>
+                            {% else %}
+                                <li class="nav-item text-uppercase font-weight-bold">
+                                    <a href="#" style="color: green;" class="nav-link">Approved Applications</a>
+                                </li>
                             {% endif %}
+                       
+                        
                         {% else %}
                         
                            
@@ -57,8 +62,12 @@
                                 <a class="nav-link" href="{%   url 'my_applications' %}" >Applications</a>
                             </li> 
                             <li class="nav-item text-uppercase font-weight-bold">
-                                <a class="nav-link" href="{%   url 'Select_Event' %}" >Events</a>
+                                <a class="nav-link" href="{%   url 'ChoosApplicationType' %}" >New Application</a>
                             </li>   
+                            <li class="nav-item text-uppercase font-weight-bold">
+                                <a class="nav-link" href="{%   url 'Select_Event' %}" >Events</a>
+                            </li>
+                           
                     
                         {% endif %}
                         

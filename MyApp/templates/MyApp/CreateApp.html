@@ -5,6 +5,21 @@
 
 {% block content %}
     {% load static %}
+
+    <style>
+        #txt_HostCity_holder{
+            padding:1rem;
+
+        }
+        #txt_HostCity_holder > input{
+            border:dotted 1px red;
+
+        }
+        #datemsg, #datemsgend{
+            padding:0.5rem;
+            color:red
+        }
+    </style>
     {% if messages %}
         {% for message in messages %}
             <br/>
@@ -51,141 +66,71 @@
             <br/>
             <form method="post"  enctype="multipart/form-data" style="width:inherit">
                 {% csrf_token %}
-                <div class="row">
-                    <div class="col-md-6 mb-4">
-
-                        <div class="form-outline">
-                        
-                            <input required type="text" name="EventName" placeholder="Name of event"  class="form-control form-control-lg">
-                            <label class="form-label" for="EventName">Event Name</label>
-                    
-                        </div>
-
-                    </div>
-
-                
-                
-                    <div class="col-md-6 mb-4">
-
-                    <div class="form-outline" style="display:flex;flex-direction: column">
-                        
-                        <input  required  type="date" id="StartDate" name="StartDate" onchange="dateChanged(this)" class="form-control form-control-lg">
-                        <label class="form-label" for="Middlename">Start Date</label>
-                        <div id="datemsg">
-                            
-                        </div>
-                    
-                    </div>
-
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 mb-4">
-
-                        <div class="form-outline">
-                        
-                            <input required type="date" name="EndDate" class="form-control form-control-lg">
-                            <label class="form-label" for="EndDate">End Date</label>
-                    
-                        </div>
-
-                    </div>
-
-                
-                
-                    <div class="col-md-6 mb-4">
-
-                    <div class="form-outline" style="display:flex;flex-direction: column">
-                        
-                        <input required  type="number" name="NumberOfTeam"  class="form-control form-control-lg">
-                        <label class="form-label" for="NumberOfTeam">Number Of Team Members</label>
-                    
-                    </div>
-
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 mb-4">
-
-                        <div class="form-outline">
-                        
-                            <input required type="text" name="HostCity" class="form-control form-control-lg">
-                            <label class="form-label" for="HostCity">Host City</label>
-                    
-                        </div>
-
-                    </div>
-
-                
-                
-                    <div class="col-md-6 mb-4">
-
-                    <div class="form-outline" style="display:flex;flex-direction: column">
-                        
-                        <input required  type="text" name="HostProvince"  class="form-control form-control-lg">
-                        <label class="form-label" for="Middlename">Host Province</label>
-                    
-                    </div>
-
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 mb-4">
-
-                        <div class="form-outline">
-                        
-                            <input required type="text" name="MethodOfSelection" class="form-control form-control-lg">
-                            <label class="form-label" for="MethodOfSelection">Method Of Selection</label>
-                    
-                        </div>
-
-                    </div>
-
-                
-                
-                    <div class="col-md-6 mb-4">
-
-                    <div class="form-outline" style="display:flex;flex-direction: column">
-                        
-                    
-                        <input required type="date" name="SelectionApprovedDate" class="form-control form-control-lg" />
-                            
-                        <label class="form-label" for="RepresatativeType">Team Selection Approved  Date</label>
-                    
-                    </div>
-
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 mb-4">
-
-                        <div class="form-outline">
-                        
-                            <input required type="text" name="ModeOfTravel" class="form-control form-control-lg">
-                            <label class="form-label" for="ModeOfTravel">Mode of travel</label>
-                    
-                        </div>
-
-                    </div>
-
-                
-                
-                    <div class="col-md-6 mb-4">
-
-                        <div class="form-outline" style="display:flex;flex-direction: column">
-                            
-                            <div class="" style="display:flex;justify-content:center ">
-                                <input required  type="date" name="TravelDate" style=""  class="form-control form-control-lg">
-                                <input required type="time" name="TravelTime" />
-                                
-                            </div>
-                            <label class="form-label" for="TravelDateTime">Travel Date And Time</label>
-                        
-                        </div>
-
-                    </div>
+                <div class="form-outline">
+                    <label class="form-label" for="EventName">Event Name</label> 
+                    <input required type="text" name="EventName" placeholder="Name of event"  class="form-control form-control-lg">
+            
                 </div>
 
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    <label class="form-label" for="Middlename">Host Province</label>
+                    <select onchange="setCities(this.value)" required  type="text" name="HostProvince" id="drpListProvince"  class="form-control form-control-lg"></select>
+                    
+                
+                </div>
+                <div class="form-outline">
+                    <label class="form-label" for="HostCity">Host city/town</label>
+                    <select onchange="whenCitChange(this.value)" id="drpCities" required type="text" name="HostCity" class="form-control form-control-lg"></select>
+                    
+                    <div id="txt_HostCity_holder" hidden >
+                        <label>Please specify city/town</label>
+                        <input type="text"  class="form-control form-control-lg" id="txt_HostCity" />
+
+                    </div>
+            
+                </div>
+               
+            
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    <label class="form-label" for="Middlename">Start Date</label>
+                    <input  required  type="date" id="StartDate" name="StartDate" onchange="validateDate(this.value, 'start')" class="form-control form-control-lg">
+                    <div id="datemsg">
+                        
+                    </div>
+                
+                </div>
+                
+                <div class="form-outline">
+                    <label class="form-label" for="EndDate">End Date</label>
+                    <input required type="date" onchange="validateDate(this.value, 'end')" id="endDate" name="EndDate" class="form-control form-control-lg">
+                    <div id="datemsgend">
+                        
+                    </div>
+                </div>
+               
+               
+                
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                        
+                    <label class="form-label" for="RepresatativeType">Team Selection Approved  Date</label>
+                    <input required type="date" name="SelectionApprovedDate" class="form-control form-control-lg" />
+                        
+                    
+                
+                </div>
+         
+                <div class="form-outline" style="display:flex;flex-direction: column">
+                    <label class="form-label" for="TravelDateTime">Travel Date And Time</label>
+                    <div class="" style="display:flex;justify-content:center ">
+                        <input  required  type="datetime-local" name="TravelDateTime" style=""  class="form-control form-control-lg">
+                      
+                        
+                    </div>
+                   
+                
+                </div>
+                <br/>
+                
 
                 <input class="btn btn-default btn-primary" style="width:100%" type="submit" value="Save and continue"/> 
             </form>
@@ -194,8 +139,11 @@
         </div>
 
     </div>
-
     <script>
+      
+
+        </script>
+    {% comment %} <script>
 
         //checking date
 
@@ -248,8 +196,8 @@
             });
         }
 
-    </script>
-
+    </script> {% endcomment %}
+    <script src="{% static 'MyApp/myjs/basiccolorsjs.js' %}"></script>
 {% endblock %}
 
 
