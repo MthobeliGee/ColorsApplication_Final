@@ -41,6 +41,12 @@ def ApproveApplication(request, applicationId):
         
         application.ApplicationStatus = "Approved"
         application.Step = "Approved"
+        try:
+            
+            application.Committee = get_object_or_404(CommitteeMember, user = request.user)
+        except:
+            messages.error(request, "You are not allowed to take this action")
+            return redirect('home')
         application.save()
         sendStateAlert(request,application)
        

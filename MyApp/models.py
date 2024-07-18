@@ -8,7 +8,6 @@ from manage_personnel.models import *
 
 class Federation(models.Model):
     user = models.ForeignKey(User,blank=True,null=True,on_delete=models.CASCADE)
-<<<<<<< HEAD
     FederationId = models.AutoField(primary_key=True, null= False, blank=False)
     FederationPersonel = models.ForeignKey(FederationPersonel,blank=True,null=True,on_delete=models.CASCADE)
     FederationName = models.TextField(blank=True, null = True)
@@ -27,20 +26,12 @@ class ApplicantTeams(models.Model):
     user = models.ForeignKey(User,blank=True,null=True,on_delete=models.CASCADE)
     Federation = models.ForeignKey(Federation, on_delete=models.CASCADE)
     teams = models.TextField()
-    
-    
-    
-    
-    
-
-
-=======
     FederationName = models.CharField(max_length=255,blank=True,null=True)
     dateSelected = models.DateField(default=timezone.now())
     PersonelPhone = models.CharField(max_length=255 , null=True, blank=True)
     PersonelGender = models.CharField(max_length=6,null=True, blank=True)
     Status = models.CharField(max_length=20,default="Pending")
->>>>>>> 63f1979025f70cff35c98ec0d995a34b184f4a6e
+
 
 
 class FedDocuments(models.Model):
@@ -109,13 +100,11 @@ class Application(models.Model):
     DateCreated = models.DateTimeField(default=datetime.now())
     DeclineReason = models.TextField(blank=True, null=True)
     CancelReason = models.TextField(blank=True, null=True)
-<<<<<<< HEAD
     is_App_taking = models.BooleanField(default = False)
     ApplicantsClosingDate = models.DateTimeField(default=datetime.now())
-=======
     LateAppMotivation = models.TextField(max_length=255)
     
->>>>>>> 63f1979025f70cff35c98ec0d995a34b184f4a6e
+
     ApparelLetters = models.CharField(max_length=300, blank=True, null=True)
     is_lateApplication = models.BooleanField(default=False)
 
