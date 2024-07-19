@@ -27,4 +27,6 @@ urlpatterns = [
     path('accounts/login/', loginuser, name='login'),
     path('ProcessApplication/', include('ProcessApplication.urls')),
     path('manage_personnel/', include('manage_personnel.urls')),
+    path('awarding/', include('awarding.urls')),
+    
 ]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

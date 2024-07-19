@@ -1,0 +1,447 @@
+{% extends "MyApp/base.html" %}
+
+{% block content %}
+    {% load static %}
+        <link href="{% static "MyApp/reviewCss.css" %}" rel="stylesheet"/>
+            <style>
+                table{
+                    border:solid 1px;
+                    width:100%
+                }
+                tr{
+                    border:solid 1px
+                }
+                td{
+                    border:solid 1px
+                }
+                tr:hover{
+                    background-color:green;
+                    color:white
+                }
+
+            </style>
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <br/>
+                    <div>
+                        <center>
+                            <div style="padding:1rem; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% elif message.tags == 'info' %}info{% endif %}">
+                                <p style="font-size:20px">
+                                    <b> {{ message }}</b>
+                                </p>
+                            </div>
+                        </center>
+                    </div>
+
+                {% endfor %}
+            {% endif %}
+
+
+       
+       
+       
+
+    </div>
+    {% if pendingApplicants > 0 %}
+
+        <div style="padding:1rem; display:flex; justify-content:center;">
+            <p style="border:solid 1px;border-radius:12px;padding:1rem; background-color:azure">
+                <b class="text-danger">Attention!!:</b> There are/is {{pendingApplicants}} applicant(s) requesting to onbord the team to attend this event. 
+                <br/><b class="text-info">Instruction:</b> Navigate to Applcants above.
+            </p>
+        </div>
+    {% endif %}
+
+   <div class="container">
+
+    <input type="hidden" id="domain" value="{{domain}}"/>
+
+
+    <div id="app_pop" hidden>
+        <input type="hidden" id="applicationId" value="{{application.applicationId}}"/>
+        <div class="card">
+            <div id="pop_header" class="card-header">
+                
+            </div>
+            <div id="pop_body" class="card-body">   
+
+
+            </div>
+
+        </div>
+    </div>
+    <div>
+        {% if user == application.user or application.Federation.FederationPersonel.user == user %}
+            {% if application.isHistory == False%}
+                <div style="display:flex; justify-content:center;padding:1rem">
+                    
+                    <div>
+                        <a style="border: solid 1px; padding:0.5rem; border-radius:12px"  title="Edit application details" href="{% url 'UpdateDetails' ApplicationId=application.ApplicationId %}" >
+                            Update Application Details
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+
+        <div class=" " style="width:100%">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-header row">
+
+                   <div>
+                        <h2>
+                            {{application.EventName}}
+
+                        </h2> <b>application review</b>
+                   </div>
+                  
+                    <div style="padding:0.5rem;">
+
+                        {%if user.is_superuser == False %}
+                            {%if user.is_staff%}
+                           
+
+
+                           
+                            {%endif%}
+                        {%endif%}
+                        
+                    
+                    </div>
+                    
+
+                    {% if user  == application.user %}
+                        {% if application.ApplicationStatus == "Oncreate" or application.ApplicationStatus == "Complete"%}
+                            
+                        <div>
+
+                                <button
+                                    id="app_take"
+
+                                    
+                                    {% if application.is_App_taking%}
+                                        class="btn btn-default "
+                                        onclick="app_take(true)"
+                                    {% else %}
+                                        class="btn btn-default "
+                                        onclick="app_take(false)"
+                                    {% endif %}
+                                    
+                                    >
+                                
+                                        {% if application.is_App_taking%}
+                                            Close event for applications
+                                        {% else %}
+                                            Open event for applications
+                                        {% endif %}
+                                    
+                                
+                                </button>
+                                <form hidden action="{% url 'allowAppTake' %}" method="POST" >
+                                    {% csrf_token %}
+
+                                    <input type="number" value="{{application.ApplicationId}}" name="applicationId"/>
+                                    <input type="datetime-local" value="" name="ApplicantsClosingDate"/>
+
+                                    <input type="text" id="action" name="action"/>
+
+                                    <input type="submit" id="sub_App_take" />
+
+                                </form>
+                                
+                            </div>
+                        {% endif %}
+                    {% endif %}
+            
+                </div>
+                <div class="card-body">
+                    <div class="no-gutters align-items-center">
+                        <div class="col mr-2" style="">
+                            <div class=" font-weight-bold" >
+                                <table class="" >
+                                    <tr> 
+                                        <td>
+                                            <b>Federation</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.Federation.FederationName}}
+                                            
+                                        </td>
+                                    </tr>
+                                    <tr> 
+                                        <td>
+                                            <b>Host province</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.HostProvince}}
+                                        </td>
+                                    </tr>
+                                    <tr > 
+                                        <td>
+                                            <b>City</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.HostCity}}
+                                        </td>
+                                    </tr>
+
+                                    <tr > 
+                                        <td>
+                                            <b>Start Date</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.StartDate}}
+                                        </td>
+                                    </tr>
+
+                                    <tr > 
+                                        <td>
+                                            <b>End date</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.EndDate}}
+                                        </td>
+                                    </tr>
+
+                                    
+                                    <tr > 
+                                        <td>
+                                            <b>Selection approved date</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.SelectionApprovedDate}}
+                                        </td>
+                                    </tr>
+                                    <tr > 
+                                        <td>
+                                            <b>Travel Date Time</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.TravelDateTime}}
+                                        </td>
+                                    </tr>
+
+                                    <tr > 
+                                        <td>
+                                            <b>Number of applicants</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{numApplicants}}
+                                        </td>
+                                    </tr>
+
+                                   
+
+                                   
+                                    <tr > 
+                                        <td>
+                                            <b>Application Status</b>
+                                        </td>
+                                        
+                                        <td>
+                                            {{application.ApplicationStatus}}
+                                        </td>
+                                    </tr>
+
+
+
+                                </table>
+
+                                <div class="row" style="display:flex;justify-content:center; padding:1rem">
+                                    {% if user.is_staff and not user.is_superuser %}
+                                        <div style="padding:0.5rem;">
+                                            <form method="POST" action="{% url 'awardingColors' applicationId=application.ApplicationId %}">
+                                                {% csrf_token %}
+                                                <div class="text-success" style="padding:0.5rem; border:solid 2px; border-radius:12px">
+                                                    <button type="submit" class="btn btn-success text-uppercase font-weight-bold text-xs" style="width:100%">
+                                                        Confirm Awarding
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    {% else %}
+                                        <div style="padding:0.5rem;">
+                                            <div class="text-success" style="padding:0.5rem; border:solid 2px; border-radius:12px">
+                                                <a href="{% url 'my_applications' %}" class="btn btn-success">
+                                                    Go to My Applications
+                                                </a>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    <div style="padding:0.5rem;">
+                                        <div style="padding:0.5rem; border:solid 1px; border-radius:12px">
+                                            <a href="{% url 'DeclineApplication' applicationId=application.ApplicationId %}" class="btn btn-danger text-uppercase font-weight-bold text-xs" style="color:white;width:100%">
+                                                Abort Application
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                {%endblock%}
+
+   
+
+
+<script>
+    const app_pop = document.getElementById("app_pop")
+    const pop_header = document.getElementById("pop_header")
+    const pop_body = document.getElementById("pop_body")
+    function app_take(is_App_taking){
+        app_pop.hidden = false
+        pop_header.innerHTML = `
+                <div>
+                    <b>Allow Applicants</b>
+                </div>
+
+                <div class="close2">
+                    <label onclick="togglePop()">Close</label>
+                </div>
+
+            `
+        if(is_App_taking){
+            pop_body.innerHTML=`
+            
+                <div>
+                    <p><b>Are you sure you want to "Close" this colors application to take 'Applicants'</b></p>
+                </div>
+                <hr/>
+                <div class="action_btn">
+                    <div>
+                        <button id="btn_yes" onclick="isAllowClose(true)" class="btn btn-default btn-success">Yes</button>
+                    </div>
+                    <div>
+
+                        <button id="btn_yes" onclick="isAllowClose(false)" class="btn btn-default btn-danger">No</button>
+                    </div>
+
+                </div>
+
+            
+            `
+        }
+        else{
+            
+            pop_body.innerHTML=`
+            
+                <div>
+                    <p><b>Are you sure you want to allow this colors application to take 'Applicants'</b></p>
+                </div>
+                <hr/>
+                <div class="action_btn">
+                    <div>
+                        <button id="btn_yes" onclick="isAllow(true)" class="btn btn-default btn-success">Yes</button>
+                    </div>
+                    <div>
+
+                        <button id="btn_yes" onclick="isAllow(false)" class="btn btn-default btn-danger">No</button>
+                    </div>
+
+                </div>
+
+            
+            `
+
+
+        }
+    }
+
+    function isAllow(is_app_allow){
+       
+        domain = document.getElementById("domain").value
+        if(is_app_allow){
+
+            document.getElementById("action").value = "Allowed";
+
+            document.getElementById("sub_App_take").click();
+            
+
+        }
+        else{
+            togglePop()
+        }
+    }
+
+    function isAllowClose(is_app_allow){
+      
+    
+        if(is_app_allow){
+
+            document.getElementById("action").value = "DisAllowed";
+
+            document.getElementById("sub_App_take").click();
+            
+
+        }
+        else{
+            togglePop()
+        }
+    }
+
+
+    function togglePop(){
+        app_pop.hidden = true
+    }
+</script>
+
+<script>
+    const event_StartDate = document.getElementById("event_StartDate")
+    console.log("event_StartDate: ", event_StartDate)
+    function dateChanged(input){
+
+        let date = input.value
+        let dateComps = date.split('-')
+        console.log("Date has been changed!", dateComps)
+        let year = parseInt(dateComps[0])
+        let month = parseInt(dateComps[1])
+        let day = parseInt(dateComps[3])
+
+        verifyDate(date)
+
+    }
+    function verifyDate(datestr){
+        console.log("datestr: ",datestr)
+        
+        fetch("http://127.0.0.1:8000/checkDateAp/"+datestr,{
+            method:"GET",
+            
+            //mode:'no-cors',
+            
+           
+        }).then(function(response){
+            
+           
+            return response.json()
+        }).then(function(data) {
+           
+            console.log("data.isValid: ",data.isValid); 
+            if(data.isValid){
+                //date is valid
+                console.log("Date is valid at: ", datestr)
+            }
+            else{
+                console.log("Date is not valid at: ", datestr)
+                //date is not valid
+            }
+        }).catch(function(error){
+            console.log(error)
+            datemsg = document.getElementById("datemsg")
+           // document.getElementById('OfficialLetterhead_selected').innerHTML= '<small class="text-danger"><b>Something went wrong, please try again.</b></small>'
+           datemsg.innerHTML += ' (<i class="text-danger">Something went wrong while validating date please try again</i>)'
+
+        });
+    }
+    //verifyDate(event_StartDate.value)
+    dateChanged(event_StartDate)
+    
+   </script>
+
+
+ {% comment %} <script src="{% static "MyApp/reviewJs.js" %}"></script> {% endcomment %}

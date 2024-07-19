@@ -2,40 +2,40 @@
 
 {% block content %}
     {% load static %}
-    <link href="{% static "MyApp/reviewCss.css" %}" rel="stylesheet"/>
-    <style>
-        table{
-            border:solid 1px;
-            width:100%
-        }
-        tr{
-            border:solid 1px
-        }
-        td{
-            border:solid 1px
-        }
-        tr:hover{
-            background-color:green;
-            color:white
-        }
+        <link href="{% static "MyApp/reviewCss.css" %}" rel="stylesheet"/>
+            <style>
+                table{
+                    border:solid 1px;
+                    width:100%
+                }
+                tr{
+                    border:solid 1px
+                }
+                td{
+                    border:solid 1px
+                }
+                tr:hover{
+                    background-color:green;
+                    color:white
+                }
 
-    </style>
-    
-    {% if messages %}
-        {% for message in messages %}
-            <br/>
-            <div>
-                <center>
-                    <div style="padding:1rem; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% elif message.tags == 'info' %}info{% endif %}">
-                        <p style="font-size:20px">
-                            <b> {{ message }}</b>
-                        </p>
+            </style>
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <br/>
+                    <div>
+                        <center>
+                            <div style="padding:1rem; border-radius:15px; width:auto; display:flex; justify-content:center;align-centent:center;" class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'error' %}alert-danger{% elif message.tags == 'info' %}info{% endif %}">
+                                <p style="font-size:20px">
+                                    <b> {{ message }}</b>
+                                </p>
+                            </div>
+                        </center>
                     </div>
-                </center>
-            </div>
 
-        {% endfor %}
-    {% endif %}
+                {% endfor %}
+            {% endif %}
 
     <div class="row"  style="display:flex;justify-content:center; padding:1rem">
         
@@ -54,7 +54,7 @@
                         <div class="text-success" style="padding:0.5rem; border:solid 2px; border-radius:12px">
                             <a href="{% url 'Applications'  %}" class="btn btn-success">
                                 <b>
-                                    << All Applications
+                                    All Applications
                                 </b>
                             </a>
                         
@@ -72,7 +72,7 @@
                     <div class="text-success" style="padding:0.5rem; border:solid 2px; border-radius:12px">
                         <a href="{% url 'my_applications'  %}"  class="btn btn-success">
                             <b>
-                                << All Applications
+                                All Applications
                             </b>
                         </a>
                     
@@ -118,7 +118,7 @@
         </div>
     {% endif %}
 
-<div class="container">
+   <div class="container">
 
     <input type="hidden" id="domain" value="{{domain}}"/>
 
@@ -160,7 +160,30 @@
 
                         </h2> <b>application review</b>
                    </div>
-                
+                  
+                    <div style="padding:0.5rem;">
+
+                        {%if user.is_superuser == False %}
+                            {%if user.is_staff%}
+                           
+
+
+                            <div style="padding:0.5rem; border:solid 1px; border-radius:12px;">
+                                <a href="{% url 'awardingColors' applicationId=application.ApplicationId %}" class="btn btn-warning" style="color:green">
+                                    <b>
+                                        Award Certificate
+                                    </b>
+                                </a>
+                                
+                            </div>
+                           
+                            {%endif%}
+                        {%endif%}
+                        
+                    
+                    </div>
+                    
+
                     {% if user  == application.user %}
                         {% if application.ApplicationStatus == "Oncreate" or application.ApplicationStatus == "Complete"%}
                             
@@ -217,6 +240,7 @@
                                         
                                         <td>
                                             {{application.Federation.FederationName}}
+                                            
                                         </td>
                                     </tr>
                                     <tr> 
@@ -498,7 +522,7 @@
 
         
         
-    </div>
+       </div>
     
         
 
@@ -572,6 +596,7 @@
 
 
 </div>
+
 
 
 
@@ -736,7 +761,7 @@
     //verifyDate(event_StartDate.value)
     dateChanged(event_StartDate)
     
-</script>
+   </script>
 
 
  {% comment %} <script src="{% static "MyApp/reviewJs.js" %}"></script> {% endcomment %}
